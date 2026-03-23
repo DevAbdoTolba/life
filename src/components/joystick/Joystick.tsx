@@ -10,6 +10,8 @@ import Animated, {
   interpolateColor,
   runOnJS,
   Easing,
+  useDerivedValue,
+  SharedValue,
 } from 'react-native-reanimated';
 
 import { getPillarById } from '../../constants/pillars';
@@ -17,6 +19,8 @@ import type { SwipeDirection } from '../../constants/pillars';
 import { colors } from '../../constants/colors';
 import type { JoystickProps, SwipeResult } from './types';
 import { useSwipeLog } from './useSwipeLog';
+import { RadialMenu } from './RadialMenu';
+import { useRadialMenu } from './useRadialMenu';
 import {
   JOYSTICK_SIZE,
   KNOB_SIZE,
@@ -81,6 +85,10 @@ export function Joystick({
 }: JoystickProps) {
   const pillar = getPillarById(pillarId);
   const { handleSwipe } = useSwipeLog(pillarId);
+  const { getTargetPositions, getClosestTarget } = useRadialMenu(pillarId);
+
+  const [radialVisible, setRadialVisible] = React.useState(false);
+  const [radialDirection, setRadialDirection] = React.useState<SwipeDirection | null>(null);
 
   // Shared values for knob position
   const translateX = useSharedValue(0);
@@ -125,6 +133,8 @@ export function Joystick({
    */
   const handleHoldStart = useCallback(
     (direction: SwipeDirection) => {
+      setRadialDirection(direction);
+      setRadialVisible(true);
       onHoldStart?.(direction);
     },
     [onHoldStart]
@@ -133,9 +143,19 @@ export function Joystick({
   /**
    * JS callback when hold ends.
    */
-  const handleHoldEnd = useCallback(() => {
+  const handleHoldEnd = useCallback((tx: number, ty: number, dir: SwipeDirection) => {
+    setRadialVisible(false);
+
+    // Hit detection
+    const positions = getTargetPositions(dir);
+    const closest = getClosestTarget(tx, ty, positions);
+
+    // Log the targeted entry
+    const result: SwipeResult = { pillarId, direction: dir, wasHeld: true };
+    handleSwipe(result, closest ? closest.id : null);
+
     onHoldEnd?.();
-  }, [onHoldEnd]);
+  }, [pillarId, getTargetPositions, getClosestTarget, handleSwipe, onHoldEnd]);
 
   // ─── Gesture Setup ───────────────────────────────────
 
@@ -207,7 +227,7 @@ export function Joystick({
       } else if (dir && isHolding.value === 1) {
         // Was holding — the hold handler manages the swipe callback
         // Just need to snap back and clean up
-        runOnJS(handleHoldEnd)();
+        runOnJS(handleHoldEnd)(tx, ty, dir);
         isHolding.value = 0;
       }
 
@@ -290,6 +310,15 @@ export function Joystick({
 
   return (
     <View style={styles.wrapper}>
+      <RadialMenu
+        visible={radialVisible}
+        direction={radialDirection}
+        pillarId={pillarId}
+        thumbPosition={useDerivedValue(() => ({
+          x: translateX.value,
+          y: translateY.value,
+        }))}
+      />
       <GestureDetector gesture={composedGesture}>
         <Animated.View
           style={[
