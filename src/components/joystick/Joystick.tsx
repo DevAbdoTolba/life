@@ -16,6 +16,7 @@ import { getPillarById } from '../../constants/pillars';
 import type { SwipeDirection } from '../../constants/pillars';
 import { colors } from '../../constants/colors';
 import type { JoystickProps, SwipeResult } from './types';
+import { useSwipeLog } from './useSwipeLog';
 import {
   JOYSTICK_SIZE,
   KNOB_SIZE,
@@ -79,6 +80,7 @@ export function Joystick({
   disabled = false,
 }: JoystickProps) {
   const pillar = getPillarById(pillarId);
+  const { handleSwipe } = useSwipeLog(pillarId);
 
   // Shared values for knob position
   const translateX = useSharedValue(0);
@@ -112,9 +114,10 @@ export function Joystick({
   const handleSwipeComplete = useCallback(
     (direction: SwipeDirection, wasHeld: boolean) => {
       const result: SwipeResult = { pillarId, direction, wasHeld };
-      onSwipe(result);
+      handleSwipe(result);
+      if (onSwipe) onSwipe(result);
     },
-    [pillarId, onSwipe]
+    [pillarId, onSwipe, handleSwipe]
   );
 
   /**
