@@ -6,7 +6,9 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "jest",
+    "test:services": "jest --testPathPattern=src/services"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
@@ -15,6 +17,7 @@
     "expo": "~55.0.8",
     "expo-constants": "~55.0.9",
     "expo-crypto": "~55.0.10",
+    "expo-document-picker": "~55.0.9",
     "expo-file-system": "~55.0.11",
     "expo-font": "~55.0.4",
     "expo-haptics": "~55.0.9",
@@ -41,9 +44,13 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/matter-js": "^0.20.2",
     "@types/react": "~19.2.2",
     "@types/uuid": "^10.0.0",
+    "jest": "^30.3.0",
+    "jest-expo": "^55.0.11",
+    "ts-jest": "^29.4.6",
     "typescript": "~5.9.2"
   },
   "private": true

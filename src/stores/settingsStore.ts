@@ -17,6 +17,9 @@ interface SettingsState {
   // App state
   isDbReady: boolean;
 
+  // Review
+  weeklyReviewDay: number; // 1=Sunday, 2=Monday ... 7=Saturday
+
   // Actions
   setPrivacyPassword: (password: string | null) => void;
   togglePrivacyMode: () => void;
@@ -24,6 +27,7 @@ interface SettingsState {
   toggleReminder: () => void;
   completeOnboarding: () => void;
   setDbReady: (ready: boolean) => void;
+  setWeeklyReviewDay: (day: number) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -36,6 +40,7 @@ export const useSettingsStore = create<SettingsState>()(
       reminderTime: '21:00',
       onboardingComplete: false,
       isDbReady: false,
+      weeklyReviewDay: 1,
 
       // Actions
       setPrivacyPassword: (password) => set({ privacyPassword: password }),
@@ -51,6 +56,8 @@ export const useSettingsStore = create<SettingsState>()(
       completeOnboarding: () => set({ onboardingComplete: true }),
 
       setDbReady: (ready) => set({ isDbReady: ready }),
+
+      setWeeklyReviewDay: (day) => set({ weeklyReviewDay: day }),
     }),
     {
       name: 'hayat-settings',
