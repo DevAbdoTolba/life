@@ -13,7 +13,7 @@ export function SettingsSection({ title, children }: SettingsSectionProps) {
   return (
     <View style={styles.container}>
       <Text variant="label" style={styles.header}>{title}</Text>
-      <Card>{children}</Card>
+      <Card style={styles.card}>{children}</Card>
     </View>
   );
 }
@@ -25,5 +25,9 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: spacing.sm,
     paddingHorizontal: spacing.xs,
+  },
+  card: {
+    // Remove Card's default padding — SettingsRow handles its own paddingHorizontal/Vertical
+    padding: 0,
   },
 });
