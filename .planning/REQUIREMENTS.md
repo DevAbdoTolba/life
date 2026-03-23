@@ -19,23 +19,23 @@
 
 ### Goals
 - [x] **GOAL-01**: Goals can be created, edited, completed, paused, failed, and archived
-- [x] **GOAL-02**: Full goal history/changelog tracking
+- [ ] **GOAL-02**: Full goal history/changelog tracking
 - [x] **GOAL-03**: Targets are strictly per-pillar (cannot span multiple pillars)
 
 ### Privacy
-- [x] **PRIV-01**: Goals can be masked with auto-assigned funny codenames from a pool of ~30
-- [x] **PRIV-02**: Real goal names hidden behind password-protected reveal
+- [ ] **PRIV-01**: Goals can be masked with auto-assigned funny codenames from a pool of ~30
+- [ ] **PRIV-02**: Real goal names hidden behind password-protected reveal
 
 ### Visualization
 - [x] **VIZ-01**: Bullet journal style charts (bar, pie, trend lines) for any time period
 - [x] **VIZ-02**: Physics-based human body silhouette fills with colored balls representing actions
-- [x] **VIZ-03**: Custom time period selector (today, week, month, Ramadan, custom range)
+- [ ] **VIZ-03**: Custom time period selector (today, week, month, Ramadan, custom range)
 - [x] **VIZ-04**: Period comparison view (this week vs last week)
 - [x] **VIZ-05**: Target-specific analytics (trending for individual targets)
 
 ### Notifications
-- [x] **NOTIFY-01**: Configurable daily review notification prompting user to log
-- [x] **NOTIFY-02**: Period review reminders
+- [ ] **NOTIFY-01**: Configurable daily review notification prompting user to log
+- [ ] **NOTIFY-02**: Period review reminders
 
 ### Polish
 - [x] **POLISH-01**: Onboarding flow explaining 3 pillars + gesture tutorial
@@ -74,31 +74,33 @@
 | LOG-01 | Phase 1, 2 | Complete |
 | LOG-02 | Phase 2 | Complete |
 | LOG-03 | Phase 2 | Complete |
-| LOG-04 | Phase 2 | Complete |
+| LOG-04 | Phase 6 | Pending |
 | DATA-01 | Phase 1 | Complete |
 | DATA-02 | Phase 5 | Complete |
 | DATA-03 | Phase 5 | Complete |
 | DATA-04 | Phase 1 | Complete |
 | GOAL-01 | Phase 3 | Complete |
-| GOAL-02 | Phase 3 | Complete |
+| GOAL-02 | Phase 7 | Pending |
 | GOAL-03 | Phase 3 | Complete |
-| PRIV-01 | Phase 3 | Complete |
-| PRIV-02 | Phase 3 | Complete |
+| PRIV-01 | Phase 7 | Pending |
+| PRIV-02 | Phase 7 | Pending |
 | VIZ-01 | Phase 4 | Complete |
 | VIZ-02 | Phase 4 | Complete |
-| VIZ-03 | Phase 4 | Complete |
+| VIZ-03 | Phase 8 | Pending |
 | VIZ-04 | Phase 4 | Complete |
 | VIZ-05 | Phase 4 | Complete |
-| NOTIFY-01 | Phase 5 | Complete |
-| NOTIFY-02 | Phase 5 | Complete |
+| NOTIFY-01 | Phase 7 | Pending |
+| NOTIFY-02 | Phase 7 | Pending |
 | POLISH-01 | Phase 5 | Complete |
 | POLISH-02 | Phase 5 | Complete |
 | POLISH-03 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 23 total
+- Satisfied: 14 (checkboxes checked)
+- Pending (gap closure): 9 (LOG-04, PRIV-01, PRIV-02, GOAL-02, VIZ-03, NOTIFY-01, NOTIFY-02, DATA-01, DATA-04)
 - Mapped to phases: 23
 - Unmapped: 0
 
 *Requirements defined: 2026-03-23*
-*Last updated: 2026-03-23 after Phase 3 completion*
+*Last updated: 2026-03-23 after gap closure phases 06-08 added*

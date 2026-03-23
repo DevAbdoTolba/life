@@ -1,7 +1,7 @@
 # Roadmap: Hayat (Life Balance Tracker)
 
 ## Overview
-Build a gesture-driven life balance tracker from foundation through analytics to launch-ready polish. Phases 01-03 (foundation, joystick interaction, goals/privacy) are complete. Phase 04 (analytics & visualization) is complete. Phase 05 (polish & launch prep) is planned.
+Build a gesture-driven life balance tracker from foundation through analytics to launch-ready polish. Phases 01-05 complete. Phases 06-08 close gaps identified by v1.0 milestone audit.
 
 ## Phases
 
@@ -10,6 +10,9 @@ Build a gesture-driven life balance tracker from foundation through analytics to
 - [x] **Phase 03: Goals, Targets & Privacy** - CRUD goals, lifecycle tracking, privacy codenames, auth
 - [x] **Phase 04: Analytics & Visualization** - Bullet journal charts, physics body-fill, time periods (completed 2026-03-23)
 - [x] **Phase 05: Polish, Export & Launch Prep** - Export/import, notifications, onboarding, performance (completed 2026-03-23)
+- [ ] **Phase 06: Swipe Note Entry** - Post-swipe note UI for LOG-04 (gap closure)
+- [ ] **Phase 07: Integration Wiring Fixes** - Privacy toggle, soft-delete, notification channel init (gap closure)
+- [ ] **Phase 08: Custom Date Range Picker** - Date picker UI for custom period analytics (gap closure)
 
 ## Phase Details
 
@@ -109,6 +112,39 @@ Plans:
 - [x] 05-04-PLAN.md — Onboarding carousel with interactive gesture demo (POLISH-01)
 - [x] 05-05-PLAN.md — App icon/splash assets and final visual verification (POLISH-03)
 
+### Phase 06: Swipe Note Entry
+**Goal**: Add optional text note capture to the swipe logging flow, satisfying the last unsatisfied v1 requirement.
+**Depends on**: Phase 02
+**Requirements**: [LOG-04]
+**Gap Closure:** Closes gaps from v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. Post-swipe note entry UI appears after a swipe log
+  2. useSwipeLog passes note parameter to addLog()
+  3. Notes display in log history views
+**Plans**: TBD
+
+### Phase 07: Integration Wiring Fixes
+**Goal**: Fix three integration gaps — privacy mode toggle, target soft-delete, and Android notification channel initialization.
+**Depends on**: Phase 03, Phase 05
+**Requirements**: [PRIV-01, PRIV-02, GOAL-02, NOTIFY-01, NOTIFY-02]
+**Gap Closure:** Closes gaps from v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. Settings Privacy Mode toggle controls masking in TargetCard, TargetAnalyticsList, TargetTrendModal, RadialMenu
+  2. deleteTarget() uses soft-delete (status='deleted') instead of hard DELETE, preserving target_history FK integrity
+  3. initNotificationChannel() called at app startup in _layout.tsx
+**Plans**: TBD
+
+### Phase 08: Custom Date Range Picker
+**Goal**: Add a date range picker UI for custom period analytics, completing the VIZ-03 requirement.
+**Depends on**: Phase 04
+**Requirements**: [VIZ-03]
+**Gap Closure:** Closes gaps from v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. Date range picker component renders with start/end date selection
+  2. PeriodSelector 'custom' option opens the date picker
+  3. getPeriodDates('custom') returns user-selected date range instead of falling back to current month
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
@@ -118,3 +154,6 @@ Plans:
 | 03. Goals & Privacy | 4/4 | Complete | 2026-03-23 |
 | 04. Analytics & Viz | 4/4 | Complete | 2026-03-23 |
 | 05. Polish & Launch | 0/5 | Complete    | 2026-03-23 |
+| 06. Swipe Note Entry | 0/0 | Pending | — |
+| 07. Integration Wiring Fixes | 0/0 | Pending | — |
+| 08. Custom Date Range Picker | 0/0 | Pending | — |
