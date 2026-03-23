@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, pillars, typography, spacing } from '../../src/constants';
 import { Joystick } from '../../src/components/joystick';
 import { useLogStore } from '../../src/stores/logStore';
+import { LogHistoryItem } from '../../src/components/ui';
+import type { Log } from '../../src/database/types';
 
 export default function HomeScreen() {
   const today = new Date().toLocaleDateString('en-US', {
@@ -24,26 +26,42 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Hayat</Text>
-        <Text style={styles.date}>{today}</Text>
-        <Text style={styles.actionCount}>
-          {todayLogs.length} action{todayLogs.length !== 1 ? 's' : ''} today
-        </Text>
-      </View>
+      <FlatList
+        data={todayLogs}
+        keyExtractor={(item: Log) => item.id}
+        renderItem={({ item }: { item: Log }) => <LogHistoryItem log={item} />}
+        ListHeaderComponent={
+          <>
+            <View style={styles.header}>
+              <Text style={styles.title}>Hayat</Text>
+              <Text style={styles.date}>{today}</Text>
+              <Text style={styles.actionCount}>
+                {todayLogs.length} action{todayLogs.length !== 1 ? 's' : ''} today
+              </Text>
+            </View>
 
-      <View style={styles.triangleContainer}>
-        {/* Afterlife — top center */}
-        <View style={styles.topRow}>
-          <Joystick pillarId={pillars[0].id} onSwipe={handleSwipe} />
-        </View>
+            <View style={styles.triangleContainer}>
+              {/* Afterlife — top center */}
+              <View style={styles.topRow}>
+                <Joystick pillarId={pillars[0].id} onSwipe={handleSwipe} />
+              </View>
 
-        {/* Self & Others — bottom row */}
-        <View style={styles.bottomRow}>
-          <Joystick pillarId={pillars[1].id} onSwipe={handleSwipe} />
-          <Joystick pillarId={pillars[2].id} onSwipe={handleSwipe} />
-        </View>
-      </View>
+              {/* Self & Others — bottom row */}
+              <View style={styles.bottomRow}>
+                <Joystick pillarId={pillars[1].id} onSwipe={handleSwipe} />
+                <Joystick pillarId={pillars[2].id} onSwipe={handleSwipe} />
+              </View>
+            </View>
+
+            {todayLogs.length > 0 && (
+              <Text style={styles.logListTitle}>Today's Activity</Text>
+            )}
+          </>
+        }
+        ListEmptyComponent={null}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 }
@@ -78,10 +96,10 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   triangleContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     gap: spacing.xxxl,
+    paddingVertical: spacing.xl,
     paddingBottom: spacing.xxxl,
   },
   topRow: {
@@ -91,5 +109,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '85%',
+  },
+  logListTitle: {
+    fontFamily: typography.fontFamily.semibold,
+    fontSize: typography.sizes.sm,
+    color: colors.textSecondary,
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.md,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  listContent: {
+    paddingBottom: spacing.xxxl,
   },
 });
