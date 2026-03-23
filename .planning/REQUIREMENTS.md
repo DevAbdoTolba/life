@@ -34,8 +34,8 @@
 - [x] **VIZ-05**: Target-specific analytics (trending for individual targets)
 
 ### Notifications
-- [ ] **NOTIFY-01**: Configurable daily review notification prompting user to log
-- [ ] **NOTIFY-02**: Period review reminders
+- [x] **NOTIFY-01**: Configurable daily review notification prompting user to log
+- [x] **NOTIFY-02**: Period review reminders
 
 ### Polish
 - [ ] **POLISH-01**: Onboarding flow explaining 3 pillars + gesture tutorial
@@ -89,8 +89,8 @@
 | VIZ-03 | Phase 4 | Complete |
 | VIZ-04 | Phase 4 | Complete |
 | VIZ-05 | Phase 4 | Complete |
-| NOTIFY-01 | Phase 5 | Pending |
-| NOTIFY-02 | Phase 5 | Pending |
+| NOTIFY-01 | Phase 5 | Complete |
+| NOTIFY-02 | Phase 5 | Complete |
 | POLISH-01 | Phase 5 | Pending |
 | POLISH-02 | Phase 5 | Pending |
 | POLISH-03 | Phase 5 | Pending |
