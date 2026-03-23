@@ -7,6 +7,10 @@ import { SummaryStatsRow } from '../../src/components/analytics/SummaryStatsRow'
 import { PillarBarChart } from '../../src/components/analytics/PillarBarChart';
 import { PillarDonutChart } from '../../src/components/analytics/PillarDonutChart';
 import { TrendLineChart } from '../../src/components/analytics/TrendLineChart';
+import { BodyFillPreviewCard } from '../../src/components/analytics/BodyFillPreviewCard';
+import { ComparisonCards } from '../../src/components/analytics/ComparisonCards';
+import { TargetAnalyticsList } from '../../src/components/analytics/TargetAnalyticsList';
+import { TargetTrendModal } from '../../src/components/analytics/TargetTrendModal';
 import { useLogStore } from '../../src/stores/logStore';
 import { getPeriodDates, formatPeriodLabel } from '../../src/utils/periodHelpers';
 import type { PeriodType, DateRange, DailyPillarCount } from '../../src/types/analytics';
@@ -20,9 +24,16 @@ export default function AnalyticsScreen() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [dailyCounts, setDailyCounts] = useState<DailyPillarCount[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedTargetId, setSelectedTargetId] = useState<string | null>(null);
+  const [showTargetTrend, setShowTargetTrend] = useState(false);
 
   const getLogsByPeriod = useLogStore((s) => s.getLogsByPeriod);
   const getDailyLogsByPillar = useLogStore((s) => s.getDailyLogsByPillar);
+
+  const handleTargetPress = (targetId: string) => {
+    setSelectedTargetId(targetId);
+    setShowTargetTrend(true);
+  };
 
   useEffect(() => {
     const range = getPeriodDates(selectedPeriod);
@@ -73,17 +84,36 @@ export default function AnalyticsScreen() {
 
                 <TrendLineChart dailyCounts={dailyCounts} period={selectedPeriod} />
                 <View style={styles.chartSpacer} />
+
+                <BodyFillPreviewCard logCount={logs.length} />
+
+                <ComparisonCards
+                  period={selectedPeriod}
+                  currentLogs={logs}
+                  dateRange={dateRange}
+                />
+
+                <TargetAnalyticsList
+                  logs={logs}
+                  period={selectedPeriod}
+                  dateRange={dateRange}
+                  onTargetPress={handleTargetPress}
+                />
               </>
             )}
           </>
         )}
-
-        {/* BodyFillPreviewCard — Plan 04 */}
-
-        {/* ComparisonCards — Plan 03 */}
-
-        {/* TargetAnalyticsList — Plan 03 */}
       </ScrollView>
+
+      <TargetTrendModal
+        visible={showTargetTrend}
+        targetId={selectedTargetId}
+        dateRange={dateRange}
+        onClose={() => {
+          setShowTargetTrend(false);
+          setSelectedTargetId(null);
+        }}
+      />
     </SafeAreaView>
   );
 }
