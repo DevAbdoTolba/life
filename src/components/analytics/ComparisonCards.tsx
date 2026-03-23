@@ -21,11 +21,6 @@ export function ComparisonCards({ period, currentLogs, dateRange }: ComparisonCa
   const [previousLogs, setPreviousLogs] = useState<Log[]>([]);
   const getLogsByPeriod = useLogStore((s) => s.getLogsByPeriod);
 
-  // D-21: Only render for week and month periods
-  if (period !== 'week' && period !== 'month') {
-    return null;
-  }
-
   useEffect(() => {
     if (period !== 'week' && period !== 'month') return;
     const prevRange = getPreviousPeriodDates(period);
@@ -52,6 +47,11 @@ export function ComparisonCards({ period, currentLogs, dateRange }: ComparisonCa
       };
     });
   }, [currentLogs, previousLogs]);
+
+  // D-21: Only render for week and month periods
+  if (period !== 'week' && period !== 'month') {
+    return null;
+  }
 
   const currentLabel = period === 'week' ? 'This Week' : 'This Month';
   const previousLabel = period === 'week' ? 'Last Week' : 'Last Month';
