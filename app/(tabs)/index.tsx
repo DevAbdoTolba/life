@@ -1,7 +1,9 @@
-import { View, StyleSheet } from 'react-native';
-import { Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, pillars, typography, spacing } from '../../src/constants';
+import { Joystick } from '../../src/components/joystick';
+import { useLogStore } from '../../src/stores/logStore';
 
 export default function HomeScreen() {
   const today = new Date().toLocaleDateString('en-US', {
@@ -10,42 +12,38 @@ export default function HomeScreen() {
     day: 'numeric',
   });
 
+  const getTodayLogs = useLogStore((state) => state.getTodayLogs);
+  const todayLogs = useLogStore((state) => state.todayLogs);
+
+  useEffect(() => {
+    getTodayLogs();
+  }, [getTodayLogs]);
+
+  // Using empty callback since Joystick internally uses useSwipeLog
+  const handleSwipe = () => {};
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Hayat</Text>
         <Text style={styles.date}>{today}</Text>
+        <Text style={styles.actionCount}>
+          {todayLogs.length} action{todayLogs.length !== 1 ? 's' : ''} today
+        </Text>
       </View>
 
-      {/* Triangle layout preview for joysticks */}
       <View style={styles.triangleContainer}>
         {/* Afterlife — top center */}
         <View style={styles.topRow}>
-          <View style={[styles.joystickPlaceholder, { backgroundColor: pillars[0].positiveColor }]}>
-            <Text style={styles.pillarEmoji}>{pillars[0].emoji}</Text>
-          </View>
-          <Text style={styles.pillarLabel}>{pillars[0].name}</Text>
+          <Joystick pillarId={pillars[0].id} onSwipe={handleSwipe} />
         </View>
 
         {/* Self & Others — bottom row */}
         <View style={styles.bottomRow}>
-          <View style={styles.pillarGroup}>
-            <View style={[styles.joystickPlaceholder, { backgroundColor: pillars[1].positiveColor }]}>
-              <Text style={styles.pillarEmoji}>{pillars[1].emoji}</Text>
-            </View>
-            <Text style={styles.pillarLabel}>{pillars[1].name}</Text>
-          </View>
-
-          <View style={styles.pillarGroup}>
-            <View style={[styles.joystickPlaceholder, { backgroundColor: pillars[2].positiveColor }]}>
-              <Text style={styles.pillarEmoji}>{pillars[2].emoji}</Text>
-            </View>
-            <Text style={styles.pillarLabel}>{pillars[2].name}</Text>
-          </View>
+          <Joystick pillarId={pillars[1].id} onSwipe={handleSwipe} />
+          <Joystick pillarId={pillars[2].id} onSwipe={handleSwipe} />
         </View>
       </View>
-
-      <Text style={styles.placeholder}>Joystick interactions coming in Phase 2</Text>
     </SafeAreaView>
   );
 }
@@ -60,6 +58,7 @@ const styles = StyleSheet.create({
     paddingTop: spacing.lg,
     paddingBottom: spacing.xxl,
     alignItems: 'center',
+    gap: spacing.xs,
   },
   title: {
     fontFamily: typography.fontFamily.bold,
@@ -71,13 +70,19 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.regular,
     fontSize: typography.sizes.md,
     color: colors.textSecondary,
-    marginTop: spacing.xs,
+  },
+  actionCount: {
+    fontFamily: typography.fontFamily.medium,
+    fontSize: typography.sizes.sm,
+    color: colors.textMuted,
+    marginTop: spacing.sm,
   },
   triangleContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     gap: spacing.xxxl,
+    paddingBottom: spacing.xxxl,
   },
   topRow: {
     alignItems: 'center',
@@ -85,33 +90,6 @@ const styles = StyleSheet.create({
   bottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '80%',
-  },
-  pillarGroup: {
-    alignItems: 'center',
-  },
-  joystickPlaceholder: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    opacity: 0.85,
-  },
-  pillarEmoji: {
-    fontSize: 28,
-  },
-  pillarLabel: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: typography.sizes.sm,
-    color: colors.textSecondary,
-    marginTop: spacing.sm,
-  },
-  placeholder: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: typography.sizes.sm,
-    color: colors.textMuted,
-    textAlign: 'center',
-    paddingBottom: spacing.xxl,
+    width: '85%',
   },
 });
