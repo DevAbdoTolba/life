@@ -7,7 +7,11 @@
 module.exports = {
   displayName: 'unit',
   testEnvironment: 'node',
-  testMatch: ['<rootDir>/src/services/**/*.test.ts', '<rootDir>/src/utils/**/*.test.ts'],
+  testMatch: [
+    '<rootDir>/src/services/**/*.test.ts',
+    '<rootDir>/src/utils/**/*.test.ts',
+    '<rootDir>/src/stores/**/*.test.ts',
+  ],
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: {
