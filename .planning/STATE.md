@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 05-04-PLAN.md — onboarding carousel, gesture demo, and first-launch gate
-last_updated: "2026-03-23T22:21:41.257Z"
+stopped_at: Completed 05-03-PLAN.md — full Settings screen POLISH-02 delivered
+last_updated: "2026-03-23T22:22:57.016Z"
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 21
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 ## Current Position
 
 Phase: 05 (polish-launch) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Plan: 4 of 5
 | Phase 05-polish-launch P02 | 5 | 2 tasks | 4 files |
 | Phase 05-polish-launch P01 | 25 | 3 tasks | 9 files |
 | Phase 05 P04 | 15 | 2 tasks | 6 files |
+| Phase 05 P03 | 12min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Recent decisions affecting current work:
 - [Phase 05-polish-launch]: Full table replace (DELETE all + INSERT) for backup restore — simpler atomicity over UPSERT
 - [Phase 05]: Used <Redirect> component (not router.replace) in _layout.tsx for safe render-time redirect to onboarding
 - [Phase 05]: GestureSlide onboarding demo uses Gesture.Pan + Reanimated without logStore/addLog — demo only, no data recorded
+- [Phase 05]: Card padding overridden to 0 in SettingsSection to avoid double-padding with SettingsRow
+- [Phase 05]: Time picker uses Modal+TextInput (cross-platform) not Alert.prompt (iOS-only) in Settings
 
 ### Pending Todos
 
@@ -91,6 +94,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-23T22:21:41.254Z
-Stopped at: Completed 05-04-PLAN.md — onboarding carousel, gesture demo, and first-launch gate
+Last session: 2026-03-23T22:22:57.011Z
+Stopped at: Completed 05-03-PLAN.md — full Settings screen POLISH-02 delivered
 Resume file: None
