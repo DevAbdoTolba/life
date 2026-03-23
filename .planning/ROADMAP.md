@@ -121,7 +121,11 @@ Plans:
   1. Post-swipe note entry UI appears after a swipe log
   2. useSwipeLog passes note parameter to addLog()
   3. Notes display in log history views
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Store return type fix, useSwipeLog pendingLogId state, NoteEntryModal, Joystick wiring (LOG-04)
+- [ ] 06-02-PLAN.md — LogHistoryItem component, home screen today-log list, logStore unit tests (LOG-04)
 
 ### Phase 07: Integration Wiring Fixes
 **Goal**: Fix three integration gaps — privacy mode toggle, target soft-delete, and Android notification channel initialization.
@@ -154,6 +158,6 @@ Plans:
 | 03. Goals & Privacy | 4/4 | Complete | 2026-03-23 |
 | 04. Analytics & Viz | 4/4 | Complete | 2026-03-23 |
 | 05. Polish & Launch | 0/5 | Complete    | 2026-03-23 |
-| 06. Swipe Note Entry | 0/0 | Pending | — |
+| 06. Swipe Note Entry | 0/2 | Planned | — |
 | 07. Integration Wiring Fixes | 0/0 | Pending | — |
 | 08. Custom Date Range Picker | 0/0 | Pending | — |
