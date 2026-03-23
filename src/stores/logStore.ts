@@ -15,7 +15,7 @@ interface LogState {
     direction: SwipeDirectionType,
     targetId?: string | null,
     note?: string | null
-  ) => Promise<void>;
+  ) => Promise<string>;
   getTodayLogs: () => Promise<void>;
   getLogsByPeriod: (startDate: string, endDate: string) => Promise<Log[]>;
   getDailyLogsByPillar: (startDate: string, endDate: string) => Promise<DailyPillarCount[]>;
@@ -59,6 +59,8 @@ export const useLogStore = create<LogState>((set, get) => ({
     set((state) => ({
       todayLogs: [newLog, ...state.todayLogs],
     }));
+
+    return id;  // Return the generated UUID for post-swipe note modal
   },
 
   getTodayLogs: async () => {

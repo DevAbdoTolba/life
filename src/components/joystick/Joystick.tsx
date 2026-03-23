@@ -19,6 +19,7 @@ import type { SwipeDirection } from '../../constants/pillars';
 import { colors } from '../../constants/colors';
 import type { JoystickProps, SwipeResult } from './types';
 import { useSwipeLog } from './useSwipeLog';
+import { NoteEntryModal } from './NoteEntryModal';
 import { RadialMenu } from './RadialMenu';
 import { useRadialMenu } from './useRadialMenu';
 import {
@@ -84,7 +85,7 @@ export function Joystick({
   disabled = false,
 }: JoystickProps) {
   const pillar = getPillarById(pillarId);
-  const { handleSwipe } = useSwipeLog(pillarId);
+  const { handleSwipe, pendingLogId, clearPendingLogId } = useSwipeLog(pillarId);
   const { getTargetPositions, getClosestTarget } = useRadialMenu(pillarId);
 
   const [radialVisible, setRadialVisible] = React.useState(false);
@@ -366,6 +367,7 @@ export function Joystick({
         <Animated.Text style={styles.pillarName}>{pillar.name}</Animated.Text>
         <Animated.Text style={styles.pillarArabic}>{pillar.arabic}</Animated.Text>
       </View>
+      <NoteEntryModal logId={pendingLogId} onClose={clearPendingLogId} />
     </View>
   );
 }
