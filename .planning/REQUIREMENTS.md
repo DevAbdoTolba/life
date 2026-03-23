@@ -40,7 +40,7 @@
 ### Polish
 - [x] **POLISH-01**: Onboarding flow explaining 3 pillars + gesture tutorial
 - [x] **POLISH-02**: Settings screen (reminder frequency, codename password, data management)
-- [ ] **POLISH-03**: App icon and splash screen
+- [x] **POLISH-03**: App icon and splash screen
 
 ## v2 Requirements
 
@@ -93,7 +93,7 @@
 | NOTIFY-02 | Phase 5 | Complete |
 | POLISH-01 | Phase 5 | Complete |
 | POLISH-02 | Phase 5 | Complete |
-| POLISH-03 | Phase 5 | Pending |
+| POLISH-03 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 23 total

@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 05-03-PLAN.md — full Settings screen POLISH-02 delivered
-last_updated: "2026-03-23T22:22:57.016Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 05-05-PLAN.md — app icon and splash assets (POLISH-03) delivered
+last_updated: "2026-03-23T22:27:56.066Z"
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 21
-  completed_plans: 20
+  completed_plans: 21
 ---
 
 # Project State
@@ -48,6 +48,7 @@ Plan: 5 of 5
 | Phase 05-polish-launch P01 | 25 | 3 tasks | 9 files |
 | Phase 05 P04 | 15 | 2 tasks | 6 files |
 | Phase 05 P03 | 12min | 2 tasks | 3 files |
+| Phase 05 P05 | 12 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,8 @@ Recent decisions affecting current work:
 - [Phase 05]: GestureSlide onboarding demo uses Gesture.Pan + Reanimated without logStore/addLog — demo only, no data recorded
 - [Phase 05]: Card padding overridden to 0 in SettingsSection to avoid double-padding with SettingsRow
 - [Phase 05]: Time picker uses Modal+TextInput (cross-platform) not Alert.prompt (iOS-only) in Settings
+- [Phase 05]: Used sharp for SVG-to-PNG icon generation (reproducible, no external tools needed)
+- [Phase 05]: Android adaptive foreground scaled to 66% safe zone per Android spec
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-23T22:22:57.011Z
-Stopped at: Completed 05-03-PLAN.md — full Settings screen POLISH-02 delivered
+Last session: 2026-03-23T22:27:56.062Z
+Stopped at: Completed 05-05-PLAN.md — app icon and splash assets (POLISH-03) delivered
 Resume file: None
