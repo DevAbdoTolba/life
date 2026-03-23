@@ -1,5 +1,5 @@
 import { MMKV } from 'react-native-mmkv';
-import { StateStorage } from 'zustand/middleware';
+import type { StateStorage } from 'zustand/middleware';
 
 // Single MMKV instance for the app
 export const mmkvStorage = new MMKV({
