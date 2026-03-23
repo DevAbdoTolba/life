@@ -1,0 +1,141 @@
+---
+phase: 1
+plan: 2
+wave: 1
+---
+
+# Plan 1.2: Design System & Theme
+
+## Objective
+Define the complete design system — dark theme, pillar colors (6 total), typography (Inter font), spacing scale, and shared constants. After this plan, every future component will import from a single source of truth for styling.
+
+## Context
+- .gsd/SPEC.md — Pillar definitions (lines 33-43), color associations
+- .gsd/DECISIONS.md — ADR-008 (dark mode only), ADR-009 (minimalist Inter font), ADR-010 (triangle layout)
+- .gsd/RESEARCH.md — Tech stack
+
+## Tasks
+
+<task type="auto">
+  <name>Create theme constants and design tokens</name>
+  <files>
+    - src/constants/theme.ts (created)
+    - src/constants/pillars.ts (created)
+    - src/constants/colors.ts (created)
+    - src/constants/index.ts (created)
+  </files>
+  <action>
+    Create the design system files under `src/constants/`:
+
+    **colors.ts** — All color tokens:
+    ```
+    Dark theme base:
+    - background: #0A0A0F (near-black with slight blue)
+    - surface: #14141F (cards, elevated surfaces)
+    - surfaceLight: #1E1E2E (hover states, subtle elevation)
+    - border: #2A2A3A (subtle borders)
+    - textPrimary: #F0F0F5 (main text, high contrast)
+    - textSecondary: #8888A0 (labels, descriptions)
+    - textMuted: #555570 (disabled, hints)
+
+    Pillar positive colors (for UP and RIGHT swipes):
+    - afterlifePositive: #F5A623 (Golden/Amber)
+    - selfPositive: #10B981 (Emerald Green)
+    - othersPositive: #3B82F6 (Sky Blue)
+
+    Pillar negative colors (for DOWN and LEFT swipes):
+    - afterlifeNegative: #6B21A8 (Deep Purple)
+    - selfNegative: #EF4444 (Crimson Red)
+    - othersNegative: #64748B (Slate Gray)
+
+    UI accent:
+    - accent: #F5A623 (match Afterlife gold — spiritual theme)
+    - success: #10B981
+    - warning: #F59E0B
+    - error: #EF4444
+    ```
+
+    **pillars.ts** — Pillar metadata:
+    ```
+    Array of 3 pillar objects:
+    {
+      id: 1 | 2 | 3,
+      key: 'afterlife' | 'self' | 'others',
+      name: 'Afterlife' | 'With Self' | 'With Others',
+      arabic: 'الآخرة' | 'مع النفس' | 'مع الناس',
+      emoji: '🕌' | '💪' | '🤝',
+      positiveColor: from colors.ts,
+      negativeColor: from colors.ts,
+      description: string
+    }
+    ```
+
+    Also define a SwipeDirection enum: UP, DOWN, LEFT, RIGHT with labels:
+    ```
+    UP: { label: 'Direct Positive', valence: 'positive', type: 'direct' }
+    DOWN: { label: 'Direct Negative', valence: 'negative', type: 'direct' }
+    RIGHT: { label: 'Indirect Positive', valence: 'positive', type: 'indirect' }
+    LEFT: { label: 'Indirect Negative', valence: 'negative', type: 'indirect' }
+    ```
+
+    **theme.ts** — Typography, spacing, border radii:
+    ```
+    Typography:
+    - fontFamily: 'Inter' (will be loaded via expo-font)
+    - sizes: { xs: 10, sm: 12, md: 14, lg: 16, xl: 20, xxl: 28, hero: 36 }
+    - weights: { regular: '400', medium: '500', semibold: '600', bold: '700' }
+
+    Spacing (4px base):
+    - xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, xxxl: 48
+
+    Border Radii:
+    - sm: 8, md: 12, lg: 16, xl: 24, full: 9999
+
+    Shadows (for dark mode — subtle glows):
+    - subtle: { shadowColor, shadowOffset, shadowOpacity, shadowRadius }
+    ```
+
+    **index.ts** — Re-export everything from one entry point.
+
+    NOTE: Do NOT hardcode any color values anywhere else in the app. Every component must import from these constants.
+  </action>
+  <verify>
+    - TypeScript compiles: `npx tsc --noEmit`
+    - All 6 pillar colors defined (3 positive, 3 negative)
+    - Pillar metadata array has exactly 3 entries
+    - SwipeDirection has exactly 4 entries with correct valence/type
+  </verify>
+  <done>Design system fully defined in src/constants/ with colors, pillars, theme tokens, and SwipeDirection enum. All exported from index.ts.</done>
+</task>
+
+<task type="auto">
+  <name>Load Inter font and configure global styles</name>
+  <files>
+    - app/_layout.tsx (modified — root layout)
+    - src/constants/fonts.ts (created — if needed)
+  </files>
+  <action>
+    1. Download Inter font: use `expo-font` to load Inter from Google Fonts or `@expo-google-fonts/inter`
+       - Install: `npx expo install @expo-google-fonts/inter`
+    2. In the root `app/_layout.tsx`:
+       - Use `useFonts` hook to load Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold
+       - Show SplashScreen until fonts load (`expo-splash-screen`)
+       - Set StatusBar to light (for dark mode)
+       - Apply dark background color to root view
+    3. Ensure the font family names match what's referenced in theme.ts
+  </action>
+  <verify>
+    - App boots with Inter font loaded (visible in text rendering)
+    - SplashScreen hides after fonts load
+    - StatusBar is light-content (white text on dark background)
+  </verify>
+  <done>Inter font loads on app boot. Root layout applies dark background. StatusBar configured for dark mode.</done>
+</task>
+
+## Success Criteria
+- [ ] All color tokens defined in a single source of truth (colors.ts)
+- [ ] 3 pillar definitions with metadata, colors, and Arabic names
+- [ ] SwipeDirection enum with 4 directions and valence/type labels
+- [ ] Typography scale, spacing scale, and border radii defined
+- [ ] Inter font loads successfully on app boot
+- [ ] Dark mode applied globally (dark background, light text)

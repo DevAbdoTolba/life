@@ -1,0 +1,174 @@
+---
+phase: 1
+plan: 4
+wave: 2
+---
+
+# Plan 1.4: Navigation Shell & Reusable Components
+
+## Objective
+Set up the tab-based navigation structure (Home, Analytics, Goals, Settings) with placeholder screens, and create the reusable UI component library. After this plan, the app has working navigation and a component toolkit ready for Phase 2.
+
+## Context
+- .gsd/SPEC.md — Navigation structure, pillar definitions
+- .gsd/DECISIONS.md — ADR-010 (triangle layout), ADR-008 (dark mode)
+- src/constants/ — Theme tokens, colors, pillars (from Plan 1.2)
+
+## Tasks
+
+<task type="auto">
+  <name>Configure expo-router tab navigation</name>
+  <files>
+    - app/(tabs)/_layout.tsx (created or modified)
+    - app/(tabs)/index.tsx (Home screen placeholder)
+    - app/(tabs)/analytics.tsx (Analytics screen placeholder)
+    - app/(tabs)/goals.tsx (Goals screen placeholder)
+    - app/(tabs)/settings.tsx (Settings screen placeholder)
+    - app/_layout.tsx (modified — ensure tabs are root)
+  </files>
+  <action>
+    Set up expo-router file-based navigation:
+
+    1. Create the `(tabs)` group layout at `app/(tabs)/_layout.tsx`:
+       - 4 tabs: Home (🏠), Analytics (📊), Goals (🎯), Settings (⚙️)
+       - Tab bar styling: dark background matching theme (colors.background or colors.surface)
+       - Active tab: accent color (#F5A623 gold)
+       - Inactive tab: textMuted color
+       - Tab bar should be sleek and minimal — no labels, just icons, with a subtle top border
+       - Use proper icons from `@expo/vector-icons` (Ionicons or MaterialCommunityIcons)
+
+    2. Create placeholder screens for each tab:
+       Each placeholder should:
+       - Use dark background from theme
+       - Show the screen name and a relevant emoji centered
+       - Use Inter font from theme
+       - Apply consistent padding from spacing scale
+
+       **Home (index.tsx)**:
+       - Title: "Hayat"
+       - Subtitle showing today's date
+       - Placeholder text: "Joysticks coming in Phase 2"
+       - Show 3 colored circles in triangle layout as placeholders for the joysticks
+         (Afterlife gold top, Self green bottom-left, Others blue bottom-right)
+
+       **Analytics (analytics.tsx)**:
+       - Title: "Analytics"
+       - Placeholder: "Charts & body-fill visualization coming in Phase 4"
+
+       **Goals (goals.tsx)**:
+       - Title: "Goals"
+       - Placeholder: "Target management coming in Phase 3"
+
+       **Settings (settings.tsx)**:
+       - Title: "Settings"
+       - Placeholder: "Reminders, export, privacy coming in Phase 5"
+
+    3. Ensure smooth tab switching with no flicker or white flash (dark backgrounds on all screens)
+  </action>
+  <verify>
+    - App boots to Home tab by default
+    - All 4 tabs are visible and navigable
+    - Tab icons show with correct active/inactive colors
+    - No white flash when switching tabs (dark backgrounds everywhere)
+    - Home shows 3 colored circles in triangle arrangement
+  </verify>
+  <done>4-tab navigation works smoothly. Each tab has a styled dark placeholder screen. Home shows triangle layout preview with pillar colors.</done>
+</task>
+
+<task type="auto">
+  <name>Create reusable UI components</name>
+  <files>
+    - src/components/ui/ScreenContainer.tsx (created)
+    - src/components/ui/Card.tsx (created)
+    - src/components/ui/Button.tsx (created)
+    - src/components/ui/Text.tsx (created)
+    - src/components/ui/Badge.tsx (created)
+    - src/components/ui/Modal.tsx (created)
+    - src/components/ui/index.ts (created)
+  </files>
+  <action>
+    Create reusable components under `src/components/ui/`:
+
+    **ScreenContainer.tsx** — Wrapper for all screens:
+    - SafeAreaView with dark background
+    - Consistent padding (xl = 24)
+    - Props: children, style (override), scrollable (boolean, default false)
+    - If scrollable, wrap children in ScrollView
+
+    **Text.tsx** — Themed text component:
+    - Wraps React Native Text with Inter font family
+    - Props: variant ('hero' | 'title' | 'subtitle' | 'body' | 'caption' | 'label')
+    - Each variant maps to size/weight from theme.ts
+    - Default color: textPrimary
+    - Props: color (optional override), align, style
+
+    **Card.tsx** — Elevated surface:
+    - Background: colors.surface
+    - Border radius: borderRadius.lg (16)
+    - Padding: spacing.lg (16)
+    - Optional border (1px colors.border)
+    - Props: children, style, onPress (optional — makes it pressable with opacity feedback)
+
+    **Button.tsx** — Action button:
+    - Variants: 'primary' (accent color fill), 'secondary' (outlined), 'ghost' (no border)
+    - Sizes: 'sm', 'md', 'lg'
+    - Props: label, onPress, variant, size, disabled, loading, icon (optional)
+    - Haptic feedback on press (expo-haptics — ImpactFeedbackStyle.Light)
+    - Subtle press animation (scale down to 0.97 using Reanimated)
+
+    **Badge.tsx** — Small status indicator:
+    - Shows pillar color dot + text
+    - Props: text, color, size ('sm' | 'md')
+    - Used for showing pillar indicators, direction labels, status tags
+
+    **Modal.tsx** — Bottom sheet modal:
+    - Slides up from bottom with dark overlay
+    - Uses Reanimated for smooth animation
+    - Props: visible, onClose, title, children
+    - Drag-to-dismiss gesture (using gesture-handler PanGesture)
+    - Dark surface background with rounded top corners
+
+    **index.ts** — Re-export all components.
+
+    IMPORTANT: All components must:
+    - Import colors/theme from src/constants
+    - Use Inter font family
+    - Have proper TypeScript props interfaces
+    - Support style overrides via `style` prop
+  </action>
+  <verify>
+    - TypeScript compiles: `npx tsc --noEmit`
+    - All 6 components export from index.ts
+    - ScreenContainer renders with dark background
+    - Text renders with Inter font in all variants
+    - Button has haptic feedback (test on device)
+    - Modal animates in/out smoothly
+  </verify>
+  <done>6 reusable UI components created with consistent dark theme, Inter typography, and smooth animations. All exported from src/components/ui/index.ts.</done>
+</task>
+
+<task type="checkpoint:human-verify">
+  <name>Visual verification — app shell looks correct</name>
+  <files>None — visual check only</files>
+  <action>
+    Boot the app on a device or simulator and verify:
+    1. Dark mode throughout — no white flashes on any screen
+    2. Inter font renders correctly on all text
+    3. Tab bar is visible with correct icons and accent color
+    4. Home screen shows 3 colored circles in triangle layout
+    5. All tabs navigate correctly
+    6. Overall feel is clean, minimal, and dark
+  </action>
+  <verify>User confirms visual appearance is correct</verify>
+  <done>User approves the app shell appearance.</done>
+</task>
+
+## Success Criteria
+- [ ] 4 tabs work: Home, Analytics, Goals, Settings
+- [ ] Tab bar has dark styling with gold accent for active tab
+- [ ] Home screen shows triangle layout preview with 3 pillar-colored circles
+- [ ] 6 reusable components created (ScreenContainer, Text, Card, Button, Badge, Modal)
+- [ ] All components use theme constants (no hardcoded colors/sizes)
+- [ ] Inter font renders correctly throughout the app
+- [ ] No white flash between screen transitions
+- [ ] App feels clean, minimal, dark, and premium
