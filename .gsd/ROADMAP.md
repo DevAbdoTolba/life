@@ -53,7 +53,7 @@
 - Handle edge cases (accidental swipes, incomplete gestures)
 
 ### Phase 3: Goals, Targets & Privacy
-**Status**: ⬜ Not Started
+**Status**: ✅ Complete
 **Objective**: Build the goal/target management system with full lifecycle tracking and the privacy codename feature.
 **Delivers**: Users can create, edit, mask, complete, pause, and archive goals. Goals appear as targets in the joystick hold menu.
 **Key Tasks**:
