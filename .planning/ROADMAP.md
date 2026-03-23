@@ -84,7 +84,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — Install chart dependencies, data aggregation layer, analytics screen scaffold with period selector
-- [ ] 04-02-PLAN.md — Build chart components (bar, donut, trend line, summary stats) and wire into analytics screen
+- [x] 04-02-PLAN.md — Build chart components (bar, donut, trend line, summary stats) and wire into analytics screen
 - [ ] 04-03-PLAN.md — Physics body-fill visualization (SVG body, Matter.js engine, Skia canvas, full-screen modal)
 - [ ] 04-04-PLAN.md — Comparison cards, target analytics, body-fill preview card, final integration
 
