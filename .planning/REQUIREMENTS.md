@@ -30,8 +30,8 @@
 - [x] **VIZ-01**: Bullet journal style charts (bar, pie, trend lines) for any time period
 - [x] **VIZ-02**: Physics-based human body silhouette fills with colored balls representing actions
 - [x] **VIZ-03**: Custom time period selector (today, week, month, Ramadan, custom range)
-- [ ] **VIZ-04**: Period comparison view (this week vs last week)
-- [ ] **VIZ-05**: Target-specific analytics (trending for individual targets)
+- [x] **VIZ-04**: Period comparison view (this week vs last week)
+- [x] **VIZ-05**: Target-specific analytics (trending for individual targets)
 
 ### Notifications
 - [ ] **NOTIFY-01**: Configurable daily review notification prompting user to log
@@ -87,8 +87,8 @@
 | VIZ-01 | Phase 4 | Complete |
 | VIZ-02 | Phase 4 | Complete |
 | VIZ-03 | Phase 4 | Complete |
-| VIZ-04 | Phase 4 | Pending |
-| VIZ-05 | Phase 4 | Pending |
+| VIZ-04 | Phase 4 | Complete |
+| VIZ-05 | Phase 4 | Complete |
 | NOTIFY-01 | Phase 5 | Pending |
 | NOTIFY-02 | Phase 5 | Pending |
 | POLISH-01 | Phase 5 | Pending |
