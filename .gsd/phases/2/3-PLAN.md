@@ -1,0 +1,156 @@
+---
+phase: 2
+plan: 3
+wave: 2
+depends_on: ["1"]
+files_modified:
+  - src/components/joystick/RadialMenu.tsx
+  - src/components/joystick/useRadialMenu.ts
+  - src/components/joystick/Joystick.tsx
+autonomous: true
+user_setup: []
+
+must_haves:
+  truths:
+    - "Swipe + hold for 400ms triggers radial menu appearance"
+    - "Radial menu shows active targets for the specific pillar"
+    - "User can drag to a target to create a targeted log"
+    - "Releasing without selecting a target creates a basic (untargeted) log"
+    - "Masked targets show codename in radial menu"
+  artifacts:
+    - "src/components/joystick/RadialMenu.tsx exists"
+    - "src/components/joystick/useRadialMenu.ts exists"
+---
+
+# Plan 2.3: Radial Target Menu
+
+<objective>
+Build the swipe+hold radial menu that lets users tag log entries with specific targets. This is the "targeted log" flow.
+
+Purpose: Quick swipes log general actions, but the radial menu lets users be specific — "I didn't just do something positive for Self, I specifically exercised" (target: Exercise). This is a key differentiator of the app.
+
+Output: Holding during a joystick swipe reveals a radial arc of target bubbles. Dragging to one creates a targeted log.
+</objective>
+
+<context>
+Load for context:
+- .gsd/DECISIONS.md — ADR-014 (show all targets), ADR-016 (composed gestures), ADR-017 (release = basic log), ADR-018 (codename if masked)
+- src/components/joystick/Joystick.tsx — Base component with composed gesture
+- src/components/joystick/types.ts — JoystickProps.onHoldStart
+- src/stores/targetStore.ts — getTargetsByPillar, Target type
+- src/database/types.ts — Target interface
+- src/constants/pillars.ts — PillarId, pillar colors
+- src/constants/theme.ts — animation config
+</context>
+
+<tasks>
+
+<task type="auto">
+  <name>Create RadialMenu component</name>
+  <files>
+    src/components/joystick/RadialMenu.tsx
+    src/components/joystick/useRadialMenu.ts
+  </files>
+  <action>
+    **Create `useRadialMenu.ts` hook:**
+    - Takes `pillarId: PillarId`
+    - Reads active targets from `useTargetStore` filtered by pillarId and status === 'active'
+    - Calculates arc positions for each target:
+      - Targets arranged in a semicircular arc in the swipe direction
+      - Arc radius = 80px from joystick center
+      - Arc span = 120 degrees (e.g., from -60° to +60° around the swipe direction)
+      - Spacing = arcSpan / (numTargets + 1) — evenly distributed
+    - Returns: { targets, getTargetPositions(direction), getClosestTarget(x, y) }
+    - `getClosestTarget`: given current drag position, returns the closest target if within 30px hit radius, or null
+
+    **Create `RadialMenu.tsx` component:**
+    - Props: { visible: boolean, direction: SwipeDirection, pillarId: PillarId, thumbPosition: { x: number, y: number }, onSelectTarget: (targetId: string) => void }
+    - Renders target bubbles in arc arrangement when visible=true
+
+    **Each target bubble:**
+    - 44px circle with pillar color background (slightly transparent)
+    - Text inside: show `target.codename` if `target.isMasked`, else `target.realName` — truncated to ~8 chars (ADR-018)
+    - The currently hovered/closest target scales up to 1.2x and increases opacity
+    - Uses `useAnimatedStyle` driven by shared value from parent thumb position
+
+    **Appearance animation:**
+    - On visible → true: bubbles scale from 0 → 1 with staggered springs (each bubble delayed by 30ms)
+    - On visible → false: all bubbles scale to 0 simultaneously (fast, 100ms)
+
+    **Empty state:**
+    - If no active targets for pillar, show a single muted bubble with text "Add target" or just don't show the radial (log basic entry)
+
+    AVOID: Don't put the gesture handling here — the RadialMenu is purely visual. Gesture coordination stays in Joystick.tsx.
+    AVOID: Don't fetch targets on every render — useTargetStore already provides reactive data via Zustand.
+  </action>
+  <verify>Component compiles without errors. Can be rendered standalone with mock data to verify arc positioning and animations.</verify>
+  <done>
+    RadialMenu renders target bubbles in semicircular arc. Bubbles show codename/realname per ADR-018. Staggered spring entrance animation. Hit detection via getClosestTarget(). Empty state handled.
+  </done>
+</task>
+
+<task type="auto">
+  <name>Integrate radial menu into Joystick gesture flow</name>
+  <files>src/components/joystick/Joystick.tsx</files>
+  <action>
+    Update Joystick.tsx to orchestrate the hold → radial menu → target selection flow:
+
+    1. **State management (shared values):**
+       - Add `isHolding` shared value (0 or 1)
+       - Add `holdDirection` shared value (encoded as number: 0=up, 1=down, 2=left, 3=right)
+       - Add `selectedTargetId` ref (string | null)
+
+    2. **Update composed gesture flow:**
+       - LongPress.onStart: set `isHolding = 1`, call `runOnJS(showRadialMenu)(currentDirection)`
+       - Pan.onUpdate (when isHolding): continue tracking thumb position, pass to RadialMenu for hit detection
+       - Pan.onEnd (when isHolding):
+         a. Check if a target is selected (hit detection from RadialMenu)
+         b. If target selected: call `logStore.addLog(pillarId, direction, targetId)` + haptic `Haptics.notificationAsync(Success)`
+         c. If no target selected: call `logStore.addLog(pillarId, direction, null)` + haptic `Haptics.impactAsync(Medium)` (ADR-017: still log basic entry)
+         d. Hide radial menu, snap knob back
+
+    3. **Render RadialMenu:**
+       - Place `<RadialMenu>` as a sibling/overlay to the joystick
+       - Pass `visible`, `direction`, `pillarId`, `thumbPosition` from shared values (bridge to JS via `useDerivedValue` or `runOnJS`)
+
+    4. **Different haptic for targeted vs untargeted:**
+       - Untargeted swipe: `Haptics.impactAsync(Medium)` — quick thump
+       - Targeted selection: `Haptics.notificationAsync(NotificationFeedbackType.Success)` — satisfying "done" feel
+
+    AVOID: Don't read target data inside a worklet — target filtering is a JS operation. Use `runOnJS` to bridge.
+    AVOID: Don't block pan gesture updates when radial is visible — user needs to keep dragging to targets.
+    AVOID: Don't add visual complexity to the joystick itself when radial is open — keep the knob tracked to thumb, let the radial bubbles do the visual work.
+  </action>
+  <verify>
+    On device/simulator:
+    1. Quick swipe = log created (no radial menu)
+    2. Swipe and hold 400ms = radial menu appears with targets
+    3. Drag to a target = targeted log created with targetId
+    4. Hold but release without target = basic log created (ADR-017)
+    5. Different haptic pattern for targeted vs untargeted
+  </verify>
+  <done>
+    Joystick supports both quick-swipe (basic log) and swipe+hold (targeted log via radial menu). RadialMenu appears on hold, targets are selectable by dragging. Release without selection still creates basic log. Haptic patterns differ between targeted and untargeted logs.
+  </done>
+</task>
+
+</tasks>
+
+<verification>
+After all tasks, verify:
+- [ ] Hold for 400ms triggers radial menu
+- [ ] Radial menu shows correct targets for pillar
+- [ ] Masked targets show codename (ADR-018)
+- [ ] Dragging to target selects it (targeted log)
+- [ ] Releasing without target creates basic log (ADR-017)
+- [ ] Different haptic feedback for targeted vs untargeted
+- [ ] Staggered entrance animation for target bubbles
+- [ ] Empty state handled (no targets for pillar)
+</verification>
+
+<success_criteria>
+- [ ] Targeted log flow works end-to-end (swipe → hold → select → logged)
+- [ ] User can attach a target to a log in < 4 seconds (SPEC success criterion)
+- [ ] Radial menu respects privacy settings (codenames)
+- [ ] Quick swipe flow (Plan 2.2) still works undisturbed
+</success_criteria>

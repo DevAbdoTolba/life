@@ -1,0 +1,163 @@
+---
+phase: 2
+plan: 1
+wave: 1
+depends_on: []
+files_modified:
+  - src/components/joystick/Joystick.tsx
+  - src/components/joystick/index.ts
+  - src/components/joystick/constants.ts
+  - src/components/joystick/types.ts
+autonomous: true
+user_setup: []
+
+must_haves:
+  truths:
+    - "Joystick knob follows user's thumb via Pan gesture on native UI thread"
+    - "4-directional swipe detection works with 45° wedge algorithm"
+    - "Knob snaps back to center with spring animation on release"
+    - "Visual feedback reflects swipe direction (color change + glow)"
+    - "Direction indicators (subtle arrows/dots) visible at N/S/E/W positions"
+  artifacts:
+    - "src/components/joystick/Joystick.tsx exists"
+    - "src/components/joystick/constants.ts exports JOYSTICK_SIZE, KNOB_SIZE, SWIPE_THRESHOLD, DIRECTION_ANGLE"
+    - "src/components/joystick/types.ts exports JoystickProps, SwipeResult"
+---
+
+# Plan 2.1: Core Joystick Component
+
+<objective>
+Build the foundational Joystick component with pan gesture, animated knob, spring snap-back, and 4-directional swipe detection.
+
+Purpose: This is the core interaction primitive that all other Phase 2 work depends on. The joystick must feel responsive and fluid — it runs on the native UI thread via Reanimated worklets.
+
+Output: A self-contained `<Joystick>` component that detects swipe direction and calls an `onSwipe` callback. No database wiring yet — that's Plan 2.2.
+</objective>
+
+<context>
+Load for context:
+- .gsd/SPEC.md — Swipe directions, gesture requirements
+- .gsd/DECISIONS.md — ADR-016 (composed gestures), ADR-019 (game controller feel), ADR-021 (100px size)
+- src/constants/pillars.ts — SwipeDirection type, DirectionInfo, pillar colors
+- src/constants/theme.ts — animation.spring config, shadows.glow()
+- src/constants/colors.ts — color tokens
+</context>
+
+<tasks>
+
+<task type="auto">
+  <name>Create joystick types and constants</name>
+  <files>
+    src/components/joystick/types.ts
+    src/components/joystick/constants.ts
+    src/components/joystick/index.ts
+  </files>
+  <action>
+    Create `types.ts`:
+    - `JoystickProps`: { pillarId: PillarId, onSwipe: (result: SwipeResult) => void, onHoldStart?: (direction: SwipeDirection) => void, onHoldEnd?: () => void, disabled?: boolean }
+    - `SwipeResult`: { pillarId: PillarId, direction: SwipeDirection, wasHeld: boolean }
+    - `JoystickState`: 'idle' | 'dragging' | 'holding' | 'completing'
+
+    Create `constants.ts`:
+    - JOYSTICK_SIZE = 100 (outer container diameter)
+    - KNOB_SIZE = 56 (draggable knob diameter)
+    - SWIPE_THRESHOLD = 30 (minimum px to register a swipe — ADR edge case handling)
+    - HOLD_DURATION = 400 (ms before hold triggers — fast enough to not feel sluggish)
+    - MAX_DRAG_DISTANCE = 40 (max px the knob can travel from center)
+    - DEBOUNCE_MS = 300 (prevent double-logging on rapid swipes)
+    - DIRECTION_ANGLE = 45 (degrees per wedge for direction detection)
+    - SNAP_BACK_CONFIG = { damping: 15, stiffness: 150, mass: 1 } (from theme.ts animation.spring)
+
+    Create `index.ts`:
+    - Re-export Joystick component, types, and constants
+
+    AVOID: Don't make JOYSTICK_SIZE responsive/dynamic yet — fixed sizes first. Dynamic sizing is premature optimization.
+  </action>
+  <verify>Check that all files exist and TypeScript types are valid: `npx tsc --noEmit src/components/joystick/types.ts` (or equivalent type-check)</verify>
+  <done>types.ts exports JoystickProps + SwipeResult + JoystickState. constants.ts exports all 7 constants. index.ts re-exports everything.</done>
+</task>
+
+<task type="auto">
+  <name>Build Joystick component with gesture and animation</name>
+  <files>src/components/joystick/Joystick.tsx</files>
+  <action>
+    Build the `<Joystick>` component:
+
+    **Structure:**
+    ```
+    <GestureDetector gesture={composedGesture}>
+      <Animated.View style={outerRing}>        ← 100px circle, pillar color border/glow
+        <DirectionIndicators />                ← 4 subtle dots/arrows at N/S/E/W
+        <Animated.View style={knobStyle}>      ← 56px draggable circle
+          <Text>{pillar.emoji}</Text>
+        </Animated.View>
+      </Animated.View>
+    </GestureDetector>
+    ```
+
+    **Gesture setup (ADR-016: composed gestures):**
+    - `const pan = Gesture.Pan()` — tracks knob translation
+      - `onStart`: reset state
+      - `onUpdate`: clamp translation to MAX_DRAG_DISTANCE using `Math.min(distance, MAX_DRAG_DISTANCE)` and polar coordinates. Update `translateX`/`translateY` shared values.
+      - `onEnd`: if translation > SWIPE_THRESHOLD, calculate direction via `Math.atan2(y, x)` mapped to 4 wedges (up/down/left/right). Call `onSwipe(result)`. Animate knob back to center with spring.
+    - `const longPress = Gesture.LongPress().minDuration(HOLD_DURATION)` — triggers hold mode
+      - `onStart`: call `onHoldStart(currentDirection)` (for radial menu — Plan 2.3)
+    - `const composed = Gesture.Simultaneous(pan, longPress)`
+
+    **Direction detection algorithm (45° wedges):**
+    ```
+    angle = Math.atan2(-translationY, translationX) * (180 / Math.PI)
+    // Normalize to 0-360
+    if angle < 0: angle += 360
+    // Map: 45-135 = up, 225-315 = down, 315-45 = right, 135-225 = left
+    ```
+    Note: Y is inverted in screen coordinates, hence `-translationY`.
+
+    **Animation:**
+    - Knob position: `useSharedValue(0)` for X and Y
+    - Snap-back: `withSpring(0, SNAP_BACK_CONFIG)` on both axes
+    - Color feedback: knob background color interpolates based on direction — use `interpolateColor` from reanimated. Positive directions (up, right) → pillar.positiveColor, Negative (down, left) → pillar.negativeColor
+    - Glow effect: outer ring shadow intensifies during drag using `useAnimatedStyle`
+
+    **Direction indicators:**
+    - 4 small circles (6px) positioned at top, bottom, left, right of the outer ring
+    - Opacity animates: the indicator in the active swipe direction brightens (opacity 1), others dim (opacity 0.3)
+    - Use `useAnimatedStyle` to reactively update based on current swipe direction
+
+    **Pillar label:**
+    - Render pillar name + arabic below the joystick (outside the gesture area)
+
+    AVOID: Don't use `runOnJS` for gesture callbacks in the middle of gestures — keep everything on the UI thread with shared values. Only use `runOnJS` at `onEnd` to call the JS-thread `onSwipe` callback.
+    AVOID: Don't use `Animated` from react-native — use ONLY `Animated` from react-native-reanimated.
+    AVOID: Don't add haptic feedback here — that's Plan 2.2's responsibility.
+  </action>
+  <verify>
+    App compiles without errors: `npx expo start` loads without crash.
+    Can test by temporarily rendering a single Joystick on the home screen with a console.log onSwipe callback.
+  </verify>
+  <done>
+    Joystick component renders a 100px outer ring with a 56px draggable knob inside. Knob follows thumb on pan, clamps to max distance, detects 4 directions via atan2, snaps back with spring animation, and calls onSwipe with {pillarId, direction, wasHeld}. Direction indicators animate based on active direction. Color feedback reflects positive/negative valence.
+  </done>
+</task>
+
+</tasks>
+
+<verification>
+After all tasks, verify:
+- [ ] Joystick renders with correct pillar color on outer ring
+- [ ] Knob follows thumb drag smoothly (60fps on native thread)
+- [ ] Knob does not exceed MAX_DRAG_DISTANCE from center
+- [ ] Swipe direction correctly detected for all 4 directions
+- [ ] Sub-threshold drags do NOT trigger onSwipe
+- [ ] Knob snaps back to center with spring physics on release
+- [ ] Direction indicators highlight the active direction during drag
+- [ ] Composed gesture supports both quick-swipe and hold detection
+</verification>
+
+<success_criteria>
+- [ ] All type definitions compile without errors
+- [ ] Joystick renders and responds to gestures
+- [ ] Direction detection is accurate for all 4 quadrants
+- [ ] Spring snap-back animation is smooth
+- [ ] onSwipe callback fires with correct SwipeResult
+</success_criteria>

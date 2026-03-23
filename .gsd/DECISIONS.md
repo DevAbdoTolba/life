@@ -89,3 +89,70 @@
 **Context**: Daily review was originally a separate tab/screen. User clarified it should be simpler.
 **Decision**: Daily review is a scheduled notification that prompts the user to open the app and log. No separate review screen — the review IS the act of logging from Home.
 **Rationale**: Keeps the app lightweight. The user's mental model is "notification reminds me → I open app → I log via joysticks." No extra UI needed.
+
+---
+
+## Phase 2 Discussion Decisions (2026-03-23)
+
+## ADR-013: Quick Swipe Confirmation — Haptic + Animation Only
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: After a quick swipe log, need to decide if a toast/overlay confirms the action.
+**Decision**: No toast or overlay. Haptic feedback + color flash animation + snap-back is sufficient confirmation.
+**Rationale**: The < 2 second logging goal means zero UI friction. Visual animation + haptic is immediate and doesn't block the screen.
+
+## ADR-014: Radial Menu Shows All Pillar Targets
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Should the swipe+hold radial menu filter targets by direction (positive/negative) or show all?
+**Decision**: Show all active targets for the pillar, regardless of swipe direction.
+**Rationale**: Users may want to tag any target with any direction. Filtering would confuse the mental model.
+
+## ADR-015: Direction Arrow Indicator During Swipe
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Should the joystick show directional arrows/indicators while swiping?
+**Decision**: Yes — subtle directional indicators at N/S/E/W positions around the joystick.
+**Rationale**: Provides visual reinforcement of which direction the user is swiping, especially for new users.
+
+## ADR-016: Gesture Architecture — Composed (Pan + LongPress)
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Two approaches: simple Pan with setTimeout hold detection, or RNGH v2 composed gestures.
+**Decision**: Use `Gesture.Simultaneous(Gesture.Pan(), Gesture.LongPress())` from RNGH v2.
+**Rationale**: Runs on native UI thread for 60fps. Cleaner separation of quick-swipe vs hold logic. Designed for multi-gesture interactions.
+
+## ADR-017: Release Without Target = Log Basic Entry
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: If user swipes + holds but releases without selecting a target from the radial menu.
+**Decision**: Still log a basic (untargeted) directional entry.
+**Rationale**: The user already committed to the swipe direction. Canceling entirely would feel like lost effort.
+
+## ADR-018: Radial Menu Shows Codename If Masked
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Should the radial menu show real names or codenames for masked targets?
+**Decision**: Show codename if target is masked, real name if not masked.
+**Rationale**: Privacy is the point of codenames. Showing real names in the radial menu defeats the purpose.
+
+## ADR-019: Joystick Visual Style — Game Controller Feel
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Should the joystick feel like a game controller analog stick or a compass/radial control?
+**Decision**: Game controller analog stick feel.
+**Rationale**: More intuitive, more fun, matches the "joystick" naming in the spec.
+
+## ADR-020: Home Screen — Joysticks Only (No Log Feed)
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Should the home screen include a scrollable log feed below the joysticks?
+**Decision**: Home screen is purely the triangle of joysticks. No scrolling, no log feed.
+**Rationale**: Keeps the interaction space clean and focused. Log history belongs in Analytics. Avoids scroll vs swipe gesture conflicts.
+
+## ADR-021: Joystick Size — 100px
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Joystick knob/container size for thumb reach on mobile.
+**Decision**: 100px diameter for the joystick container. Knob itself slightly smaller (~60px).
+**Rationale**: Good balance of thumb reach and screen real estate. Spec requires one-hand use designed for thumb reach.

@@ -1,26 +1,31 @@
 # STATE.md — Project Memory
 
 > **Last Updated**: 2026-03-23
-> **Current Phase**: 1 — Foundation & Project Setup
+> **Current Phase**: 2 — Core Interaction: The Joystick System
 > **Current Milestone**: v1.0
 
 ## Current Position
-- **Phase**: 1 (complete)
-- **Task**: All 4 plans executed
-- **Status**: Verified
+- **Phase**: 2 (planned)
+- **Task**: 4 plans created, ready for execution
+- **Status**: Ready for execution
 
 ## Last Session Summary
-Phase 1 executed successfully. 4 plans, ~10 tasks completed.
+Phase 2 discussed and planned. 9 ADRs documented (ADR-013 through ADR-021). 4 plans created across 3 waves.
 
-### What was built:
-- Expo SDK 55 project with TypeScript + expo-router
-- 25+ dependencies installed (gesture-handler, reanimated, skia, sqlite, zustand, etc.)
-- Design system: 6 pillar colors, dark theme, Inter font, spacing/typography tokens
-- SQLite schema: 5 tables (logs, targets, target_history, periods, settings)
-- 3 Zustand stores (logStore, targetStore, settingsStore with MMKV)
-- 4-tab navigation (Home, Analytics, Goals, Settings)
-- 5 reusable UI components (ScreenContainer, Text, Card, Button, Badge)
-- Boot sequence: fonts → DB → stores → render
+### Phase 2 Plan Summary:
+- **Plan 2.1** (Wave 1): Core Joystick Component — gesture, animation, direction detection
+- **Plan 2.2** (Wave 2): Swipe-to-Log Integration — wire to SQLite, haptics, confirmation, debounce
+- **Plan 2.3** (Wave 2): Radial Target Menu — swipe+hold, arc layout, target selection
+- **Plan 2.4** (Wave 3): Home Screen Assembly & Polish — triangle layout, visual QA
+
+### Key Decisions (Phase 2):
+- Composed gestures (Pan + LongPress) for native thread 60fps
+- 100px joystick containers, 56px knobs
+- Haptic + animation only (no toasts)
+- Show all targets (not direction-filtered)
+- Release without target = still log basic entry
+- Show codename if masked
+- No scroll / no log feed on home screen
 
 ## Next Steps
-1. `/plan 2` — Plan Phase 2: Core Interaction (The Joystick System)
+1. `/execute 2` — Execute all Phase 2 plans
