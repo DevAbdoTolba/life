@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../src/constants/colors';
 import { typography, spacing } from '../../src/constants/theme';
 import { TargetList } from '../../src/components/goals/TargetList';
+import { TargetFormModal } from '../../src/components/goals/TargetFormModal';
 import { useTargetStore } from '../../src/stores/targetStore';
 import { useAuthStore } from '../../src/stores/authStore';
 import { AuthModal } from '../../src/components/privacy/AuthModal';
@@ -13,6 +14,7 @@ export default function GoalsScreen() {
   const { targets, loadTargets } = useTargetStore();
   const { isUnlocked, lock } = useAuthStore();
   const [authModalVisible, setAuthModalVisible] = useState(false);
+  const [formVisible, setFormVisible] = useState(false);
 
   useEffect(() => {
     loadTargets();
@@ -44,9 +46,10 @@ export default function GoalsScreen() {
         onTargetPress={(target) => console.log('Press target', target.id)}
       />
 
+      {/* FAB */}
       <TouchableOpacity 
         style={styles.fab} 
-        onPress={() => console.log('Open Add Modal')}
+        onPress={() => setFormVisible(true)}
         activeOpacity={0.8}
       >
         <Ionicons name="add" size={32} color={colors.background} />
@@ -55,6 +58,11 @@ export default function GoalsScreen() {
       <AuthModal
         visible={authModalVisible}
         onClose={() => setAuthModalVisible(false)}
+      />
+
+      <TargetFormModal 
+        visible={formVisible}
+        onClose={() => setFormVisible(false)}
       />
     </SafeAreaView>
   );
