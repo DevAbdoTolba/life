@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Switch, Alert, Modal, View, TextInput, StyleSheet } from 'react-native';
+import { Switch, Alert, Modal, View, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
 import Constants from 'expo-constants';
 import { ScreenContainer } from '../../src/components/ui/ScreenContainer';
 import { Text } from '../../src/components/ui/Text';
@@ -237,11 +237,13 @@ export default function SettingsScreen() {
         />
         <SettingsRow
           label="Export Backup"
-          onPress={handleExport}
+          onPress={isExporting ? undefined : handleExport}
           rightElement={
-            isExporting ? undefined : undefined
+            isExporting
+              ? <ActivityIndicator size="small" color={colors.accent} />
+              : undefined
           }
-          showChevron
+          showChevron={!isExporting}
         />
         <SettingsRow
           label="Import Backup"
