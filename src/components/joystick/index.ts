@@ -1,4 +1,5 @@
 export { Joystick } from './Joystick';
+export { NoteEntryModal } from './NoteEntryModal';
 export type { JoystickProps, SwipeResult, JoystickState } from './types';
 export {
   JOYSTICK_SIZE,
