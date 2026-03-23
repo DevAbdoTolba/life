@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { getDatabase } from '../database';
 import type { Log, SwipeDirectionType } from '../database/types';
+import type { DailyPillarCount } from '../types/analytics';
+import type { PillarId, SwipeDirection } from '../constants/pillars';
 
 interface LogState {
   todayLogs: Log[];
@@ -16,6 +18,8 @@ interface LogState {
   ) => Promise<void>;
   getTodayLogs: () => Promise<void>;
   getLogsByPeriod: (startDate: string, endDate: string) => Promise<Log[]>;
+  getDailyLogsByPillar: (startDate: string, endDate: string) => Promise<DailyPillarCount[]>;
+  getLogsByTarget: (targetId: string, startDate: string, endDate: string) => Promise<Log[]>;
   deleteLog: (id: string) => Promise<void>;
   updateLogNote: (id: string, note: string) => Promise<void>;
 }
@@ -111,6 +115,55 @@ export const useLogStore = create<LogState>((set, get) => ({
       [startDate, endDate]
     );
 
+    return rows.map((row) => ({
+      id: row.id,
+      pillarId: row.pillar_id,
+      direction: row.direction,
+      targetId: row.target_id,
+      note: row.note,
+      createdAt: row.created_at,
+    }));
+  },
+
+  getDailyLogsByPillar: async (startDate, endDate) => {
+    const db = getDatabase();
+    const rows = await db.getAllAsync<{
+      day: string;
+      pillar_id: number;
+      direction: string;
+      count: number;
+    }>(
+      `SELECT date(created_at) as day, pillar_id, direction, COUNT(*) as count
+       FROM logs
+       WHERE created_at >= ? AND created_at <= ?
+       GROUP BY day, pillar_id, direction
+       ORDER BY day ASC`,
+      [startDate, endDate]
+    );
+    return rows.map((row) => ({
+      day: row.day,
+      pillarId: row.pillar_id as PillarId,
+      direction: row.direction as SwipeDirection,
+      count: row.count,
+    }));
+  },
+
+  getLogsByTarget: async (targetId, startDate, endDate) => {
+    const db = getDatabase();
+    const rows = await db.getAllAsync<{
+      id: string;
+      pillar_id: number;
+      direction: SwipeDirectionType;
+      target_id: string | null;
+      note: string | null;
+      created_at: string;
+    }>(
+      `SELECT id, pillar_id, direction, target_id, note, created_at
+       FROM logs
+       WHERE target_id = ? AND created_at >= ? AND created_at <= ?
+       ORDER BY created_at ASC`,
+      [targetId, startDate, endDate]
+    );
     return rows.map((row) => ({
       id: row.id,
       pillarId: row.pillar_id,
