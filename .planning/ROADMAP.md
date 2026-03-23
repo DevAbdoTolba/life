@@ -83,7 +83,7 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Install chart dependencies, data aggregation layer, analytics screen scaffold with period selector
+- [x] 04-01-PLAN.md — Install chart dependencies, data aggregation layer, analytics screen scaffold with period selector
 - [ ] 04-02-PLAN.md — Build chart components (bar, donut, trend line, summary stats) and wire into analytics screen
 - [ ] 04-03-PLAN.md — Physics body-fill visualization (SVG body, Matter.js engine, Skia canvas, full-screen modal)
 - [ ] 04-04-PLAN.md — Comparison cards, target analytics, body-fill preview card, final integration
@@ -109,5 +109,5 @@ Plans:
 | 01. Foundation | 4/4 | Complete | 2026-03-23 |
 | 02. Joystick System | 4/4 | Complete | 2026-03-23 |
 | 03. Goals & Privacy | 4/4 | Complete | 2026-03-23 |
-| 04. Analytics & Viz | 0/4 | Planning complete | - |
+| 04. Analytics & Viz | 1/4 | In Progress|  |
 | 05. Polish & Launch | 0/0 | Not started | - |
