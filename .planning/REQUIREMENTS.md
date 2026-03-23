@@ -38,7 +38,7 @@
 - [x] **NOTIFY-02**: Period review reminders
 
 ### Polish
-- [ ] **POLISH-01**: Onboarding flow explaining 3 pillars + gesture tutorial
+- [x] **POLISH-01**: Onboarding flow explaining 3 pillars + gesture tutorial
 - [ ] **POLISH-02**: Settings screen (reminder frequency, codename password, data management)
 - [ ] **POLISH-03**: App icon and splash screen
 
@@ -91,7 +91,7 @@
 | VIZ-05 | Phase 4 | Complete |
 | NOTIFY-01 | Phase 5 | Complete |
 | NOTIFY-02 | Phase 5 | Complete |
-| POLISH-01 | Phase 5 | Pending |
+| POLISH-01 | Phase 5 | Complete |
 | POLISH-02 | Phase 5 | Pending |
 | POLISH-03 | Phase 5 | Pending |
 

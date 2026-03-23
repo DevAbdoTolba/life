@@ -106,7 +106,7 @@ Plans:
 - [x] 05-01-PLAN.md — Dependencies, test infra, settingsStore update, export/import services (DATA-02, DATA-03)
 - [x] 05-02-PLAN.md — Notification scheduling service with daily and weekly reminders (NOTIFY-01, NOTIFY-02)
 - [ ] 05-03-PLAN.md — Full settings screen with 4 sections wired to services (POLISH-02)
-- [ ] 05-04-PLAN.md — Onboarding carousel with interactive gesture demo (POLISH-01)
+- [x] 05-04-PLAN.md — Onboarding carousel with interactive gesture demo (POLISH-01)
 - [ ] 05-05-PLAN.md — App icon/splash assets and final visual verification (POLISH-03)
 
 ## Progress

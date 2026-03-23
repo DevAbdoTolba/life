@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to execute
-stopped_at: Completed 05-01-PLAN.md — export/import services, test infra
-last_updated: "2026-03-23T22:16:40.462Z"
+stopped_at: Completed 05-04-PLAN.md — onboarding carousel, gesture demo, and first-launch gate
+last_updated: "2026-03-23T22:21:41.257Z"
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 21
-  completed_plans: 18
+  completed_plans: 19
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 ## Current Position
 
 Phase: 05 (polish-launch) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 
 ## Performance Metrics
 
@@ -46,6 +46,7 @@ Plan: 3 of 5
 | Phase 04-analytics-visualization P04 | 3 | 3 tasks | 5 files |
 | Phase 05-polish-launch P02 | 5 | 2 tasks | 4 files |
 | Phase 05-polish-launch P01 | 25 | 3 tasks | 9 files |
+| Phase 05 P04 | 15 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Recent decisions affecting current work:
 - [Phase 05-polish-launch]: Split jest config: services use ts-jest+node env, components use jest-expo — avoids RN winter runtime setup conflicts
 - [Phase 05-polish-launch]: babel.config.js with reanimated:false to fix jest worklets missing plugin error
 - [Phase 05-polish-launch]: Full table replace (DELETE all + INSERT) for backup restore — simpler atomicity over UPSERT
+- [Phase 05]: Used <Redirect> component (not router.replace) in _layout.tsx for safe render-time redirect to onboarding
+- [Phase 05]: GestureSlide onboarding demo uses Gesture.Pan + Reanimated without logStore/addLog — demo only, no data recorded
 
 ### Pending Todos
 
@@ -88,6 +91,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-23T22:16:40.458Z
-Stopped at: Completed 05-01-PLAN.md — export/import services, test infra
+Last session: 2026-03-23T22:21:41.254Z
+Stopped at: Completed 05-04-PLAN.md — onboarding carousel, gesture demo, and first-launch gate
 Resume file: None
