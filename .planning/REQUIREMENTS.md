@@ -9,7 +9,7 @@
 - [x] **LOG-01**: 3 joystick analogs visible on main screen in triangle layout (one per pillar)
 - [x] **LOG-02**: Swipe in 4 directions (up/down/left/right) to log positive/negative, direct/indirect actions in under 2 seconds
 - [x] **LOG-03**: Swipe + hold to reveal radial target menu and select specific targets in under 4 seconds
-- [ ] **LOG-04**: Optional text notes can be added to any log entry
+- [x] **LOG-04**: Optional text notes can be added to any log entry
 
 ### Data
 - [x] **DATA-01**: All data persists locally in SQLite across app restarts
@@ -74,7 +74,7 @@
 | LOG-01 | Phase 1, 2 | Complete |
 | LOG-02 | Phase 2 | Complete |
 | LOG-03 | Phase 2 | Complete |
-| LOG-04 | Phase 6 | Pending |
+| LOG-04 | Phase 6 | Complete |
 | DATA-01 | Phase 1 | Complete |
 | DATA-02 | Phase 5 | Complete |
 | DATA-03 | Phase 5 | Complete |
