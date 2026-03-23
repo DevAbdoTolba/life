@@ -1,0 +1,65 @@
+---
+phase: 3
+plan: 1
+wave: 1
+depends_on: []
+files_modified:
+  - src/constants/codenames.ts
+  - src/stores/authStore.ts
+  - src/components/privacy/AuthModal.tsx
+autonomous: true
+---
+
+# Plan 3.1: Privacy System (Auth & Codenames)
+
+## Objective
+Implement the privacy codename pool (~30 funny names) and a password-protected global auth store to reveal masked target names.
+
+## Context
+- .gsd/SPEC.md — "funny names like 'Angry Birds', 'Rubber Duck', password-protected reveal"
+- src/constants/theme.ts
+- src/constants/colors.ts
+
+## Tasks
+
+<task type="auto">
+  <name>Create codename pool and utilities</name>
+  <files>
+    src/constants/codenames.ts
+  </files>
+  <action>
+    Create a constant array of ~30 funny, non-descript codenames (e.g., "Rubber Duck", "Angry Bird", "Moon Walker", "Secret Squirrel", "Ninja Turtle", etc.).
+    Export a function `getRandomCodename()` that securely picks a random item from this pool.
+    AVOID: Don't use actual sensitive-sounding names. The tone is lighthearted.
+  </action>
+  <verify>npx tsc --noEmit src/constants/codenames.ts</verify>
+  <done>src/constants/codenames.ts exists with 30 names and a getRandomCodename function.</done>
+</task>
+
+<task type="auto">
+  <name>Build Auth Store and Auth Modal</name>
+  <files>
+    src/stores/authStore.ts
+    src/components/privacy/AuthModal.tsx
+  </files>
+  <action>
+    **Create `authStore.ts`**:
+    - Manage a simple Zustand store with `zustandMMKVStorage`.
+    - `isUnlocked: boolean` (defaults false)
+    - `pin: string | null` (to store an initial PIN if configured)
+    - `unlock(pin)`, `lock()`, `setPin(newPin)`
+    - *Note: Simple string comparison for v1 local storage is acceptable to avoid heavy external crypto libraries on initial layout iteration.*
+
+    **Create `AuthModal.tsx`**:
+    - A standard React Native Modal or full-screen overlay.
+    - Prompts user to set a PIN (if none exists) or enter it to unlock.
+    - Closes on success.
+  </action>
+  <verify>npx tsc --noEmit</verify>
+  <done>authStore exists with lock/unlock actions and AuthModal component UI is built.</done>
+</task>
+
+## Success Criteria
+- [ ] Codename pool returns random funny strings safely.
+- [ ] AuthStore safely toggles unlocked state based on correct PIN input.
+- [ ] AuthModal correctly renders the pin/password form.

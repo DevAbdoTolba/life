@@ -1,0 +1,61 @@
+---
+phase: 3
+plan: 4
+wave: 2
+depends_on: ["2"]
+files_modified:
+  - src/components/goals/TargetActionSheet.tsx
+  - src/stores/targetStore.ts
+autonomous: true
+---
+
+# Plan 3.4: Lifecycle Management & History
+
+## Objective
+Enable CRUD lifecycle operations on existing Targets. Let users adjust States (Pause, Fail, Complete) via Action Sheets and trace historical changelogs.
+
+## Context
+- src/stores/targetStore.ts
+- src/database/types.ts
+
+## Tasks
+
+<task type="auto">
+  <name>Target Action Menu (Status Updates)</name>
+  <files>
+    src/components/goals/TargetActionSheet.tsx
+  </files>
+  <action>
+    Create an Action Sheet modal triggered by long-pressing / tapping the `TargetCard` component.
+    Options:
+    - Mark Completed (success - green focus)
+    - Mark Failed (error - red focus)
+    - Pause (warning - orange focus)
+    - Resume (if already paused)
+    - Delete (destructive)
+    
+    Tie the options natively to `useTargetStore.updateTargetStatus(id, newStatus)` or `deleteTarget(id)`.
+  </action>
+  <verify>npx tsc --noEmit src/components/goals/TargetActionSheet.tsx</verify>
+  <done>Action Sheet successfully exposes lifecycle mutations and performs SQLite transactions.</done>
+</task>
+
+<task type="auto">
+  <name>Add history query logic to TargetStore</name>
+  <files>
+    src/stores/targetStore.ts
+  </files>
+  <action>
+    TargetStore already pushes table updates. Add a data fetching action:
+    `getTargetHistory: async (id: string) => Promise<{ old_status, new_status, changed_at }[]>`
+    Map this to the SQLite backend using standard `.getAllAsync()` methods securely to `target_history`.
+    *(We decouple the UI design of the History component to later Polish phases to preserve context limits, focusing firmly on completing backend hooks).*
+  </action>
+  <verify>npx tsc --noEmit src/stores/targetStore.ts</verify>
+  <done>target_history queries return sequentially ordered timelines for targets.</done>
+</task>
+
+## Success Criteria
+- [ ] Targets safely transition states out of 'active' safely via manual triggers.
+- [ ] Only 'active' targets continue populating `Joystick.tsx` radial menus tracking accurately.
+- [ ] Status updates accurately push history records dynamically capturing timestamps.
