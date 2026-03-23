@@ -73,7 +73,17 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: colors.background },
           animation: 'fade',
         }}
-      />
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="body-fill"
+          options={{
+            presentation: 'fullScreenModal',
+            headerShown: false,
+            animation: 'slide_from_bottom',
+          }}
+        />
+      </Stack>
     </View>
   );
 }
