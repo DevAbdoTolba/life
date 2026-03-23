@@ -156,3 +156,42 @@
 **Context**: Joystick knob/container size for thumb reach on mobile.
 **Decision**: 100px diameter for the joystick container. Knob itself slightly smaller (~60px).
 **Rationale**: Good balance of thumb reach and screen real estate. Spec requires one-hand use designed for thumb reach.
+
+---
+
+## Phase 4 Discussion Decisions (2026-03-23)
+
+## ADR-022: Split Analytics Execution
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Phase 4 scope is massive (charts + physics engine visualization).
+**Decision**: Split implementation. Standard charts (bullet journal style) execute first. Physics visualization executes in a subsequent iteration.
+**Rationale**: Reduces risk and ensures the app delivers core analytical value quickly before tackling the experimental physics views.
+
+## ADR-023: Time Period Selection — Preset Toggles Initial
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Need to filter logs by time (today, week, month, etc.).
+**Decision**: Implement simple segmented preset toggles (Today, Week, Month) for v1 initially. Heavy custom date-picker deferred.
+**Rationale**: Highest ROI for user friction reduction. Custom date ranges are rarely used in daily quick-reviews.
+
+## ADR-024: Charting Library — react-native-gifted-charts
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Need to build bar/pie charts for the bullet-journal analytics.
+**Decision**: Use `react-native-gifted-charts`.
+**Rationale**: "Performance is the highest priority." Pre-built Native-optimized charts achieve this faster and safer than manually writing Skia-based axes and legends from scratch.
+
+## ADR-025: Physics Collision Boundary Optimization
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Matter.js struggles with complex, detailed SVG path rigid bodies.
+**Decision**: Generate a simplified, smooth-curved, "cartoonish" segmented SVG path directly in code for both visuals and rigid body collisions.
+**Rationale**: "Performance is the highest priority." A mathematically simple body outline ensures 60fps physics simulation while still delivering the visual charm required.
+
+## ADR-026: Physics Ball Aggregation
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: High log counts (e.g., thousands of actions over a year) will crash the physics simulation if a 1:1 ratio is used.
+**Decision**: Implement visual aggregation. If log counts exceed a safety threshold, 1 physical ball will represent multiple actions, scaling conditionally.
+**Rationale**: Prevents memory overflow and frame-rate drops on older devices without losing the visual impact of the "body filling up".
