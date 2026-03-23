@@ -6,6 +6,8 @@ import { colors } from '../../src/constants/colors';
 import { typography, spacing } from '../../src/constants/theme';
 import { TargetList } from '../../src/components/goals/TargetList';
 import { TargetFormModal } from '../../src/components/goals/TargetFormModal';
+import { TargetActionSheet } from '../../src/components/goals/TargetActionSheet';
+import type { Target } from '../../src/database/types';
 import { useTargetStore } from '../../src/stores/targetStore';
 import { useAuthStore } from '../../src/stores/authStore';
 import { AuthModal } from '../../src/components/privacy/AuthModal';
@@ -15,6 +17,7 @@ export default function GoalsScreen() {
   const { isUnlocked, lock } = useAuthStore();
   const [authModalVisible, setAuthModalVisible] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
+  const [selectedTarget, setSelectedTarget] = useState<Target | null>(null);
 
   useEffect(() => {
     loadTargets();
@@ -43,7 +46,7 @@ export default function GoalsScreen() {
 
       <TargetList
         targets={targets}
-        onTargetPress={(target) => console.log('Press target', target.id)}
+        onTargetPress={(target) => setSelectedTarget(target)}
       />
 
       {/* FAB */}
@@ -63,6 +66,12 @@ export default function GoalsScreen() {
       <TargetFormModal 
         visible={formVisible}
         onClose={() => setFormVisible(false)}
+      />
+
+      <TargetActionSheet 
+        target={selectedTarget}
+        visible={!!selectedTarget}
+        onClose={() => setSelectedTarget(null)}
       />
     </SafeAreaView>
   );

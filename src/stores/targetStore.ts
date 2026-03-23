@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import { getDatabase } from '../database';
-import type { Target, TargetStatus } from '../database/types';
+import type { Target, TargetStatus, TargetHistoryEntry } from '../database/types';
 
 interface TargetState {
   targets: Target[];
@@ -15,6 +15,7 @@ interface TargetState {
   getTargetsByPillar: (pillarId: number) => Target[];
   deleteTarget: (id: string) => Promise<void>;
   updateTargetName: (id: string, realName: string) => Promise<void>;
+  getTargetHistory: (targetId: string) => Promise<TargetHistoryEntry[]>;
 }
 
 export const useTargetStore = create<TargetState>((set, get) => ({
@@ -160,6 +161,31 @@ export const useTargetStore = create<TargetState>((set, get) => ({
       targets: state.targets.map((t) =>
         t.id === id ? { ...t, realName, updatedAt: now } : t
       ),
+    }));
+  },
+
+  getTargetHistory: async (targetId: string) => {
+    const db = getDatabase();
+    const rows = await db.getAllAsync<{
+      id: string;
+      target_id: string;
+      old_status: TargetStatus;
+      new_status: TargetStatus;
+      changed_at: string;
+    }>(
+      `SELECT id, target_id, old_status, new_status, changed_at
+       FROM target_history
+       WHERE target_id = ?
+       ORDER BY changed_at DESC`,
+      [targetId]
+    );
+
+    return rows.map((r) => ({
+      id: r.id,
+      targetId: r.target_id,
+      oldStatus: r.old_status,
+      newStatus: r.new_status,
+      changedAt: r.changed_at,
     }));
   },
 }));
