@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import {
@@ -20,6 +20,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [appReady, setAppReady] = useState(false);
   const setDbReady = useSettingsStore((s) => s.setDbReady);
+  const onboardingComplete = useSettingsStore((s) => s.onboardingComplete);
 
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
@@ -64,6 +65,15 @@ export default function RootLayout() {
     return null;
   }
 
+  if (!onboardingComplete) {
+    return (
+      <View style={styles.container}>
+        <StatusBar style="light" />
+        <Redirect href="/onboarding" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -74,6 +84,13 @@ export default function RootLayout() {
           animation: 'fade',
         }}
       >
+        <Stack.Screen
+          name="onboarding"
+          options={{
+            headerShown: false,
+            animation: 'fade',
+          }}
+        />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="body-fill"
