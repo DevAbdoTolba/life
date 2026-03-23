@@ -43,3 +43,49 @@
 **Context**: MongoDB Atlas Device Sync (Realm) is being deprecated September 2025.
 **Decision**: Do not use Realm. If sync is needed later, use WatermelonDB sync protocol with custom Node.js/Express/MongoDB backend.
 **Rationale**: Cannot build on a platform being sunset. Custom sync gives more control anyway.
+
+---
+
+## Phase 1 Discussion Decisions (2026-03-23)
+
+## ADR-007: Pillar 1 Naming — "Afterlife" (not "Allah")
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Pillar 1 represents the spiritual/faith relationship. Original naming used "With Allah" directly.
+**Decision**: Rename to "Afterlife" (الآخرة) out of respect.
+**Rationale**: More respectful usage. "Afterlife" captures the spiritual dimension — praying, reading Quran, worship — as actions oriented toward the hereafter.
+
+## ADR-008: Dark Mode Only
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Need to decide between dark mode, light mode, or both.
+**Decision**: Dark mode only for v1. No light mode toggle.
+**Rationale**: Feels more personal and journal-like. Reduces design/theming scope. Can add light mode in future if requested.
+
+## ADR-009: Minimalist Typography
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Need to select a font style for the app.
+**Decision**: Clean minimalist sans-serif font (Inter or similar).
+**Rationale**: Matches the app's philosophy of simplicity and focus. Inter has excellent readability on mobile at all sizes.
+
+## ADR-010: Triangle Joystick Layout
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Need to decide how to arrange the 3 joysticks on the main screen. Options were vertical stack, triangle, or bottom bar.
+**Decision**: Triangle layout — Afterlife at the top, Self bottom-left, Others bottom-right.
+**Rationale**: Gives Afterlife visual priority at the top. Natural triangle arrangement avoids scrolling. All 3 joysticks visible simultaneously.
+
+## ADR-011: Targets Are Strictly Per-Pillar
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Need to decide if a target/goal can span multiple pillars.
+**Decision**: Each target belongs to exactly one pillar. No cross-pillar targets.
+**Rationale**: Keeps the data model simple and the joystick hold menu clean. If something touches two pillars, create two separate targets.
+
+## ADR-012: Daily Review = Notification, Not a Screen
+**Date**: 2026-03-23
+**Status**: Accepted
+**Context**: Daily review was originally a separate tab/screen. User clarified it should be simpler.
+**Decision**: Daily review is a scheduled notification that prompts the user to open the app and log. No separate review screen — the review IS the act of logging from Home.
+**Rationale**: Keeps the app lightweight. The user's mental model is "notification reminds me → I open app → I log via joysticks." No extra UI needed.

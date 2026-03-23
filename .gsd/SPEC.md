@@ -32,13 +32,15 @@ A mobile-first personal progress tracking app rooted in Islamic well-being princ
 
 ### The 3 Pillars (Analogs)
 
-Each pillar is represented by an interactive **joystick element** on the main screen:
+Each pillar is represented by an interactive **joystick element** on the main screen, arranged in a **triangle layout** (Afterlife at the top, Self and Others at the bottom):
 
 | Pillar | Arabic | Description | Example Actions |
 |--------|--------|-------------|-----------------|
-| **1. With Allah** | مع الله | Spiritual relationship — faith, worship, devotion | Prayer, Quran reading, dhikr, dua |
+| **1. Afterlife** | الآخرة | Spiritual relationship — faith, worship, devotion | Prayer, Quran reading, dhikr, dua |
 | **2. With Self** | مع النفس | Personal well-being — body, mind, soul | Exercise, meditation, study, rest, health |
 | **3. With Others** | مع الناس | Social relationships — family, friends, community | Family time, helping others, good conversation |
+
+**Important**: Targets/goals are strictly **per-pillar**. A target belongs to exactly one pillar and cannot span multiple pillars.
 
 ### Swipe Directions (Quick Log)
 
@@ -53,13 +55,17 @@ Each pillar is represented by an interactive **joystick element** on the main sc
 
 After swiping in a direction, the user can **hold** to reveal their custom targets/goals for that pillar. They drag to a target to tag the log entry specifically. This creates a targeted log with both a direction (good/bad, direct/indirect) and a specific goal reference.
 
+### Optional Notes
+
+Each log entry can optionally include a short text note. Notes are not required for quick logging but can be added for context (e.g., "prayed at the masjid" or "watched a health documentary"). Notes can also be added/edited later from the log history.
+
 ### Privacy Codenames
 
 Goals can be assigned a funny codename from a pre-built pool (~30 names like "Angry Birds", "Rubber Duck", "Moon Walker", etc.). The real name is hidden behind a password. This allows the app to be used in public without revealing personal goals.
 
-### Daily Review
+### Daily Review (Notification-Based)
 
-In addition to moment-by-moment logging, users can review their day with a summary view showing all logged actions, organized by pillar and direction.
+The app sends a configurable daily notification reminding the user to log what they did today. Tapping the notification opens the app's Home screen where the user can quickly log all their actions for the day via the joystick system. There is no separate daily review screen — the review IS the act of logging, prompted by the notification.
 
 ### Time Periods
 
@@ -84,11 +90,12 @@ Users can define custom time periods (weekly, monthly, Ramadan, custom date rang
 
 - [ ] User can log an action in under 2 seconds via joystick swipe
 - [ ] User can attach a specific target to a log via swipe-and-hold in under 4 seconds
-- [ ] All 3 pillar joysticks visible and interactive on main screen
+- [ ] All 3 pillar joysticks visible in triangle layout on main screen
 - [ ] Analytics show bullet-journal-style charts for any time period
 - [ ] Physics body-fill visualization renders colored balls correctly with gravity
 - [ ] Goals can be created, edited, masked (codename), completed, and archived
+- [ ] Targets are strictly per-pillar (cannot span multiple pillars)
 - [ ] Data persists across app restarts (local storage)
 - [ ] Export produces a JSON/encrypted file; import restores all data
 - [ ] App runs fully offline with zero network requirements
-- [ ] Daily review screen summarizes all logged actions
+- [ ] Daily review notification prompts user to log at configured time

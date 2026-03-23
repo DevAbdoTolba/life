@@ -13,7 +13,7 @@
 - [ ] Privacy codenames (pool of ~30 funny names, password-protected reveal)
 - [ ] Bullet journal style analytics
 - [ ] Physics body-fill visualization (Matter.js + Skia)
-- [ ] Daily review screen
+- [ ] Daily review notification (not a screen — prompts logging)
 - [ ] Custom time periods for evaluation
 - [ ] Export/import data as backup file
 - [ ] Period review reminders
@@ -30,7 +30,12 @@
 - Design and implement SQLite schema (logs, pillars, targets, goals, periods)
 - Create Zustand stores with MMKV persistence
 - Set up expo-router file-based navigation (Home, Analytics, Goals, Settings)
-- Define design system: color palette (6 pillar colors — 3 good, 3 bad), typography, spacing
+- Define design system:
+  - **Dark mode only** (no light mode for v1)
+  - **Color palette**: Afterlife (Gold #F5A623 / Purple #6B21A8), Self (Emerald #10B981 / Crimson #EF4444), Others (Blue #3B82F6 / Slate #64748B)
+  - **Typography**: Minimalist font (Inter or similar clean sans-serif)
+  - **Layout**: Triangle joystick arrangement (Afterlife top, Self bottom-left, Others bottom-right)
+  - Spacing scale, border radii, shadows
 - Create reusable UI components (buttons, cards, modals)
 
 ### Phase 2: Core Interaction — The Joystick System
@@ -44,7 +49,7 @@
 - Add haptic feedback on swipe and selection
 - Create log confirmation animation (the joystick snaps back with color flash)
 - Wire joystick actions to SQLite (create log entries)
-- Build the main screen layout with 3 joysticks + pillar labels
+- Build the main screen with triangle layout (Afterlife top, Self bottom-left, Others bottom-right)
 - Handle edge cases (accidental swipes, incomplete gestures)
 
 ### Phase 3: Goals, Targets & Privacy
@@ -66,7 +71,7 @@
 **Objective**: Build both the traditional analytics view (bullet journal style) and the creative physics body-fill visualization.
 **Delivers**: Users can see their progress through charts and the human silhouette body-fill, filtered by custom time periods.
 **Key Tasks**:
-- Build the Daily Review screen (list of today's logs organized by pillar)
+- Build log history view (accessible from Home, filterable by pillar/direction)
 - Create bullet journal style charts (bar charts, pie charts, trend lines)
 - Implement custom time period selector (today, week, month, Ramadan, custom range)
 - Build the human body silhouette SVG/path
@@ -84,7 +89,7 @@
 - Build export functionality (JSON file with all data)
 - Build import functionality (restore from backup file)
 - Add data validation on import
-- Implement review reminders via expo-notifications
+- Implement daily review notification via expo-notifications (configurable time)
 - Create onboarding flow (explain the 3 pillars + gesture tutorial)
 - Performance optimization (gesture frame rate, Skia rendering, SQLite queries)
 - App icon and splash screen design
