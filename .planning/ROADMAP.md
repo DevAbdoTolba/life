@@ -1,7 +1,7 @@
 # Roadmap: Hayat (Life Balance Tracker)
 
 ## Overview
-Build a gesture-driven life balance tracker from foundation through analytics to launch-ready polish. Phases 01-03 (foundation, joystick interaction, goals/privacy) are complete. Phase 04 (analytics & visualization) is next, followed by Phase 05 (polish & launch prep).
+Build a gesture-driven life balance tracker from foundation through analytics to launch-ready polish. Phases 01-03 (foundation, joystick interaction, goals/privacy) are complete. Phase 04 (analytics & visualization) is complete. Phase 05 (polish & launch prep) is planned.
 
 ## Phases
 
@@ -100,7 +100,14 @@ Plans:
   5. Settings screen functional (reminders, password, data management)
   6. App icon and splash screen designed
   7. Performance optimized (gesture fps, Skia rendering, SQLite queries)
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Dependencies, test infra, settingsStore update, export/import services (DATA-02, DATA-03)
+- [ ] 05-02-PLAN.md — Notification scheduling service with daily and weekly reminders (NOTIFY-01, NOTIFY-02)
+- [ ] 05-03-PLAN.md — Full settings screen with 4 sections wired to services (POLISH-02)
+- [ ] 05-04-PLAN.md — Onboarding carousel with interactive gesture demo (POLISH-01)
+- [ ] 05-05-PLAN.md — App icon/splash assets and final visual verification (POLISH-03)
 
 ## Progress
 
@@ -109,5 +116,5 @@ Plans:
 | 01. Foundation | 4/4 | Complete | 2026-03-23 |
 | 02. Joystick System | 4/4 | Complete | 2026-03-23 |
 | 03. Goals & Privacy | 4/4 | Complete | 2026-03-23 |
-| 04. Analytics & Viz | 1/4 | Complete    | 2026-03-23 |
-| 05. Polish & Launch | 0/0 | Not started | - |
+| 04. Analytics & Viz | 4/4 | Complete | 2026-03-23 |
+| 05. Polish & Launch | 0/5 | Planned | - |
