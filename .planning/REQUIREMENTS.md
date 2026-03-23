@@ -13,8 +13,8 @@
 
 ### Data
 - [x] **DATA-01**: All data persists locally in SQLite across app restarts
-- [ ] **DATA-02**: Export all data as JSON backup file
-- [ ] **DATA-03**: Import and restore from backup file with validation
+- [x] **DATA-02**: Export all data as JSON backup file
+- [x] **DATA-03**: Import and restore from backup file with validation
 - [x] **DATA-04**: App runs fully offline with zero network requirements
 
 ### Goals
@@ -76,8 +76,8 @@
 | LOG-03 | Phase 2 | Complete |
 | LOG-04 | Phase 2 | Complete |
 | DATA-01 | Phase 1 | Complete |
-| DATA-02 | Phase 5 | Pending |
-| DATA-03 | Phase 5 | Pending |
+| DATA-02 | Phase 5 | Complete |
+| DATA-03 | Phase 5 | Complete |
 | DATA-04 | Phase 1 | Complete |
 | GOAL-01 | Phase 3 | Complete |
 | GOAL-02 | Phase 3 | Complete |
