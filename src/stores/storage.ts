@@ -1,24 +1,32 @@
-import { MMKV } from 'react-native-mmkv';
+import * as SQLite from 'expo-sqlite';
 import type { StateStorage } from 'zustand/middleware';
 
-// Single MMKV instance for the app
-export const mmkvStorage = new MMKV({
-  id: 'hayat-storage',
-});
+// Single SQLite database for key-value storage
+const db = SQLite.openDatabaseSync('hayat-storage.db');
+db.execSync(
+  'CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT)'
+);
 
 /**
- * Zustand-compatible storage adapter for MMKV.
+ * Zustand-compatible storage adapter using expo-sqlite.
  * Used with zustand's persist middleware.
  */
-export const zustandMMKVStorage: StateStorage = {
+export const zustandStorage: StateStorage = {
   getItem: (name: string): string | null => {
-    const value = mmkvStorage.getString(name);
-    return value ?? null;
+    const result = db.getFirstSync<{ value: string }>(
+      'SELECT value FROM kv WHERE key = ?',
+      name
+    );
+    return result?.value ?? null;
   },
   setItem: (name: string, value: string): void => {
-    mmkvStorage.set(name, value);
+    db.runSync(
+      'INSERT OR REPLACE INTO kv (key, value) VALUES (?, ?)',
+      name,
+      value
+    );
   },
   removeItem: (name: string): void => {
-    mmkvStorage.delete(name);
+    db.runSync('DELETE FROM kv WHERE key = ?', name);
   },
 };

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { zustandMMKVStorage } from './storage';
+import { zustandStorage } from './storage';
 
 interface AuthState {
   isUnlocked: boolean;
@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'hayat-auth-storage', // key in storage
-      storage: createJSONStorage(() => zustandMMKVStorage),
+      storage: createJSONStorage(() => zustandStorage),
       partialize: (state) => ({ pin: state.pin }), // only persist the PIN, not isUnlocked state
     }
   )

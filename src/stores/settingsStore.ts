@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { zustandMMKVStorage } from './storage';
+import { zustandStorage } from './storage';
 
 interface SettingsState {
   // Privacy
@@ -61,7 +61,7 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'hayat-settings',
-      storage: createJSONStorage(() => zustandMMKVStorage),
+      storage: createJSONStorage(() => zustandStorage),
       // Don't persist isDbReady — it's runtime-only
       partialize: (state) => {
         const { isDbReady, ...rest } = state;
