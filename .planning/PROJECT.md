@@ -12,6 +12,7 @@ Effortless behavioral self-awareness through gesture-driven logging and creative
 - [x] LOG-01: 3 joystick analogs on main screen (one per pillar) — Phase 1-2
 - [x] LOG-02: Swipe in 4 directions to log actions (up/down/left/right) — Phase 2
 - [x] LOG-03: Swipe + hold to reveal and select specific targets — Phase 2
+- [x] LOG-04: Optional text notes can be added to any log entry — Phase 6
 - [x] DATA-01: Local data persistence (SQLite) — Phase 1
 - [x] GOAL-01: Goal/target management with lifecycle tracking — Phase 3
 - [x] PRIV-01: Privacy codenames (pool of ~30 funny names, password-protected reveal) — Phase 3
@@ -77,4 +78,4 @@ Tech stack: React Native + Expo, TypeScript, RNGH v2 + Reanimated v3, Matter.js 
 | expo-notifications local-only (ADR-027) | DAILY + WEEKLY triggers, no server needed | ✓ Good |
 | FlatList onboarding carousel (ADR-028) | No extra deps, pagingEnabled + Reanimated | ✓ Good |
 
-*Last updated: 2026-03-23 after Phase 5 completion — v1.0 milestone complete*
+*Last updated: 2026-03-24 after Phase 6 completion — LOG-04 gap closed*
