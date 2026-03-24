@@ -154,7 +154,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Install react-native-date-picker, date formatting helpers with tests, CustomDateRangeModal component, PeriodSelector subtitle (VIZ-03)
+- [x] 08-01-PLAN.md — Install react-native-date-picker, date formatting helpers with tests, CustomDateRangeModal component, PeriodSelector subtitle (VIZ-03)
 - [ ] 08-02-PLAN.md — Wire custom range into analytics screen, body-fill route param integration (VIZ-03)
 
 ## Progress
