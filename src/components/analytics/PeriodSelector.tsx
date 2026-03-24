@@ -8,6 +8,8 @@ import type { PeriodType } from '../../types/analytics';
 interface PeriodSelectorProps {
   selected: PeriodType;
   onSelect: (period: PeriodType) => void;
+  customLabel?: string;
+  onCustomPress?: () => void;
 }
 
 const PERIODS: { key: PeriodType; label: string }[] = [
@@ -17,7 +19,7 @@ const PERIODS: { key: PeriodType; label: string }[] = [
   { key: 'custom', label: 'Custom' },
 ];
 
-export function PeriodSelector({ selected, onSelect }: PeriodSelectorProps) {
+export function PeriodSelector({ selected, onSelect, customLabel, onCustomPress }: PeriodSelectorProps) {
   return (
     <View style={styles.container}>
       <ScrollView
@@ -30,7 +32,12 @@ export function PeriodSelector({ selected, onSelect }: PeriodSelectorProps) {
           return (
             <Pressable
               key={period.key}
-              onPress={() => onSelect(period.key)}
+              onPress={() => {
+                onSelect(period.key);
+                if (period.key === 'custom' && selected === 'custom') {
+                  onCustomPress?.();
+                }
+              }}
               style={[styles.pill, isSelected ? styles.pillSelected : styles.pillUnselected]}
             >
               <Text
@@ -45,6 +52,9 @@ export function PeriodSelector({ selected, onSelect }: PeriodSelectorProps) {
           );
         })}
       </ScrollView>
+      {selected === 'custom' && customLabel ? (
+        <Text style={styles.customSubtitle}>{customLabel}</Text>
+      ) : null}
     </View>
   );
 }
@@ -80,5 +90,13 @@ const styles = StyleSheet.create({
   pillTextUnselected: {
     color: colors.textSecondary,
     fontFamily: typography.fontFamily.regular,
+  },
+  customSubtitle: {
+    fontSize: typography.sizes.sm,
+    fontFamily: typography.fontFamily.regular,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: spacing.xs,
+    paddingHorizontal: spacing.xl,
   },
 });
