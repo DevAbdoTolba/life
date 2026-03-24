@@ -8,6 +8,7 @@ interface BodyFillCanvasProps {
   ballStates: React.MutableRefObject<BallState[]>;
   width: number;
   height: number;
+  ballCount: number; // triggers re-render when balls are populated (r/color are not SharedValues)
 }
 
 /**
@@ -30,7 +31,11 @@ function getScaledBodyPath(width: number, height: number) {
  * (written by the physics game loop) so the canvas re-draws at 60fps without
  * triggering React re-renders.
  */
-export function BodyFillCanvas({ ballStates, width, height }: BodyFillCanvasProps) {
+export function BodyFillCanvas({ ballStates, width, height, ballCount }: BodyFillCanvasProps) {
+  // ballCount is not read directly — it triggers a re-render so Circle elements
+  // pick up the static r/color values set on pre-allocated slots.
+  void ballCount;
+
   // Cache the scaled path so it's only recomputed when dimensions change
   const scaledPath = useMemo(() => getScaledBodyPath(width, height), [width, height]);
 

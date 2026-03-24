@@ -58,7 +58,7 @@ export default function BodyFillScreen() {
     canvasWidth = canvasHeight / 2;
   }
 
-  const { ballStates } = useBodyFillPhysics(
+  const { ballStates, ballCount } = useBodyFillPhysics(
     logs,
     canvasWidth > 0 ? canvasWidth : 0,
     canvasHeight > 0 ? canvasHeight : 0,
@@ -90,6 +90,7 @@ export default function BodyFillScreen() {
             ballStates={ballStates}
             width={canvasWidth}
             height={canvasHeight}
+            ballCount={ballCount}
           />
         ) : loaded && logs.length === 0 ? (
           <Text style={styles.emptyText}>No activity this week</Text>
