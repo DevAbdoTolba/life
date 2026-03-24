@@ -41,7 +41,10 @@
   1. Home screen does not dim or lock while a joystick gesture is in progress
   2. Body-fill visualization renders balls that fall and settle using physics when the screen loads
   3. Adding a new `useAnimatedStyle` call to `Joystick.tsx` does not produce non-deterministic behavior (hooks violation resolved)
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 09-01-PLAN.md — Inline hooks: remove createIndicatorStyle factory from Joystick.tsx and GestureSlide.tsx
+- [ ] 09-02-PLAN.md — Fix body-fill physics rendering and screen wake lock (BUG-01, BUG-02)
 
 ### Phase 10: Gesture Interaction Overhaul
 **Goal**: The joystick hold gesture behaves as designed — center hold is a note-mode toggle, directional hold reveals a clean target fan, and notes are never prompted on plain swipes
@@ -100,7 +103,7 @@
 | 6. Swipe Note Entry | v1.0 | 2/2 | Complete | 2026-03-24 |
 | 7. Integration Wiring Fixes | v1.0 | 2/2 | Complete | 2026-03-24 |
 | 8. Custom Date Range Picker | v1.0 | 2/2 | Complete | 2026-03-24 |
-| 9. Foundation Fixes | v1.1 | 0/? | Not started | - |
+| 9. Foundation Fixes | v1.1 | 0/2 | Not started | - |
 | 10. Gesture Interaction Overhaul | v1.1 | 0/? | Not started | - |
 | 11. Hold Interaction Visuals | v1.1 | 0/? | Not started | - |
 | 12. Analytics & Layout | v1.1 | 0/? | Not started | - |
