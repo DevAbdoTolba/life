@@ -23,8 +23,8 @@
 - [x] **GOAL-03**: Targets are strictly per-pillar (cannot span multiple pillars)
 
 ### Privacy
-- [ ] **PRIV-01**: Goals can be masked with auto-assigned funny codenames from a pool of ~30
-- [ ] **PRIV-02**: Real goal names hidden behind password-protected reveal
+- [x] **PRIV-01**: Goals can be masked with auto-assigned funny codenames from a pool of ~30
+- [x] **PRIV-02**: Real goal names hidden behind password-protected reveal
 
 ### Visualization
 - [x] **VIZ-01**: Bullet journal style charts (bar, pie, trend lines) for any time period
@@ -82,8 +82,8 @@
 | GOAL-01 | Phase 3 | Complete |
 | GOAL-02 | Phase 7 | Complete |
 | GOAL-03 | Phase 3 | Complete |
-| PRIV-01 | Phase 7 | Pending |
-| PRIV-02 | Phase 7 | Pending |
+| PRIV-01 | Phase 7 | Complete |
+| PRIV-02 | Phase 7 | Complete |
 | VIZ-01 | Phase 4 | Complete |
 | VIZ-02 | Phase 4 | Complete |
 | VIZ-03 | Phase 8 | Pending |

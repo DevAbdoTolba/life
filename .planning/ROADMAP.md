@@ -140,7 +140,7 @@ Plans:
 
 Plans:
 - [x] 07-01-PLAN.md — Schema migration, soft-delete in targetStore, notification channel init at startup (GOAL-02, NOTIFY-01, NOTIFY-02)
-- [ ] 07-02-PLAN.md — Wire isPrivacyMode toggle to TargetCard, TargetAnalyticsList, TargetTrendModal, RadialMenu (PRIV-01, PRIV-02)
+- [x] 07-02-PLAN.md — Wire isPrivacyMode toggle to TargetCard, TargetAnalyticsList, TargetTrendModal, RadialMenu (PRIV-01, PRIV-02)
 
 ### Phase 08: Custom Date Range Picker
 **Goal**: Add a date range picker UI for custom period analytics, completing the VIZ-03 requirement.

@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Executing Phase 07
-stopped_at: Completed 07-01-PLAN.md — soft-delete, schema v2 migration, notification channel startup
-last_updated: "2026-03-24T00:23:16.858Z"
+status: Ready to execute
+stopped_at: Completed 07-02-PLAN.md — privacy mode wired to all 4 target-name display components
+last_updated: "2026-03-24T00:23:44.232Z"
 progress:
   total_phases: 8
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 25
-  completed_plans: 24
+  completed_plans: 25
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-23)
 ## Current Position
 
 Phase: 07 (integration-wiring-fixes) — EXECUTING
-Plan: 1 of 2
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Plan: 1 of 2
 | Phase 06 P01 | 2min | 3 tasks | 7 files |
 | Phase 06 P02 | 2 | 2 tasks | 5 files |
 | Phase 07 P01 | 8 | 2 tasks | 6 files |
+| Phase 07 P02 | 10 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,8 @@ Recent decisions affecting current work:
 - [Phase 07]: Soft-delete via UPDATE status='deleted' + target_history INSERT preserves FK integrity (GOAL-02)
 - [Phase 07]: Schema migration recreates targets table via targets_v2 rename — SQLite cannot ALTER CHECK constraints
 - [Phase 07]: initNotificationChannel called after setDbReady and before store loads in _layout.tsx prepare()
+- [Phase 07]: Read isPrivacyMode once in RadialMenu and pass as prop to RadialBubble — avoids N store subscriptions for N bubbles
+- [Phase 07]: Privacy masking rule is target.isMasked && isPrivacyMode — both conditions required, global toggle controls all components
 
 ### Pending Todos
 
@@ -108,6 +111,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-24T00:23:16.854Z
-Stopped at: Completed 07-01-PLAN.md — soft-delete, schema v2 migration, notification channel startup
+Last session: 2026-03-24T00:23:44.229Z
+Stopped at: Completed 07-02-PLAN.md — privacy mode wired to all 4 target-name display components
 Resume file: None
