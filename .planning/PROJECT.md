@@ -41,6 +41,16 @@ No active requirements — all v1 requirements validated.
 - Gamification (badges, streaks) — not aligned with core value
 - AI-powered insights — deferred to v1.4
 
+## Current State
+
+**Shipped:** v1.0 MVP (2026-03-24)
+**Codebase:** ~39,900 LOC TypeScript across 294 files
+**Status:** All 23 v1 requirements validated. Ready for next milestone.
+
+**Known tech debt:**
+- Goals screen PIN toggle disconnected from settingsStore.isPrivacyMode (Settings toggle works)
+- 3 Phase 08 items pending device testing (modal animation, chart update, body-fill flow)
+
 ## Context
 The app uses a joystick metaphor where each of 3 life pillars (Afterlife, Self, Others) is a physical control. The 4-direction swipe creates a 2x2 matrix (positive/negative x direct/indirect) mapping to CBT behavioral tracking. Hold-to-target adds depth without UI clutter. A physics-based body-fill visualization gives an instant emotional read on life balance.
 
@@ -78,4 +88,5 @@ Tech stack: React Native + Expo, TypeScript, RNGH v2 + Reanimated v3, Matter.js 
 | expo-notifications local-only (ADR-027) | DAILY + WEEKLY triggers, no server needed | ✓ Good |
 | FlatList onboarding carousel (ADR-028) | No extra deps, pagingEnabled + Reanimated | ✓ Good |
 
-*Last updated: 2026-03-24 after Phase 8 completion — VIZ-03 custom date range picker delivered, all v1 requirements complete*
+---
+*Last updated: 2026-03-24 after v1.0 milestone*
