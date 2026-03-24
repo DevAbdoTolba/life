@@ -91,8 +91,10 @@ Plans:
   1. The joystick ring shows an intensifying water-drop glow effect as drag distance increases
   2. The app background hue shifts smoothly toward the active pillar color while dragging and returns to neutral on release
   3. No emoji appear anywhere in the UI — each pillar is represented by its own simple icon
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 2 plans
+Plans:
+- [ ] 13-01-PLAN.md — Remove all emoji, replace with Ionicons pillar and direction icons (VIS-06)
+- [ ] 13-02-PLAN.md — Skia liquid glow ring on joystick and animated background hue shift (VIS-03, VIS-05)
 
 ## Progress
 
@@ -110,4 +112,4 @@ Plans:
 | 10. Gesture Interaction Overhaul | v1.1 | 0/? | Not started | - |
 | 11. Hold Interaction Visuals | v1.1 | 0/1 | Not started | - |
 | 12. Analytics & Layout | v1.1 | 0/2 | Not started | - |
-| 13. Advanced Visual Polish | v1.1 | 0/? | Not started | - |
+| 13. Advanced Visual Polish | v1.1 | 0/2 | Not started | - |
