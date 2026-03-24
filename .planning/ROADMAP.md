@@ -136,7 +136,11 @@ Plans:
   1. Settings Privacy Mode toggle controls masking in TargetCard, TargetAnalyticsList, TargetTrendModal, RadialMenu
   2. deleteTarget() uses soft-delete (status='deleted') instead of hard DELETE, preserving target_history FK integrity
   3. initNotificationChannel() called at app startup in _layout.tsx
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Schema migration, soft-delete in targetStore, notification channel init at startup (GOAL-02, NOTIFY-01, NOTIFY-02)
+- [ ] 07-02-PLAN.md — Wire isPrivacyMode toggle to TargetCard, TargetAnalyticsList, TargetTrendModal, RadialMenu (PRIV-01, PRIV-02)
 
 ### Phase 08: Custom Date Range Picker
 **Goal**: Add a date range picker UI for custom period analytics, completing the VIZ-03 requirement.
@@ -159,5 +163,5 @@ Plans:
 | 04. Analytics & Viz | 4/4 | Complete | 2026-03-23 |
 | 05. Polish & Launch | 0/5 | Complete    | 2026-03-23 |
 | 06. Swipe Note Entry | 0/2 | Complete    | 2026-03-24 |
-| 07. Integration Wiring Fixes | 0/0 | Pending | — |
+| 07. Integration Wiring Fixes | 0/2 | In Progress | — |
 | 08. Custom Date Range Picker | 0/0 | Pending | — |
