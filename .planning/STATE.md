@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Refinement & Polish
-status: Ready to execute
-stopped_at: Completed 09-foundation-fixes 09-01-PLAN.md
-last_updated: "2026-03-24T21:29:57.990Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 09-foundation-fixes/09-02-PLAN.md
+last_updated: "2026-03-24T21:31:23.869Z"
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -35,6 +35,8 @@ All v1.0 decisions archived in PROJECT.md Key Decisions table and milestones/v1.
 v1.1 decisions pending (none logged yet).
 
 - [Phase 09-foundation-fixes]: HOOK-01: Inlined all four useAnimatedStyle indicator calls at top level in Joystick.tsx and GestureSlide.tsx — removed createIndicatorStyle factory wrapper to fix Rules of Hooks violation
+- [Phase 09-foundation-fixes]: Matter.js kept on JS thread RAF: useFrameCallback worklet constraint prevents Matter.Engine.update() on UI thread; SharedValue writes from RAF are cross-thread safe
+- [Phase 09-foundation-fixes]: Pre-allocated Skia slots pattern: never grow dynamic Skia Circle tree; pre-allocate MAX_BALLS slots with HIDDEN_POS sentinel before first render
 
 ### Pending Todos
 
@@ -51,6 +53,6 @@ v1.1 decisions pending (none logged yet).
 
 ## Session Continuity
 
-Last session: 2026-03-24T21:29:57.987Z
-Stopped at: Completed 09-foundation-fixes 09-01-PLAN.md
+Last session: 2026-03-24T21:31:23.866Z
+Stopped at: Completed 09-foundation-fixes/09-02-PLAN.md
 Resume file: None

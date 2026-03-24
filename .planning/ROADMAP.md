@@ -25,7 +25,7 @@
 
 **Milestone Goal:** Fix broken behaviors, correct UX misunderstandings, and elevate the visual/tactile experience of the joystick system.
 
-- [ ] **Phase 09: Foundation Fixes** — Repair screen wake lock and body-fill physics; remove hooks anti-pattern blocking visual work
+- [x] **Phase 09: Foundation Fixes** — Repair screen wake lock and body-fill physics; remove hooks anti-pattern blocking visual work (completed 2026-03-24)
 - [ ] **Phase 10: Gesture Interaction Overhaul** — Fix joystick hold behavior: center-hold toggles notes, directional hold fans targets at 30-degree intervals
 - [ ] **Phase 11: Hold Interaction Visuals** — Quadrant separator lines, section fill on hold, and haptic feedback — all triggered at hold-start
 - [ ] **Phase 12: Analytics & Layout** — Line chart for daily activity, joystick and activity list repositioned for thumb reach
@@ -44,7 +44,7 @@
 **Plans**: 2 plans
 Plans:
 - [x] 09-01-PLAN.md — Inline hooks: remove createIndicatorStyle factory from Joystick.tsx and GestureSlide.tsx (HOOK-01)
-- [ ] 09-02-PLAN.md — Fix body-fill physics rendering and screen wake lock (BUG-01, BUG-02)
+- [x] 09-02-PLAN.md — Fix body-fill physics rendering and screen wake lock (BUG-01, BUG-02)
 
 ### Phase 10: Gesture Interaction Overhaul
 **Goal**: The joystick hold gesture behaves as designed — center hold is a note-mode toggle, directional hold reveals a clean target fan, and notes are never prompted on plain swipes
