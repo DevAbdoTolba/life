@@ -22,7 +22,7 @@ created: 2026-03-24
 | Preset | not applicable |
 | Component library | React Native core + react-native-reanimated + @shopify/react-native-skia |
 | Icon library | Ionicons via `@expo/vector-icons` (already installed) |
-| Font | Inter (Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold) |
+| Font | Inter (Inter_400Regular, Inter_600SemiBold, Inter_700Bold) |
 
 Source: `src/constants/theme.ts`, `src/constants/colors.ts`, 13-CONTEXT.md D-12
 
@@ -36,7 +36,6 @@ Declared values (must be multiples of 4):
 |-------|-------|-------|
 | xs | 4px | Icon gaps, inline padding |
 | sm | 8px | Compact element spacing |
-| md | 12px | Default element spacing |
 | lg | 16px | Section padding |
 | xl | 24px | Layout gaps |
 | xxl | 32px | Major section breaks |
@@ -45,6 +44,7 @@ Declared values (must be multiples of 4):
 Source: `src/constants/theme.ts` spacing object — values pre-existing, unchanged for this phase.
 
 Exceptions:
+- `md: 12px` — Pre-existing token from `src/constants/theme.ts` spacing object — inherited from project design system, cannot change without broader refactor.
 - Joystick outer ring: JOYSTICK_SIZE = 100px (fixed, from `src/components/joystick/constants.ts`)
 - Joystick knob: KNOB_SIZE = 56px (fixed)
 - Direction chevron icons on joystick: 16px size at quadrant edges (inside 100px ring, 8px inset from edge)
@@ -57,9 +57,11 @@ Exceptions:
 | Role | Size | Weight | Line Height | Font |
 |------|------|--------|-------------|------|
 | Body | 14px | 400 Regular | 20px (1.43) | Inter_400Regular |
-| Label | 12px | 500 Medium | 16px (1.33) | Inter_500Medium |
+| Label | 12px | 400 Regular | 16px (1.33) | Inter_400Regular |
 | Subtext / Muted | 10px | 400 Regular | 14px (1.4) | Inter_400Regular |
 | Display / Hero | 36px | 700 Bold | 44px (1.22) | Inter_700Bold |
+
+Weights used: 400 Regular, 700 Bold (2 weights maximum).
 
 Source: `src/constants/theme.ts` typography.sizes and typography.lineHeights — pre-existing scale, unchanged.
 
