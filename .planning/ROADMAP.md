@@ -151,7 +151,11 @@ Plans:
   1. Date range picker component renders with start/end date selection
   2. PeriodSelector 'custom' option opens the date picker
   3. getPeriodDates('custom') returns user-selected date range instead of falling back to current month
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Install react-native-date-picker, date formatting helpers with tests, CustomDateRangeModal component, PeriodSelector subtitle (VIZ-03)
+- [ ] 08-02-PLAN.md — Wire custom range into analytics screen, body-fill route param integration (VIZ-03)
 
 ## Progress
 
@@ -164,4 +168,4 @@ Plans:
 | 05. Polish & Launch | 0/5 | Complete    | 2026-03-23 |
 | 06. Swipe Note Entry | 0/2 | Complete    | 2026-03-24 |
 | 07. Integration Wiring Fixes | 0/2 | Complete    | 2026-03-24 |
-| 08. Custom Date Range Picker | 0/0 | Pending | — |
+| 08. Custom Date Range Picker | 0/2 | Planned | — |
