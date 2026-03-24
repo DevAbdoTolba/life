@@ -22,7 +22,7 @@ created: 2026-03-24
 | Preset | not applicable |
 | Component library | react-native built-ins + react-native-gifted-charts |
 | Icon library | none (emoji in v1.1; pillar icons deferred to Phase 13) |
-| Font | Inter (400Regular, 500Medium, 600SemiBold, 700Bold) via expo-google-fonts |
+| Font | Inter (400Regular, 600SemiBold, 700Bold) via expo-google-fonts |
 
 Source: `src/constants/theme.ts`, `src/constants/colors.ts`, `package.json`
 
@@ -36,13 +36,13 @@ Declared values from `src/constants/theme.ts` (spacing object uses multiples of 
 |-------|-------|-------|
 | xs | 4px | Icon gaps, dot-to-text gap in LogHistoryItem |
 | sm | 8px | Internal row gaps, vertical list item padding |
-| md | 12px | Horizontal list item padding, chart title margin-bottom |
-| lg | 16px | Screen horizontal padding (via xl), section labels |
+| lg | 16px | Screen horizontal padding (via xl), section labels, horizontal list item padding |
 | xl | 24px | Screen-level horizontal padding (paddingHorizontal) |
 | xxl | 32px | Header padding-bottom, triangle gap |
 | xxxl | 48px | List bottom padding, joystick triangle vertical spacing |
 
 Exceptions:
+- `md: 12px` — Pre-existing token from `src/constants/theme.ts` spacing object — inherited from project design system, cannot change without broader refactor. Used internally by existing components (horizontal list item padding, chart title margin-bottom) but not declared as part of this phase's primary spacing contract.
 - Activity list peek height: 60px (one full LogHistoryItem row — hardcoded, not a token)
 - LogHistoryItem note indent: 16px (aligns under direction text, equals dot 8px + gap 8px)
 - Touch target minimum: 44px (RADIAL_BUBBLE_SIZE already meets this)
@@ -57,12 +57,12 @@ All sizes from `src/constants/theme.ts` typography object. This phase uses 4 rol
 
 | Role | Size | Weight | Line Height | Token |
 |------|------|--------|-------------|-------|
-| Body (log entry direction label) | 12px | 500 Medium | 16px | sm / sm |
+| Body (log entry direction label) | 12px | 400 Regular | 16px | sm / sm |
 | Label (timestamps, axis labels, action count) | 10px | 400 Regular | 14px | xs / xs |
 | Subheading (chart title, section labels) | 16px | 600 SemiBold | 24px | lg / lg |
 | Display (app title "Hayat") | 36px | 700 Bold | 44px | hero / hero |
 
-Weights in use for this phase: regular (400) + semibold (600). Medium (500) used for log direction label only.
+Weights in use for this phase: regular (400) + semibold (600). Display (700 Bold) used for app title only.
 
 Source: `src/constants/theme.ts`, `app/(tabs)/index.tsx`, `src/components/ui/LogHistoryItem.tsx`
 
