@@ -10,11 +10,13 @@ import { TargetActionSheet } from '../../src/components/goals/TargetActionSheet'
 import type { Target } from '../../src/database/types';
 import { useTargetStore } from '../../src/stores/targetStore';
 import { useAuthStore } from '../../src/stores/authStore';
+import { useSettingsStore } from '../../src/stores/settingsStore';
 import { AuthModal } from '../../src/components/privacy/AuthModal';
 
 export default function GoalsScreen() {
   const { targets, loadTargets } = useTargetStore();
   const { isUnlocked, lock } = useAuthStore();
+  const { isPrivacyMode, togglePrivacyMode } = useSettingsStore();
   const [authModalVisible, setAuthModalVisible] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
   const [selectedTarget, setSelectedTarget] = useState<Target | null>(null);
@@ -26,6 +28,7 @@ export default function GoalsScreen() {
   const handlePrivacyToggle = () => {
     if (isUnlocked) {
       lock();
+      if (!isPrivacyMode) togglePrivacyMode(); // re-enable masking on lock
     } else {
       setAuthModalVisible(true);
     }
@@ -61,6 +64,7 @@ export default function GoalsScreen() {
       <AuthModal
         visible={authModalVisible}
         onClose={() => setAuthModalVisible(false)}
+        onSuccess={() => { if (isPrivacyMode) togglePrivacyMode(); }}
       />
 
       <TargetFormModal 
