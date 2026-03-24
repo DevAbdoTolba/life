@@ -57,3 +57,18 @@ export function getDayLabels(period: PeriodType): string[] {
   // For month, return day numbers 1-31 (actual days computed from data)
   return [];
 }
+
+/** Format a Date or ISO string as "Mar 24, 2026" (MMM DD, YYYY) */
+export function formatDateShort(dateOrIso: Date | string): string {
+  const d = typeof dateOrIso === 'string' ? new Date(dateOrIso) : dateOrIso;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+/** Format a DateRange as "Mar 1 \u2013 Mar 24" for PeriodSelector subtitle */
+export function formatDateRangeLabel(range: DateRange): string {
+  const start = new Date(range.start);
+  const end = new Date(range.end);
+  const fmtShort = (d: Date) =>
+    d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return `${fmtShort(start)} \u2013 ${fmtShort(end)}`;
+}
