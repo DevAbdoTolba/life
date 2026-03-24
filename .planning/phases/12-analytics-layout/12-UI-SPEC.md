@@ -22,7 +22,7 @@ created: 2026-03-24
 | Preset | not applicable |
 | Component library | react-native built-ins + react-native-gifted-charts |
 | Icon library | none (emoji in v1.1; pillar icons deferred to Phase 13) |
-| Font | Inter (400Regular, 600SemiBold, 700Bold) via expo-google-fonts |
+| Font | Inter (400Regular, 600SemiBold) via expo-google-fonts |
 
 Source: `src/constants/theme.ts`, `src/constants/colors.ts`, `package.json`
 
@@ -60,9 +60,9 @@ All sizes from `src/constants/theme.ts` typography object. This phase uses 4 rol
 | Body (log entry direction label) | 12px | 400 Regular | 16px | sm / sm |
 | Label (timestamps, axis labels, action count) | 10px | 400 Regular | 14px | xs / xs |
 | Subheading (chart title, section labels) | 16px | 600 SemiBold | 24px | lg / lg |
-| Display (app title "Hayat") | 36px | 700 Bold | 44px | hero / hero |
+| Display (app title "Hayat") | 36px | 600 SemiBold | 44px | hero / hero |
 
-Weights in use for this phase: regular (400) + semibold (600). Display (700 Bold) used for app title only.
+Weights in use for this phase: regular (400) + semibold (600). Two weights only.
 
 Source: `src/constants/theme.ts`, `app/(tabs)/index.tsx`, `src/components/ui/LogHistoryItem.tsx`
 
@@ -169,7 +169,7 @@ The joystick triangle stays in the lower portion of the viewport (already positi
 |---------|------|
 | Screen layout | `SafeAreaView` (flex: 1) with `backgroundColor: colors.background` |
 | Header | Compact — app name + action count. Reduces vertical space consumed above joysticks. `paddingTop: spacing.lg`, `paddingBottom: spacing.lg` (reduced from current `spacing.xxl`) |
-| Header title | "Hayat" at 36px bold, `letterSpacing: -1` |
+| Header title | "Hayat" at 36px semibold, `letterSpacing: -1` |
 | Header subtitle | "{N} actions today" at 10px regular, `colors.textMuted` |
 | Joystick triangle container | Positioned to consume remaining screen space above the peek strip. `flex: 1` wrapping the triangle keeps joysticks naturally in the lower half |
 | Triangle layout | Unchanged — top row (Afterlife center) + bottom row (Self + Others, 85% width, space-between) |
