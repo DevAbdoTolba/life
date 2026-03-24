@@ -294,19 +294,23 @@ export function Joystick({
     shadowRadius: 8 + dragIntensity.value * 8,
   }));
 
-  // Direction indicator animated styles
-  const createIndicatorStyle = (direction: number) =>
-    useAnimatedStyle(() => ({
-      opacity: activeDirection.value === direction ? 1 : 0.25,
-      transform: [
-        { scale: activeDirection.value === direction ? 1.4 : 1 },
-      ],
-    }));
-
-  const upIndicatorStyle = createIndicatorStyle(1);
-  const downIndicatorStyle = createIndicatorStyle(2);
-  const leftIndicatorStyle = createIndicatorStyle(3);
-  const rightIndicatorStyle = createIndicatorStyle(4);
+  // Direction indicator animated styles (inlined per D-10/D-11 — no factory wrapper)
+  const upIndicatorStyle = useAnimatedStyle(() => ({
+    opacity: activeDirection.value === 1 ? 1 : 0.25,
+    transform: [{ scale: activeDirection.value === 1 ? 1.4 : 1 }],
+  }));
+  const downIndicatorStyle = useAnimatedStyle(() => ({
+    opacity: activeDirection.value === 2 ? 1 : 0.25,
+    transform: [{ scale: activeDirection.value === 2 ? 1.4 : 1 }],
+  }));
+  const leftIndicatorStyle = useAnimatedStyle(() => ({
+    opacity: activeDirection.value === 3 ? 1 : 0.25,
+    transform: [{ scale: activeDirection.value === 3 ? 1.4 : 1 }],
+  }));
+  const rightIndicatorStyle = useAnimatedStyle(() => ({
+    opacity: activeDirection.value === 4 ? 1 : 0.25,
+    transform: [{ scale: activeDirection.value === 4 ? 1.4 : 1 }],
+  }));
 
   // ─── Render ──────────────────────────────────────────
 
