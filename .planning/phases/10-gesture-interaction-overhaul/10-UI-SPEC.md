@@ -30,19 +30,19 @@ created: 2026-03-24
 
 ## Spacing Scale
 
-Declared values from `src/constants/theme.ts` — all multiples of 4:
+Declared values from `src/constants/theme.ts` — standard 8-point scale (multiples of 4):
 
 | Token | Value | Usage |
 |-------|-------|-------|
 | xs | 4px | Icon gaps, inline padding, indicator dot offset |
 | sm | 8px | Wrapper gap (joystick-to-label), knob internal padding |
-| md | 12px | Bubble internal padding |
 | lg | 16px | Default element spacing |
 | xl | 24px | Section padding |
 | 2xl | 32px | Layout gaps |
 | 3xl | 48px | Major section breaks |
 
 Exceptions:
+- `md: 12px` — Bubble internal padding. Pre-existing token from `src/constants/theme.ts` spacing object — inherited from project design system, cannot change without broader refactor across all phases. Not part of the standard 8-point set (4, 8, 16, 24, 32, 48, 64).
 - Joystick outer ring: 100px diameter (JOYSTICK_SIZE — pre-existing hardware constraint)
 - Knob: 56px diameter (KNOB_SIZE — pre-existing hardware constraint)
 - Radial bubble: 44px diameter (RADIAL_BUBBLE_SIZE — minimum touch target per accessibility guidelines)
