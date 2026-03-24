@@ -18,7 +18,7 @@ Effortless behavioral self-awareness through gesture-driven logging and creative
 - [x] PRIV-01: Privacy codenames (pool of ~30 funny names, password-protected reveal) — Phase 3
 - [x] VIZ-01: Bullet journal style analytics (bar, donut, trend charts) — Phase 4
 - [x] VIZ-02: Physics body-fill visualization (Matter.js + Skia) — Phase 4
-- [x] VIZ-03: Custom time periods (Today/Week/Month/Custom) — Phase 4
+- [x] VIZ-03: Custom time periods (Today/Week/Month/Custom) — Phase 4, 8
 - [x] VIZ-04: Period comparison (this week vs last week) — Phase 4
 - [x] VIZ-05: Target-specific analytics (individual target trends) — Phase 4
 - [x] DATA-02: Export all data as JSON backup file — Phase 5
@@ -78,4 +78,4 @@ Tech stack: React Native + Expo, TypeScript, RNGH v2 + Reanimated v3, Matter.js 
 | expo-notifications local-only (ADR-027) | DAILY + WEEKLY triggers, no server needed | ✓ Good |
 | FlatList onboarding carousel (ADR-028) | No extra deps, pagingEnabled + Reanimated | ✓ Good |
 
-*Last updated: 2026-03-24 after Phase 6 completion — LOG-04 gap closed*
+*Last updated: 2026-03-24 after Phase 8 completion — VIZ-03 custom date range picker delivered, all v1 requirements complete*
