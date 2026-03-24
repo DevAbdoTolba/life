@@ -26,6 +26,7 @@ function getSwipeDirection(
   translationX: number,
   translationY: number
 ): SwipeDirection | null {
+  'worklet';
   const distance = Math.sqrt(translationX ** 2 + translationY ** 2);
   if (distance < SWIPE_THRESHOLD) return null;
 

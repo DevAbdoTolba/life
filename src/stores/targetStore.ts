@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { v4 as uuidv4 } from 'uuid';
+import * as Crypto from 'expo-crypto';
 import { getDatabase } from '../database';
 import type { Target, TargetStatus, TargetHistoryEntry } from '../database/types';
 
@@ -62,7 +62,7 @@ export const useTargetStore = create<TargetState>((set, get) => ({
 
   addTarget: async (pillarId, realName, codename = null) => {
     const db = getDatabase();
-    const id = uuidv4();
+    const id = Crypto.randomUUID();
     const now = new Date().toISOString();
 
     await db.runAsync(
@@ -102,7 +102,7 @@ export const useTargetStore = create<TargetState>((set, get) => ({
     );
 
     // Record history
-    const historyId = uuidv4();
+    const historyId = Crypto.randomUUID();
     await db.runAsync(
       `INSERT INTO target_history (id, target_id, old_status, new_status, changed_at)
        VALUES (?, ?, ?, ?, ?)`,
@@ -153,7 +153,7 @@ export const useTargetStore = create<TargetState>((set, get) => ({
       [now, id]
     );
 
-    const historyId = uuidv4();
+    const historyId = Crypto.randomUUID();
     await db.runAsync(
       `INSERT INTO target_history (id, target_id, old_status, new_status, changed_at) VALUES (?, ?, ?, ?, ?)`,
       [historyId, id, target.status, 'deleted', now]

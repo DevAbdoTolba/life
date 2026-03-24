@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { v4 as uuidv4 } from 'uuid';
+import * as Crypto from 'expo-crypto';
 import { getDatabase } from '../database';
 import type { Log, SwipeDirectionType } from '../database/types';
 import type { DailyPillarCount } from '../types/analytics';
@@ -39,7 +39,7 @@ export const useLogStore = create<LogState>((set, get) => ({
 
   addLog: async (pillarId, direction, targetId = null, note = null) => {
     const db = getDatabase();
-    const id = uuidv4();
+    const id = Crypto.randomUUID();
     const createdAt = new Date().toISOString();
 
     await db.runAsync(
