@@ -14,6 +14,10 @@ Requirements for v1.1 Refinement & Polish. Each maps to roadmap phases.
 - [ ] **BUG-03**: Center hold vibrates only (toggles note mode) — does not show targets
 - [ ] **BUG-04**: Directional hold shows targets fanned at 30° intervals from swipe direction
 
+### Code Health
+
+- [ ] **HOOK-01**: Hooks anti-pattern resolved — no `useAnimatedStyle` calls wrapped in factory functions; codebase safe to extend with new animated styles
+
 ### UX Corrections
 
 - [ ] **UX-01**: Notes only prompted when center-hold note mode is active, not on every swipe
@@ -61,6 +65,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | BUG-01 | Phase 9 | Pending |
 | BUG-02 | Phase 9 | Pending |
+| HOOK-01 | Phase 9 | Pending |
 | BUG-03 | Phase 10 | Pending |
 | BUG-04 | Phase 10 | Pending |
 | UX-01 | Phase 10 | Pending |
@@ -74,10 +79,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VIS-06 | Phase 13 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 13 total
-- Mapped to phases: 13
+- v1.1 requirements: 14 total
+- Mapped to phases: 14
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-24*
-*Last updated: 2026-03-24 after v1.1 roadmap creation*
+*Last updated: 2026-03-24 after plan-phase revision (HOOK-01 added)*

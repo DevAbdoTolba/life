@@ -36,14 +36,14 @@
 ### Phase 9: Foundation Fixes
 **Goal**: Shipped features that are currently non-functional work correctly and the codebase is safe to extend with new animated styles
 **Depends on**: Phase 8 (v1.0 complete)
-**Requirements**: BUG-01, BUG-02
+**Requirements**: BUG-01, BUG-02, HOOK-01
 **Success Criteria** (what must be TRUE):
   1. Home screen does not dim or lock while a joystick gesture is in progress
   2. Body-fill visualization renders balls that fall and settle using physics when the screen loads
   3. Adding a new `useAnimatedStyle` call to `Joystick.tsx` does not produce non-deterministic behavior (hooks violation resolved)
 **Plans**: 2 plans
 Plans:
-- [ ] 09-01-PLAN.md — Inline hooks: remove createIndicatorStyle factory from Joystick.tsx and GestureSlide.tsx
+- [ ] 09-01-PLAN.md — Inline hooks: remove createIndicatorStyle factory from Joystick.tsx and GestureSlide.tsx (HOOK-01)
 - [ ] 09-02-PLAN.md — Fix body-fill physics rendering and screen wake lock (BUG-01, BUG-02)
 
 ### Phase 10: Gesture Interaction Overhaul

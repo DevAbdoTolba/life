@@ -38,11 +38,10 @@ created: 2026-03-24
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 09-01-01 | 01 | 1 | BUG-01 | unit | `npx jest --config jest.unit.config.js src/components/physics/useBodyFillPhysics.test.ts` | ❌ W0 | ⬜ pending |
-| 09-01-02 | 01 | 1 | BUG-01 | unit | same file | ❌ W0 | ⬜ pending |
-| 09-02-01 | 02 | 1 | BUG-02 | unit | same file | ❌ W0 | ⬜ pending |
-| 09-02-02 | 02 | 1 | BUG-02 | unit | same file | ❌ W0 | ⬜ pending |
-| 09-03-01 | 03 | 1 | BUG-02 | manual | ESLint + code review | — | ⬜ pending |
+| 09-01-01 | 01 | 1 | HOOK-01 | structural | `grep -rn "createIndicatorStyle" src/components/joystick/Joystick.tsx` (expect 0 matches) | n/a | ⬜ pending |
+| 09-01-02 | 01 | 1 | HOOK-01 | structural | `grep -rn "createIndicatorStyle" src/components/onboarding/GestureSlide.tsx` (expect 0 matches) | n/a | ⬜ pending |
+| 09-02-01 | 02 | 1 | BUG-01, BUG-02 | unit | `npx jest --config jest.unit.config.js src/components/physics/useBodyFillPhysics.test.ts` | ❌ W0 | ⬜ pending |
+| 09-02-02 | 02 | 1 | BUG-02 | structural | `grep -c "ballCount: number" src/components/physics/BodyFillCanvas.tsx` (expect 1) | n/a | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -60,7 +59,8 @@ created: 2026-03-24
 
 | Behavior | Requirement | Why Manual | Test Instructions |
 |----------|-------------|------------|-------------------|
-| Screen does not dim during joystick gesture | BUG-01 | OS screen dimming requires physical device | 1. Open app on device 2. Navigate to home 3. Use joystick for 2+ minutes 4. Verify screen dims after ~30s of inactivity |
+| Screen dims after body-fill balls settle | BUG-01 | OS screen dimming requires physical device; automated grep checks confirm conditional RAF guard and timeout constants are present, but cannot verify OS display timer behavior | 1. Open app on device 2. Navigate to body-fill screen 3. Let balls fall and settle 4. Wait 2+ minutes without touching screen 5. Verify screen dims normally |
+| Screen does not dim during joystick gesture | BUG-01 | OS screen dimming during active gesture is native behavior | 1. Open app on device 2. Navigate to home 3. Use joystick for 2+ minutes 4. Verify screen stays on during gesture but dims after ~30s of inactivity |
 | Balls visually fall and bounce in body-fill | BUG-02 | Skia rendering requires visual confirmation | 1. Open app 2. Navigate to body-fill screen 3. Verify balls appear and fall with physics 4. Verify satisfying bounce at bottom |
 
 ---
