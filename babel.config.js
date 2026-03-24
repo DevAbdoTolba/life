@@ -4,5 +4,8 @@ module.exports = function(api) {
     presets: [
       require('expo/internal/babel-preset'),
     ],
+    plugins: [
+      'react-native-worklets/plugin',
+    ],
   };
 };
