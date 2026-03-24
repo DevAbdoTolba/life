@@ -1,7 +1,7 @@
 // Type definitions for all data entities
 
 export type SwipeDirectionType = 'up' | 'down' | 'left' | 'right';
-export type TargetStatus = 'active' | 'paused' | 'completed' | 'failed' | 'reduced' | 'increased';
+export type TargetStatus = 'active' | 'paused' | 'completed' | 'failed' | 'reduced' | 'increased' | 'deleted';
 
 export interface Log {
   id: string;

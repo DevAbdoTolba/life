@@ -144,7 +144,21 @@ export const useTargetStore = create<TargetState>((set, get) => ({
 
   deleteTarget: async (id) => {
     const db = getDatabase();
-    await db.runAsync(`DELETE FROM targets WHERE id = ?`, [id]);
+    const now = new Date().toISOString();
+    const target = get().targets.find((t) => t.id === id);
+    if (!target) return;
+
+    await db.runAsync(
+      `UPDATE targets SET status = 'deleted', updated_at = ? WHERE id = ?`,
+      [now, id]
+    );
+
+    const historyId = uuidv4();
+    await db.runAsync(
+      `INSERT INTO target_history (id, target_id, old_status, new_status, changed_at) VALUES (?, ?, ?, ?, ?)`,
+      [historyId, id, target.status, 'deleted', now]
+    );
+
     set((state) => ({
       targets: state.targets.filter((t) => t.id !== id),
     }));

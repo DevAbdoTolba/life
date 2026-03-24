@@ -6,7 +6,7 @@
  * future WatermelonDB migration compatibility (ADR-002).
  */
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 export const CREATE_TABLES_SQL = [
   // Action logs: the core data entity
@@ -28,7 +28,7 @@ export const CREATE_TABLES_SQL = [
     real_name TEXT NOT NULL,
     codename TEXT,
     is_masked INTEGER DEFAULT 0,
-    status TEXT DEFAULT 'active' CHECK(status IN ('active', 'paused', 'completed', 'failed', 'reduced', 'increased')),
+    status TEXT DEFAULT 'active' CHECK(status IN ('active', 'paused', 'completed', 'failed', 'reduced', 'increased', 'deleted')),
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
     _status TEXT DEFAULT 'active',
