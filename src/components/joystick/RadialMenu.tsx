@@ -11,6 +11,7 @@ import { getPillarById, type PillarId, type SwipeDirection } from '../../constan
 import { RADIAL_BUBBLE_SIZE, RADIAL_HIT_RADIUS } from './constants';
 import { useRadialMenu, type TargetPosition } from './useRadialMenu';
 import { colors } from '../../constants/colors';
+import { useSettingsStore } from '../../stores/settingsStore';
 
 interface RadialMenuProps {
   visible: boolean;
@@ -25,15 +26,17 @@ function RadialBubble({
   visible,
   thumbPosition,
   pillarColor,
+  isPrivacyMode,
 }: {
   position: TargetPosition;
   index: number;
   visible: boolean;
   thumbPosition: SharedValue<{ x: number; y: number }>;
   pillarColor: string;
+  isPrivacyMode: boolean;
 }) {
   const { x, y, target } = position;
-  const displayName = target.isMasked ? target.codename : target.realName;
+  const displayName = target.isMasked && isPrivacyMode ? target.codename : target.realName;
 
   const animatedStyle = useAnimatedStyle(() => {
     // Distance from thumb to this bubble
@@ -76,6 +79,7 @@ export function RadialMenu({
 }: RadialMenuProps) {
   const { getTargetPositions } = useRadialMenu(pillarId);
   const pillar = getPillarById(pillarId);
+  const isPrivacyMode = useSettingsStore((s) => s.isPrivacyMode);
 
   // Compute positions ONCE per direction change or targets change
   const positions = React.useMemo(() => {
@@ -96,6 +100,7 @@ export function RadialMenu({
             visible={visible}
             thumbPosition={thumbPosition}
             pillarColor={pillar.positiveColor}
+            isPrivacyMode={isPrivacyMode}
           />
         ))}
       </View>
