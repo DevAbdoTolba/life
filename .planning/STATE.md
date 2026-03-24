@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 06-01-PLAN.md — swipe note entry modal (LOG-04) delivered
-last_updated: "2026-03-23T23:56:03.807Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 06-02-PLAN.md — today-log history display and logStore unit tests
+last_updated: "2026-03-24T00:00:10.333Z"
 progress:
   total_phases: 8
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 23
-  completed_plans: 22
+  completed_plans: 23
 ---
 
 # Project State
@@ -50,6 +50,7 @@ Plan: 2 of 2
 | Phase 05 P03 | 12min | 2 tasks | 3 files |
 | Phase 05 P05 | 12 | 2 tasks | 7 files |
 | Phase 06 P01 | 2min | 3 tasks | 7 files |
+| Phase 06 P02 | 2 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,8 @@ Recent decisions affecting current work:
 - [Phase 06]: addLog returns Promise<string> (log UUID) to enable post-swipe modal targeting
 - [Phase 06]: 50ms setTimeout before setPendingLogId prevents gesture handler conflict with modal autoFocus
 - [Phase 06]: NoteEntryModal: three dismiss paths (Skip button, overlay tap, Android back) for zero-friction skip
+- [Phase 06]: FlatList with ListHeaderComponent for home screen: joystick triangle becomes list header enabling scrollable log history below
+- [Phase 06]: LogHistoryItem reuses getLogColor and swipeDirections from constants — consistent with analytics color/label logic
 
 ### Pending Todos
 
@@ -101,6 +104,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-23T23:56:03.803Z
-Stopped at: Completed 06-01-PLAN.md — swipe note entry modal (LOG-04) delivered
+Last session: 2026-03-24T00:00:10.329Z
+Stopped at: Completed 06-02-PLAN.md — today-log history display and logStore unit tests
 Resume file: None

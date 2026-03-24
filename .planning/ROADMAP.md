@@ -125,7 +125,7 @@ Plans:
 
 Plans:
 - [x] 06-01-PLAN.md — Store return type fix, useSwipeLog pendingLogId state, NoteEntryModal, Joystick wiring (LOG-04)
-- [ ] 06-02-PLAN.md — LogHistoryItem component, home screen today-log list, logStore unit tests (LOG-04)
+- [x] 06-02-PLAN.md — LogHistoryItem component, home screen today-log list, logStore unit tests (LOG-04)
 
 ### Phase 07: Integration Wiring Fixes
 **Goal**: Fix three integration gaps — privacy mode toggle, target soft-delete, and Android notification channel initialization.
