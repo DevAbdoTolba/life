@@ -44,6 +44,7 @@ Declared values (from `src/constants/theme.ts` — project canonical tokens):
 | xxxl | 48px | Sheet paddingBottom (safe area clearance) |
 
 Exceptions:
+- 12px (`md`) — project-canonical token established across existing components; not a new declaration; multiple of 4; used for input and button padding throughout the codebase.
 - Bottom sheet `borderTopLeftRadius` / `borderTopRightRadius`: 24px (established modal pattern from NoteEntryModal and TargetTrendModal)
 - Touch targets for close/dismiss buttons: minimum 44px hit area via `hitSlop={8}` (established pattern from TargetTrendModal)
 - DatePicker inline component fills available width — no explicit width token
@@ -59,11 +60,11 @@ All sizes and families from `src/constants/theme.ts` and `src/constants/colors.t
 | Role | Size | Weight | Line Height | Usage in this phase |
 |------|------|--------|-------------|---------------------|
 | Body | 14px (md) | Inter_400Regular (400) | 20px (md) | Date display inside picker, subtitle body text |
-| Label | 12px (sm) | Inter_600SemiBold (600) | 16px (sm) | "Start" / "End" step label, button labels in picker |
+| Label | 12px (sm) | Inter_700Bold (700) | 16px (sm) | "Start" / "End" step labels and button labels in picker |
 | Heading | 20px (xl) | Inter_700Bold (700) | 28px (xl) | Modal title ("Select Start Date" / "Select End Date") |
 | Subtitle | 12px (sm) | Inter_400Regular (400) | 16px (sm) | Custom pill subtitle ("Mar 1 – Mar 24"), helper copy |
 
-Weights used: 400 (regular) and 700 (bold). Note: 600 (semibold) is used for selected pill text and step labels — consistent with PeriodSelector established pattern.
+Weights used: 400 (regular) and 700 (bold).
 
 Source: `src/constants/theme.ts` (typography object) + NoteEntryModal and PeriodSelector StyleSheet inspection.
 
@@ -94,6 +95,8 @@ Text colors:
 - Primary text: #F0F0F5 (`colors.textPrimary`) — modal title, date display
 - Secondary text: #8888A0 (`colors.textSecondary`) — helper subtitle, inactive step label
 - Muted text: #555570 (`colors.textMuted`) — descriptive hint below subtitle
+
+Primary focal point: accent-colored action button ("Next" / "Confirm") at the base of the sheet. All other elements are secondary to this call-to-action.
 
 Source: CONTEXT.md ("Dark theme: `colors.background`, `colors.surface`, `colors.accent`") + `src/constants/colors.ts`.
 
@@ -155,7 +158,7 @@ New utility functions (not components):
 
 When `selected === 'custom'` and `customLabel` prop is provided:
 - Render a single `Text` line centered below the pill row
-- Font: 12px (sm), Inter_400Regular, color `colors.textSecondary`
+- Font: 12px (sm), Inter_400Regular (400), color `colors.textSecondary`
 - Content: e.g., "Mar 1 – Mar 24"
 - When `selected !== 'custom'`: subtitle is hidden (not rendered)
 
@@ -180,7 +183,7 @@ When user taps "Custom" pill while `selected === 'custom'`:
 | Back action | "Back" |
 | Modal title — step 1 | "Select Start Date" |
 | Modal title — step 2 | "Select End Date" |
-| Step indicator label | "Start" / "End" (12px, semibold, above dots) |
+| Step indicator label | "Start" / "End" (12px, bold, above dots) |
 | PeriodSelector subtitle | "Mar 1 – Mar 24" (dynamic, via `formatDateRangeLabel`) |
 | Empty state heading | Not applicable — date picker always has valid default dates |
 | Error state | Not applicable — `minimumDate` constraint prevents invalid range; no network calls |
