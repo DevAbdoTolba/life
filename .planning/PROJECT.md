@@ -30,22 +30,48 @@ Effortless behavioral self-awareness through gesture-driven logging and creative
 - [x] POLISH-03: App icon and splash screen — Phase 5
 
 ### Active
-No active requirements — all v1 requirements validated.
+- [ ] Fix screen never dimming (battery drain)
+- [ ] Fix body-fill balls not animating/falling
+- [ ] Fix joystick hold behavior (center=note toggle, direction=targets at 30deg fan)
+- [ ] Fix privacy mode requiring biometric/PIN authentication
+- [ ] Notes only via center-hold toggle (not every swipe)
+- [ ] Daily activity: line chart instead of bar chart
+- [ ] Daily activity list in bottom half (thumb-reachable)
+- [ ] Joystick quadrant lines with background color change on hold
+- [ ] Liquid analog design (CSS border-shadow water-drop effect)
+- [ ] Haptic vibration on every hold event
+- [ ] Background hue shift on directional drag
+- [ ] Remove emoji clutter, use simple pillar icons
+- [ ] Biometric auth (fingerprint/Face ID) for privacy mode
 
 ### Out of Scope
-- User accounts or authentication — local-only for v1
-- Cloud sync or MongoDB backend — deferred to v1.1
-- Social/sharing features — deferred to v1.2
+- User accounts or authentication — local-only, no server
+- Cloud sync or MongoDB backend — deferred indefinitely
+- Social/sharing features — deferred indefinitely
 - Multi-device sync — requires cloud sync
 - Web version — mobile-first
 - Gamification (badges, streaks) — not aligned with core value
-- AI-powered insights — deferred to v1.4
+- AI-powered insights — deferred indefinitely
+- Islamic calendar integration — deferred to future milestone
+- Home screen widget — deferred to future milestone
+- Neutral swipe (tap without direction) — deferred to future milestone
+- Data migration to WatermelonDB — unnecessary without cloud sync
+
+## Current Milestone: v1.1 Refinement & Polish
+
+**Goal:** Fix broken behaviors, correct UX misunderstandings, and elevate the visual/tactile experience of the joystick system.
+
+**Target features:**
+- Fix screen dimming, body-fill animation, joystick hold behavior, privacy auth
+- Correct note UX (center-hold toggle), chart type (line), list position (bottom)
+- Liquid analog design, haptic feedback, background hue shifts, remove emoji clutter
+- Biometric auth for privacy mode
 
 ## Current State
 
 **Shipped:** v1.0 MVP (2026-03-24)
 **Codebase:** ~39,900 LOC TypeScript across 294 files
-**Status:** All 23 v1 requirements validated. Ready for next milestone.
+**Status:** v1.1 milestone started — bugs, UX corrections, and polish.
 
 **Known tech debt:**
 - Goals screen PIN toggle disconnected from settingsStore.isPrivacyMode (Settings toggle works)
@@ -88,5 +114,22 @@ Tech stack: React Native + Expo, TypeScript, RNGH v2 + Reanimated v3, Matter.js 
 | expo-notifications local-only (ADR-027) | DAILY + WEEKLY triggers, no server needed | ✓ Good |
 | FlatList onboarding carousel (ADR-028) | No extra deps, pagingEnabled + Reanimated | ✓ Good |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd:transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd:complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: 2026-03-24 after v1.0 milestone*
+*Last updated: 2026-03-24 after v1.1 milestone start*
