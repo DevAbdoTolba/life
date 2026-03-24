@@ -20,6 +20,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [appReady, setAppReady] = useState(false);
+  const [hydrated, setHydrated] = useState(useSettingsStore.persist.hasHydrated());
   const setDbReady = useSettingsStore((s) => s.setDbReady);
   const onboardingComplete = useSettingsStore((s) => s.onboardingComplete);
 
@@ -29,6 +30,15 @@ export default function RootLayout() {
     Inter_600SemiBold,
     Inter_700Bold,
   });
+
+  // Wait for zustand persist hydration before making routing decisions
+  useEffect(() => {
+    if (hydrated) return;
+    const unsub = useSettingsStore.persist.onFinishHydration(() => {
+      setHydrated(true);
+    });
+    return unsub;
+  }, [hydrated]);
 
   useEffect(() => {
     async function prepare() {
@@ -58,22 +68,13 @@ export default function RootLayout() {
   }, [fontsLoaded]);
 
   useEffect(() => {
-    if (appReady && fontsLoaded) {
+    if (appReady && fontsLoaded && hydrated) {
       SplashScreen.hideAsync();
     }
-  }, [appReady, fontsLoaded]);
+  }, [appReady, fontsLoaded, hydrated]);
 
-  if (!appReady || !fontsLoaded) {
+  if (!appReady || !fontsLoaded || !hydrated) {
     return null;
-  }
-
-  if (!onboardingComplete) {
-    return (
-      <View style={styles.container}>
-        <StatusBar style="light" />
-        <Redirect href="/onboarding" />
-      </View>
-    );
   }
 
   return (
@@ -103,6 +104,7 @@ export default function RootLayout() {
           }}
         />
       </Stack>
+      {!onboardingComplete && <Redirect href="/onboarding" />}
     </View>
   );
 }
