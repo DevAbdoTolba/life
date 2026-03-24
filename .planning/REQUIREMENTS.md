@@ -16,7 +16,7 @@ Requirements for v1.1 Refinement & Polish. Each maps to roadmap phases.
 
 ### Code Health
 
-- [ ] **HOOK-01**: Hooks anti-pattern resolved — no `useAnimatedStyle` calls wrapped in factory functions; codebase safe to extend with new animated styles
+- [x] **HOOK-01**: Hooks anti-pattern resolved — no `useAnimatedStyle` calls wrapped in factory functions; codebase safe to extend with new animated styles
 
 ### UX Corrections
 
@@ -65,7 +65,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | BUG-01 | Phase 9 | Pending |
 | BUG-02 | Phase 9 | Pending |
-| HOOK-01 | Phase 9 | Pending |
+| HOOK-01 | Phase 9 | Complete |
 | BUG-03 | Phase 10 | Pending |
 | BUG-04 | Phase 10 | Pending |
 | UX-01 | Phase 10 | Pending |
