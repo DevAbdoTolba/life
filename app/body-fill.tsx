@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, StyleSheet, Pressable, useWindowDimensions, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, typography } from '../src/constants';
 import { BodyFillCanvas } from '../src/components/physics/BodyFillCanvas';
@@ -13,10 +13,10 @@ import type { Log } from '../src/database/types';
 /**
  * Full-screen modal for the body-fill physics visualization (VIZ-02, D-13).
  *
- * Loads this week's logs, computes canvas dimensions at a 1:2 aspect ratio
- * (matching the 200:400 body viewBox), runs Matter.js physics via
- * useBodyFillPhysics, and renders the Skia canvas with colored balls settling
- * inside the body silhouette.
+ * Loads this week's logs (or custom date range from route params), computes
+ * canvas dimensions at a 1:2 aspect ratio (matching the 200:400 body viewBox),
+ * runs Matter.js physics via useBodyFillPhysics, and renders the Skia canvas
+ * with colored balls settling inside the body silhouette.
  */
 export default function BodyFillScreen() {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
@@ -24,10 +24,14 @@ export default function BodyFillScreen() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [loaded, setLoaded] = useState(false);
 
+  const { start, end } = useLocalSearchParams<{ start?: string; end?: string }>();
+
   const getLogsByPeriod = useLogStore((s) => s.getLogsByPeriod);
 
   useEffect(() => {
-    const range = getPeriodDates('week');
+    const range = start && end
+      ? { start, end }
+      : getPeriodDates('week');
     getLogsByPeriod(range.start, range.end)
       .then((result) => {
         setLogs(result);
@@ -75,7 +79,9 @@ export default function BodyFillScreen() {
         </Pressable>
       </View>
 
-      <Text style={styles.subtitle}>This Week's Activity</Text>
+      <Text style={styles.subtitle}>
+        {start && end ? 'Custom Range Activity' : "This Week's Activity"}
+      </Text>
 
       {/* Canvas area */}
       <View style={styles.canvasArea}>
@@ -92,7 +98,11 @@ export default function BodyFillScreen() {
 
       {/* Footer log count */}
       <Text style={[styles.logCount, { marginBottom: insets.bottom + spacing.lg }]}>
-        {loaded ? `${logs.length} action${logs.length !== 1 ? 's' : ''} this week` : ''}
+        {loaded
+          ? `${logs.length} action${logs.length !== 1 ? 's' : ''} ${
+              start && end ? 'in range' : 'this week'
+            }`
+          : ''}
       </Text>
     </View>
   );

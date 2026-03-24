@@ -6,16 +6,28 @@ import { Card } from '../ui/Card';
 import { Text } from '../ui/Text';
 import { colors } from '../../constants/colors';
 import { spacing, typography } from '../../constants/theme';
+import type { DateRange } from '../../types/analytics';
 
 interface BodyFillPreviewCardProps {
   logCount: number;
+  dateRange?: DateRange;  // Optional — pass to body-fill via route params
 }
 
-export function BodyFillPreviewCard({ logCount }: BodyFillPreviewCardProps) {
+export function BodyFillPreviewCard({ logCount, dateRange }: BodyFillPreviewCardProps) {
   const router = useRouter();
 
   return (
-    <Card onPress={() => router.push('/body-fill')} style={styles.card}>
+    <Card
+      onPress={() =>
+        router.push({
+          pathname: '/body-fill',
+          params: dateRange
+            ? { start: dateRange.start, end: dateRange.end }
+            : undefined,
+        })
+      }
+      style={styles.card}
+    >
       <View style={styles.row}>
         <View style={styles.iconContainer}>
           <Ionicons name="person-outline" size={40} color={colors.accent} />
