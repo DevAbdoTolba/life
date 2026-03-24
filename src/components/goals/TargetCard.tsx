@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import type { Target } from '../../database/types';
-import { useAuthStore } from '../../stores/authStore';
+import { useSettingsStore } from '../../stores/settingsStore';
 import { getPillarById } from '../../constants/pillars';
 import { colors } from '../../constants/colors';
 import { spacing, typography } from '../../constants/theme';
@@ -12,10 +12,10 @@ export interface TargetCardProps {
 }
 
 export function TargetCard({ target, onPress }: TargetCardProps) {
-  const isUnlocked = useAuthStore(state => state.isUnlocked);
+  const isPrivacyMode = useSettingsStore((s) => s.isPrivacyMode);
   const pillar = getPillarById(target.pillarId as ReturnType<typeof getPillarById>['id']);
 
-  const shouldMask = target.isMasked && !isUnlocked;
+  const shouldMask = target.isMasked && isPrivacyMode;
   const displayName = shouldMask ? target.codename : target.realName;
 
   const isActive = target.status === 'active';

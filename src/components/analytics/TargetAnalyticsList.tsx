@@ -7,6 +7,7 @@ import { spacing, typography } from '../../constants/theme';
 import { getPillarById } from '../../constants/pillars';
 import type { PillarId } from '../../constants/pillars';
 import { useTargetStore } from '../../stores/targetStore';
+import { useSettingsStore } from '../../stores/settingsStore';
 import type { PeriodType, DateRange } from '../../types/analytics';
 import type { Log } from '../../database/types';
 
@@ -24,6 +25,7 @@ export function TargetAnalyticsList({
   onTargetPress,
 }: TargetAnalyticsListProps) {
   const targets = useTargetStore((s) => s.targets);
+  const isPrivacyMode = useSettingsStore((s) => s.isPrivacyMode);
 
   const activeTargets = useMemo(
     () => targets.filter((t) => t.status === 'active'),
@@ -50,8 +52,7 @@ export function TargetAnalyticsList({
       ) : (
         targetsWithCounts.map((target) => {
           const pillar = getPillarById(target.pillarId as PillarId);
-          // D-24: show codename if masked, otherwise real name
-          const displayName = target.isMasked && target.codename
+          const displayName = target.isMasked && isPrivacyMode && target.codename
             ? target.codename
             : target.realName;
 

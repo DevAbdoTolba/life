@@ -9,6 +9,7 @@ import { getPillarById } from '../../constants/pillars';
 import type { PillarId } from '../../constants/pillars';
 import { useLogStore } from '../../stores/logStore';
 import { useTargetStore } from '../../stores/targetStore';
+import { useSettingsStore } from '../../stores/settingsStore';
 import type { DateRange } from '../../types/analytics';
 import type { Log } from '../../database/types';
 
@@ -36,6 +37,7 @@ export function TargetTrendModal({
   const target = useTargetStore((s) =>
     s.targets.find((t) => t.id === targetId)
   );
+  const isPrivacyMode = useSettingsStore((s) => s.isPrivacyMode);
 
   useEffect(() => {
     if (!visible || !targetId) {
@@ -63,10 +65,9 @@ export function TargetTrendModal({
 
   const chartWidth = width - spacing.xl * 4;
 
-  // D-24: show codename if masked
   const displayName =
     target
-      ? target.isMasked && target.codename
+      ? target.isMasked && isPrivacyMode && target.codename
         ? target.codename
         : target.realName
       : '';
