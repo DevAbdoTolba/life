@@ -11,8 +11,9 @@ import { BodyFillPreviewCard } from '../../src/components/analytics/BodyFillPrev
 import { ComparisonCards } from '../../src/components/analytics/ComparisonCards';
 import { TargetAnalyticsList } from '../../src/components/analytics/TargetAnalyticsList';
 import { TargetTrendModal } from '../../src/components/analytics/TargetTrendModal';
+import { CustomDateRangeModal } from '../../src/components/analytics/CustomDateRangeModal';
 import { useLogStore } from '../../src/stores/logStore';
-import { getPeriodDates, formatPeriodLabel } from '../../src/utils/periodHelpers';
+import { getPeriodDates, formatPeriodLabel, formatDateRangeLabel } from '../../src/utils/periodHelpers';
 import type { PeriodType, DateRange, DailyPillarCount } from '../../src/types/analytics';
 import type { Log } from '../../src/database/types';
 import { colors } from '../../src/constants/colors';
@@ -26,6 +27,8 @@ export default function AnalyticsScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTargetId, setSelectedTargetId] = useState<string | null>(null);
   const [showTargetTrend, setShowTargetTrend] = useState(false);
+  const [customRange, setCustomRange] = useState<DateRange>(getPeriodDates('custom'));
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const getLogsByPeriod = useLogStore((s) => s.getLogsByPeriod);
   const getDailyLogsByPillar = useLogStore((s) => s.getDailyLogsByPillar);
@@ -35,8 +38,24 @@ export default function AnalyticsScreen() {
     setShowTargetTrend(true);
   };
 
+  const handlePeriodSelect = (period: PeriodType) => {
+    setSelectedPeriod(period);
+    if (period === 'custom') {
+      setShowDatePicker(true);
+    }
+  };
+
+  const handleCustomPress = () => {
+    setShowDatePicker(true);
+  };
+
+  const handleDateRangeConfirm = (range: DateRange) => {
+    setCustomRange(range);
+    setShowDatePicker(false);
+  };
+
   useEffect(() => {
-    const range = getPeriodDates(selectedPeriod);
+    const range = selectedPeriod === 'custom' ? customRange : getPeriodDates(selectedPeriod);
     setDateRange(range);
     setIsLoading(true);
     Promise.all([
@@ -49,11 +68,16 @@ export default function AnalyticsScreen() {
         setIsLoading(false);
       })
       .catch(() => setIsLoading(false));
-  }, [selectedPeriod]);
+  }, [selectedPeriod, customRange]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <PeriodSelector selected={selectedPeriod} onSelect={setSelectedPeriod} />
+      <PeriodSelector
+        selected={selectedPeriod}
+        onSelect={handlePeriodSelect}
+        customLabel={selectedPeriod === 'custom' ? formatDateRangeLabel(customRange) : undefined}
+        onCustomPress={handleCustomPress}
+      />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -85,7 +109,7 @@ export default function AnalyticsScreen() {
                 <TrendLineChart dailyCounts={dailyCounts} period={selectedPeriod} />
                 <View style={styles.chartSpacer} />
 
-                <BodyFillPreviewCard logCount={logs.length} />
+                <BodyFillPreviewCard logCount={logs.length} dateRange={dateRange} />
 
                 <ComparisonCards
                   period={selectedPeriod}
@@ -113,6 +137,14 @@ export default function AnalyticsScreen() {
           setShowTargetTrend(false);
           setSelectedTargetId(null);
         }}
+      />
+
+      <CustomDateRangeModal
+        visible={showDatePicker}
+        defaultStart={new Date(customRange.start)}
+        defaultEnd={new Date(customRange.end)}
+        onConfirm={handleDateRangeConfirm}
+        onClose={() => setShowDatePicker(false)}
       />
     </SafeAreaView>
   );
