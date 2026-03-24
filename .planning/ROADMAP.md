@@ -78,8 +78,10 @@ Plans:
   1. Daily activity displays as a line chart — individual data points connected by a continuous line, no bar overflow
   2. All three joystick analogs are positioned in the lower thumb-reach zone without scrolling
   3. The activity list sits below the viewport with only the most recent entry peeking up, scrollable on demand
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 2 plans
+Plans:
+- [ ] 12-01-PLAN.md — Replace daily activity bar chart with multi-line area chart (UX-02)
+- [ ] 12-02-PLAN.md — Restructure home screen to three-region layout with peek activity list (UX-03)
 
 ### Phase 13: Advanced Visual Polish
 **Goal**: The joystick feels alive — it glows and distorts like liquid when dragged, the background shifts hue toward the active pillar color, and the UI uses clean pillar icons instead of emoji
@@ -107,5 +109,5 @@ Plans:
 | 9. Foundation Fixes | v1.1 | 1/2 | In Progress|  |
 | 10. Gesture Interaction Overhaul | v1.1 | 0/? | Not started | - |
 | 11. Hold Interaction Visuals | v1.1 | 0/1 | Not started | - |
-| 12. Analytics & Layout | v1.1 | 0/? | Not started | - |
+| 12. Analytics & Layout | v1.1 | 0/2 | Not started | - |
 | 13. Advanced Visual Polish | v1.1 | 0/? | Not started | - |
