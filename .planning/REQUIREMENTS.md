@@ -19,7 +19,7 @@
 
 ### Goals
 - [x] **GOAL-01**: Goals can be created, edited, completed, paused, failed, and archived
-- [ ] **GOAL-02**: Full goal history/changelog tracking
+- [x] **GOAL-02**: Full goal history/changelog tracking
 - [x] **GOAL-03**: Targets are strictly per-pillar (cannot span multiple pillars)
 
 ### Privacy
@@ -34,8 +34,8 @@
 - [x] **VIZ-05**: Target-specific analytics (trending for individual targets)
 
 ### Notifications
-- [ ] **NOTIFY-01**: Configurable daily review notification prompting user to log
-- [ ] **NOTIFY-02**: Period review reminders
+- [x] **NOTIFY-01**: Configurable daily review notification prompting user to log
+- [x] **NOTIFY-02**: Period review reminders
 
 ### Polish
 - [x] **POLISH-01**: Onboarding flow explaining 3 pillars + gesture tutorial
@@ -80,7 +80,7 @@
 | DATA-03 | Phase 5 | Complete |
 | DATA-04 | Phase 1 | Complete |
 | GOAL-01 | Phase 3 | Complete |
-| GOAL-02 | Phase 7 | Pending |
+| GOAL-02 | Phase 7 | Complete |
 | GOAL-03 | Phase 3 | Complete |
 | PRIV-01 | Phase 7 | Pending |
 | PRIV-02 | Phase 7 | Pending |
@@ -89,8 +89,8 @@
 | VIZ-03 | Phase 8 | Pending |
 | VIZ-04 | Phase 4 | Complete |
 | VIZ-05 | Phase 4 | Complete |
-| NOTIFY-01 | Phase 7 | Pending |
-| NOTIFY-02 | Phase 7 | Pending |
+| NOTIFY-01 | Phase 7 | Complete |
+| NOTIFY-02 | Phase 7 | Complete |
 | POLISH-01 | Phase 5 | Complete |
 | POLISH-02 | Phase 5 | Complete |
 | POLISH-03 | Phase 5 | Complete |

@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Completed 06-02-PLAN.md — today-log history display and logStore unit tests
-last_updated: "2026-03-24T00:03:22.992Z"
+status: Executing Phase 07
+stopped_at: Completed 07-01-PLAN.md — soft-delete, schema v2 migration, notification channel startup
+last_updated: "2026-03-24T00:23:16.858Z"
 progress:
   total_phases: 8
   completed_phases: 6
-  total_plans: 23
-  completed_plans: 23
+  total_plans: 25
+  completed_plans: 24
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-23)
 
 **Core value:** Effortless behavioral self-awareness through gesture-driven logging and creative visualization
-**Current focus:** Phase 06 — swipe-note-entry
+**Current focus:** Phase 07 — integration-wiring-fixes
 
 ## Current Position
 
-Phase: 07
-Plan: Not started
+Phase: 07 (integration-wiring-fixes) — EXECUTING
+Plan: 1 of 2
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Plan: Not started
 | Phase 05 P05 | 12 | 2 tasks | 7 files |
 | Phase 06 P01 | 2min | 3 tasks | 7 files |
 | Phase 06 P02 | 2 | 2 tasks | 5 files |
+| Phase 07 P01 | 8 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,9 @@ Recent decisions affecting current work:
 - [Phase 06]: NoteEntryModal: three dismiss paths (Skip button, overlay tap, Android back) for zero-friction skip
 - [Phase 06]: FlatList with ListHeaderComponent for home screen: joystick triangle becomes list header enabling scrollable log history below
 - [Phase 06]: LogHistoryItem reuses getLogColor and swipeDirections from constants — consistent with analytics color/label logic
+- [Phase 07]: Soft-delete via UPDATE status='deleted' + target_history INSERT preserves FK integrity (GOAL-02)
+- [Phase 07]: Schema migration recreates targets table via targets_v2 rename — SQLite cannot ALTER CHECK constraints
+- [Phase 07]: initNotificationChannel called after setDbReady and before store loads in _layout.tsx prepare()
 
 ### Pending Todos
 
@@ -104,6 +108,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-24T00:00:10.329Z
-Stopped at: Completed 06-02-PLAN.md — today-log history display and logStore unit tests
+Last session: 2026-03-24T00:23:16.854Z
+Stopped at: Completed 07-01-PLAN.md — soft-delete, schema v2 migration, notification channel startup
 Resume file: None
