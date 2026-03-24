@@ -13,6 +13,7 @@ import {
 import { colors } from '../src/constants';
 import { initDatabase } from '../src/database';
 import { useLogStore, useTargetStore, useSettingsStore } from '../src/stores';
+import { initNotificationChannel } from '../src/services/notifications';
 
 // Keep splash screen visible while loading resources
 SplashScreen.preventAutoHideAsync();
@@ -35,6 +36,7 @@ export default function RootLayout() {
         // Initialize database
         await initDatabase();
         setDbReady(true);
+        await initNotificationChannel();
 
         // Load initial data into stores
         await Promise.all([

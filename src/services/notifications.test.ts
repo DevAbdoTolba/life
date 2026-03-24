@@ -39,6 +39,13 @@ describe('notifications service', () => {
         importance: 3, // AndroidImportance.DEFAULT
       }));
     });
+
+    it('is safe to call multiple times (idempotent)', async () => {
+      await initNotificationChannel();
+      await initNotificationChannel();
+      expect(mockSetChannel).toHaveBeenCalledTimes(2);
+      // Both calls succeed — no error thrown
+    });
   });
 
   describe('syncNotificationSchedule', () => {
