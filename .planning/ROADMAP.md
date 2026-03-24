@@ -66,8 +66,9 @@ Plans:
   1. Four separator lines are visible on the joystick base dividing it into quadrants at rest
   2. When a hold begins, the active quadrant fills with color and the app background shifts to match
   3. A haptic pulse fires at the instant hold-start is detected — before any target menu appears
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 1 plan
+Plans:
+- [ ] 11-01-PLAN.md — Separator lines, quadrant fill overlays, and haptic on hold-start (VIS-01, VIS-02, VIS-04)
 
 ### Phase 12: Analytics & Layout
 **Goal**: The daily activity chart shows trend continuity with a line chart, and the home screen layout places joysticks and the activity list where thumbs naturally reach
@@ -105,6 +106,6 @@ Plans:
 | 8. Custom Date Range Picker | v1.0 | 2/2 | Complete | 2026-03-24 |
 | 9. Foundation Fixes | v1.1 | 1/2 | In Progress|  |
 | 10. Gesture Interaction Overhaul | v1.1 | 0/? | Not started | - |
-| 11. Hold Interaction Visuals | v1.1 | 0/? | Not started | - |
+| 11. Hold Interaction Visuals | v1.1 | 0/1 | Not started | - |
 | 12. Analytics & Layout | v1.1 | 0/? | Not started | - |
 | 13. Advanced Visual Polish | v1.1 | 0/? | Not started | - |
