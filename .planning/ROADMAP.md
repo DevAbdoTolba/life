@@ -57,7 +57,7 @@ Plans:
   4. Releasing a directional hold dismisses the target fan without logging an entry
 **Plans**: 2 plans
 Plans:
-- [ ] 10-01-PLAN.md — Constants, targetStore 3-cap selector, 30-degree fan geometry, useSwipeLog note-mode gate (BUG-04, UX-01)
+- [x] 10-01-PLAN.md — Constants, targetStore 3-cap selector, 30-degree fan geometry, useSwipeLog note-mode gate (BUG-04, UX-01)
 - [ ] 10-02-PLAN.md — Joystick.tsx center-vs-directional hold branch, glow ring, cancel escape, noteMode wiring (BUG-03, BUG-04, UX-01)
 
 ### Phase 11: Hold Interaction Visuals
@@ -111,7 +111,7 @@ Plans:
 | 7. Integration Wiring Fixes | v1.0 | 2/2 | Complete | 2026-03-24 |
 | 8. Custom Date Range Picker | v1.0 | 2/2 | Complete | 2026-03-24 |
 | 9. Foundation Fixes | v1.1 | 1/2 | In Progress|  |
-| 10. Gesture Interaction Overhaul | v1.1 | 0/2 | Not started | - |
+| 10. Gesture Interaction Overhaul | v1.1 | 1/2 | In Progress|  |
 | 11. Hold Interaction Visuals | v1.1 | 0/1 | Not started | - |
 | 12. Analytics & Layout | v1.1 | 2/2 | Complete   | 2026-03-25 |
 | 13. Advanced Visual Polish | v1.1 | 0/2 | Not started | - |

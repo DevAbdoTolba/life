@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Refinement & Polish
 status: Phase complete — ready for verification
-stopped_at: Completed 12-analytics-layout 12-01-PLAN.md
-last_updated: "2026-03-25T07:20:22.702Z"
+stopped_at: Completed 10-gesture-interaction-overhaul/10-01-PLAN.md
+last_updated: "2026-03-25T07:25:50.520Z"
 progress:
   total_phases: 5
   completed_phases: 2
   total_plans: 9
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -39,6 +39,9 @@ v1.1 decisions pending (none logged yet).
 - [Phase 09-foundation-fixes]: Pre-allocated Skia slots pattern: never grow dynamic Skia Circle tree; pre-allocate MAX_BALLS slots with HIDDEN_POS sentinel before first render
 - [Phase 12]: Three-region home screen layout: compact header, flex:1 joystick triangle, 60px peek activity strip replacing FlatList+ListHeaderComponent pattern
 - [Phase 12-analytics-layout]: Used LineChart with dataSet prop for multi-series daily activity chart, replacing overflow-prone BarChart
+- [Phase 10]: Export computeFanPositions as pure function alongside hook for unit testability
+- [Phase 10]: noteMode defaults to false - backward-compatible with all existing handleSwipe callers
+- [Phase 10]: Hardcode .slice(0, 3) in getActiveTargetsByPillar to avoid circular dependency with component constants
 
 ### Pending Todos
 
@@ -55,6 +58,6 @@ v1.1 decisions pending (none logged yet).
 
 ## Session Continuity
 
-Last session: 2026-03-25T07:20:22.699Z
-Stopped at: Completed 12-analytics-layout 12-01-PLAN.md
+Last session: 2026-03-25T07:25:50.516Z
+Stopped at: Completed 10-gesture-interaction-overhaul/10-01-PLAN.md
 Resume file: None
