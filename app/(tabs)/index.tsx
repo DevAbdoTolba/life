@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, FlatList } from 'react-native';
+import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, pillars, typography, spacing } from '../../src/constants';
 import { Joystick } from '../../src/components/joystick';
@@ -18,44 +18,44 @@ export default function HomeScreen() {
   // Using empty callback since Joystick internally uses useSwipeLog
   const handleSwipe = () => {};
 
+  const lastLog = todayLogs.length > 0 ? todayLogs[0] : null;
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Region 1: Compact header (per D-08) */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Hayat</Text>
-        <Text style={styles.actionCount}>
-          {todayLogs.length} action{todayLogs.length !== 1 ? 's' : ''} today
-        </Text>
-      </View>
-
-      {/* Region 2: Joystick triangle — takes remaining space (per D-05) */}
-      <View style={styles.triangleContainer}>
-        <View style={styles.topRow}>
-          <Joystick pillarId={pillars[0].id} onSwipe={handleSwipe} />
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Compact header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Hayat</Text>
+          <Text style={styles.actionCount}>
+            {todayLogs.length} action{todayLogs.length !== 1 ? 's' : ''} today
+          </Text>
         </View>
-        <View style={styles.bottomRow}>
-          <Joystick pillarId={pillars[1].id} onSwipe={handleSwipe} />
-          <Joystick pillarId={pillars[2].id} onSwipe={handleSwipe} />
-        </View>
-      </View>
 
-      {/* Region 3: Activity list peek strip (per D-06, D-07) */}
-      <View style={styles.peekContainer}>
-        {todayLogs.length === 0 ? (
-          <View style={styles.emptyPeek}>
-            <Text style={styles.emptyPeekText}>No activity yet</Text>
+        {/* Joystick triangle — pushed lower */}
+        <View style={styles.triangleContainer}>
+          <View style={styles.topRow}>
+            <Joystick pillarId={pillars[0].id} onSwipe={handleSwipe} />
           </View>
-        ) : (
-          <FlatList
-            data={todayLogs}
-            keyExtractor={(item: Log) => item.id}
-            renderItem={({ item }: { item: Log }) => <LogHistoryItem log={item} />}
-            scrollEnabled
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.listContent}
-          />
-        )}
-      </View>
+          <View style={styles.bottomRow}>
+            <Joystick pillarId={pillars[1].id} onSwipe={handleSwipe} />
+            <Joystick pillarId={pillars[2].id} onSwipe={handleSwipe} />
+          </View>
+        </View>
+
+        {/* Last activity entry */}
+        <View style={styles.activitySection}>
+          {lastLog ? (
+            <LogHistoryItem log={lastLog} />
+          ) : (
+            <View style={styles.emptyPeek}>
+              <Text style={styles.emptyPeekText}>No activity yet</Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -64,32 +64,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  scrollContent: {
+    flexGrow: 1,
     paddingHorizontal: spacing.xl,
   },
-  // Region 1: Compact header (per D-08, UI-SPEC)
   header: {
-    paddingTop: spacing.lg,       // 16px — reduced from xxl
-    paddingBottom: spacing.lg,    // 16px — reduced from xxl (was spacing.xxl = 32)
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.sm,
     alignItems: 'center',
-    gap: spacing.xs,              // 4px between title and subtitle
+    gap: spacing.xs,
   },
   title: {
-    fontFamily: typography.fontFamily.semibold,  // 600 SemiBold per UI-SPEC (not bold/700)
-    fontSize: typography.sizes.hero,             // 36px
+    fontFamily: typography.fontFamily.semibold,
+    fontSize: typography.sizes.hero,
     color: colors.textPrimary,
     letterSpacing: -1,
   },
   actionCount: {
-    fontFamily: typography.fontFamily.regular,   // 400 Regular per UI-SPEC
-    fontSize: typography.sizes.xs,               // 10px per UI-SPEC Label role
+    fontFamily: typography.fontFamily.regular,
+    fontSize: typography.sizes.xs,
     color: colors.textMuted,
   },
-  // Region 2: Joystick triangle (per D-05)
   triangleContainer: {
-    flex: 1,                      // Takes remaining vertical space between header and peek
-    justifyContent: 'center',
+    flex: 1,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    gap: spacing.xxxl,            // 48px between top row and bottom row
+    gap: spacing.xxxl,
+    paddingBottom: spacing.xxxl,
   },
   topRow: {
     alignItems: 'center',
@@ -99,23 +101,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '85%',
   },
-  // Region 3: Peek strip (per D-06, D-07)
-  peekContainer: {
-    maxHeight: 60,                // One LogHistoryItem row visible (per D-06, UI-SPEC)
+  activitySection: {
     borderTopWidth: 1,
-    borderTopColor: colors.border,  // #2A2A3A — visual separator
+    borderTopColor: colors.border,
+    paddingVertical: spacing.sm,
+    paddingBottom: spacing.xxxl,
   },
   emptyPeek: {
-    height: 60,
+    height: 48,
     justifyContent: 'center',
     alignItems: 'center',
   },
   emptyPeekText: {
     fontFamily: typography.fontFamily.regular,
-    fontSize: typography.sizes.sm,               // 12px
-    color: colors.textMuted,                     // #555570
-  },
-  listContent: {
-    paddingBottom: spacing.xxxl,  // 48px bottom padding for scroll overscroll
+    fontSize: typography.sizes.sm,
+    color: colors.textMuted,
   },
 });

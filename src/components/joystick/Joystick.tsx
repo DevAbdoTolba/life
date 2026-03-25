@@ -290,6 +290,7 @@ export function Joystick({
   const longPressGesture = Gesture.LongPress()
     .enabled(!disabled)
     .minDuration(HOLD_DURATION)
+    .maxDistance(MAX_DRAG_DISTANCE)
     .onStart(() => {
       if (isProcessing.value === 1) return;
       isHolding.value = 1;
@@ -300,6 +301,8 @@ export function Joystick({
 
       if (dist < CENTER_HOLD_THRESHOLD) {
         // CENTER HOLD — toggle note mode, no radial menu (BUG-03, D-01, D-02)
+        // Reset isHolding immediately so panGesture.onEnd won't interfere
+        isHolding.value = 0;
         runOnJS(handleCenterHold)();
       } else {
         // DIRECTIONAL HOLD — show target fan (BUG-04, D-03)
