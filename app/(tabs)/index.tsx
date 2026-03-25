@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, FlatList } from 'react-native';
+import { View, StyleSheet, Text, FlatList, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, pillars, typography, spacing } from '../../src/constants';
 import { Joystick } from '../../src/components/joystick';
@@ -7,18 +7,14 @@ import { useLogStore } from '../../src/stores/logStore';
 import { LogHistoryItem } from '../../src/components/ui';
 import type { Log } from '../../src/database/types';
 
-export default function HomeScreen() {
-  const getTodayLogs = useLogStore((state) => state.getTodayLogs);
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+function ListHeader() {
   const todayLogs = useLogStore((state) => state.todayLogs);
-
-  useEffect(() => {
-    getTodayLogs();
-  }, [getTodayLogs]);
-
   const handleSwipe = () => {};
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.headerSection}>
       {/* Compact header */}
       <View style={styles.header}>
         <Text style={styles.title}>Hayat</Text>
@@ -27,7 +23,7 @@ export default function HomeScreen() {
         </Text>
       </View>
 
-      {/* Joystick triangle — pushed to bottom of available space */}
+      {/* Joystick triangle — tighter grouping for more fan space */}
       <View style={styles.triangleContainer}>
         <View style={styles.topRow}>
           <Joystick pillarId={pillars[0].id} onSwipe={handleSwipe} />
@@ -37,23 +33,33 @@ export default function HomeScreen() {
           <Joystick pillarId={pillars[2].id} onSwipe={handleSwipe} />
         </View>
       </View>
+    </View>
+  );
+}
 
-      {/* Activity peek — one entry visible, scroll for more */}
-      <View style={styles.peekContainer}>
-        {todayLogs.length === 0 ? (
-          <View style={styles.emptyPeek}>
-            <Text style={styles.emptyPeekText}>No activity yet</Text>
+export default function HomeScreen() {
+  const getTodayLogs = useLogStore((state) => state.getTodayLogs);
+  const todayLogs = useLogStore((state) => state.todayLogs);
+
+  useEffect(() => {
+    getTodayLogs();
+  }, [getTodayLogs]);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={todayLogs}
+        keyExtractor={(item: Log) => item.id}
+        renderItem={({ item }: { item: Log }) => <LogHistoryItem log={item} />}
+        ListHeaderComponent={ListHeader}
+        ListEmptyComponent={
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyText}>No activity yet</Text>
           </View>
-        ) : (
-          <FlatList
-            data={todayLogs}
-            keyExtractor={(item: Log) => item.id}
-            renderItem={({ item }: { item: Log }) => <LogHistoryItem log={item} />}
-            scrollEnabled
-            showsVerticalScrollIndicator={false}
-          />
-        )}
-      </View>
+        }
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContent}
+      />
     </SafeAreaView>
   );
 }
@@ -62,7 +68,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  listContent: {
     paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.xxxl,
+  },
+  headerSection: {
+    minHeight: SCREEN_HEIGHT * 0.75,
+    justifyContent: 'space-between',
   },
   header: {
     paddingTop: spacing.lg,
@@ -82,11 +95,9 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
   triangleContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
     alignItems: 'center',
-    gap: spacing.xxxl,
-    paddingBottom: spacing.xxl,
+    gap: spacing.lg,
+    paddingBottom: spacing.lg,
   },
   topRow: {
     alignItems: 'center',
@@ -94,19 +105,16 @@ const styles = StyleSheet.create({
   bottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '85%',
+    width: '65%',
   },
-  peekContainer: {
-    maxHeight: 60,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  emptyPeek: {
+  emptyState: {
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
   },
-  emptyPeekText: {
+  emptyText: {
     fontFamily: typography.fontFamily.regular,
     fontSize: typography.sizes.sm,
     color: colors.textMuted,

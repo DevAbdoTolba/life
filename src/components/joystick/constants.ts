@@ -35,7 +35,7 @@ export const SNAP_BACK_CONFIG = {
 export const INDICATOR_SIZE = 6;
 
 /** Radial menu: distance of target bubbles from joystick center */
-export const RADIAL_MENU_RADIUS = 80;
+export const RADIAL_MENU_RADIUS = 110;
 
 /** Radial menu: size of each target bubble */
 export const RADIAL_BUBBLE_SIZE = 44;

@@ -226,6 +226,7 @@ export function Joystick({
 
   const panGesture = Gesture.Pan()
     .enabled(!disabled)
+    .minDistance(0)
     .onStart(() => {
       dragIntensity.value = 0;
       holdState.value = 0;
