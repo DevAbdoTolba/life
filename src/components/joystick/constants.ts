@@ -45,3 +45,9 @@ export const RADIAL_HIT_RADIUS = 30;
 
 /** Radial menu: arc span in degrees */
 export const RADIAL_ARC_SPAN = 120;
+
+/** Distance from center (px) below which LongPress is treated as center hold (D-01) */
+export const CENTER_HOLD_THRESHOLD = 15;
+
+/** Maximum active targets shown in radial fan per direction (D-10) */
+export const MAX_ACTIVE_TARGETS = 3;

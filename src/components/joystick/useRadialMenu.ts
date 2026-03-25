@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useTargetStore } from '../../stores/targetStore';
 import type { PillarId, SwipeDirection } from '../../constants/pillars';
-import { RADIAL_MENU_RADIUS, RADIAL_ARC_SPAN, RADIAL_HIT_RADIUS } from './constants';
+import { RADIAL_MENU_RADIUS, RADIAL_HIT_RADIUS } from './constants';
 import type { Target } from '../../database/types';
 
 export interface TargetPosition {
@@ -11,38 +11,47 @@ export interface TargetPosition {
   angle: number;
 }
 
+/**
+ * Pure fan position calculation — exported for unit testing.
+ * Computes symmetric 30-degree-interval positions around the base direction angle.
+ */
+export function computeFanPositions(
+  targets: Target[],
+  direction: SwipeDirection,
+  radius: number = RADIAL_MENU_RADIUS
+): TargetPosition[] {
+  if (targets.length === 0) return [];
+
+  let baseAngle = 0;
+  switch (direction) {
+    case 'up': baseAngle = 90; break;
+    case 'left': baseAngle = 180; break;
+    case 'down': baseAngle = 270; break;
+    case 'right': baseAngle = 0; break;
+  }
+
+  const STEP_DEG = 30;
+  const spread = (targets.length - 1) * STEP_DEG;
+  const startAngle = baseAngle - spread / 2;
+
+  return targets.map((target, idx) => {
+    const angle = startAngle + STEP_DEG * idx;
+    const angleRad = angle * (Math.PI / 180);
+    return {
+      target,
+      x: radius * Math.cos(angleRad),
+      y: -radius * Math.sin(angleRad),
+      angle,
+    };
+  });
+}
+
 export function useRadialMenu(pillarId: PillarId) {
-  const getTargetsByPillar = useTargetStore((state) => state.getTargetsByPillar);
-  const targets = getTargetsByPillar(pillarId);
+  const getActiveTargetsByPillar = useTargetStore((state) => state.getActiveTargetsByPillar);
+  const targets = getActiveTargetsByPillar(pillarId);
 
   const getTargetPositions = useCallback((direction: SwipeDirection): TargetPosition[] => {
-    if (targets.length === 0) return [];
-    
-    // Joystick uses: right=0, up=90, left=180, down=270
-    let baseAngle = 0;
-    switch (direction) {
-      case 'up': baseAngle = 90; break;
-      case 'left': baseAngle = 180; break;
-      case 'down': baseAngle = 270; break;
-      case 'right': baseAngle = 0; break;
-    }
-
-    const n = targets.length;
-    const startAngle = baseAngle - RADIAL_ARC_SPAN / 2;
-    const step = n > 1 ? RADIAL_ARC_SPAN / (n - 1) : 0;
-
-    return targets.map((target, idx) => {
-      const angle = n === 1 ? baseAngle : startAngle + step * idx;
-      const angleRad = angle * (Math.PI / 180);
-      
-      return {
-        target,
-        x: RADIAL_MENU_RADIUS * Math.cos(angleRad),
-        // Invert Y for React Native coordinates (Y points down)
-        y: -RADIAL_MENU_RADIUS * Math.sin(angleRad),
-        angle,
-      };
-    });
+    return computeFanPositions(targets, direction);
   }, [targets]);
 
   const getClosestTarget = useCallback((x: number, y: number, positions: TargetPosition[]): Target | null => {

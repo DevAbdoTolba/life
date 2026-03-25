@@ -11,6 +11,7 @@ module.exports = {
     '<rootDir>/src/services/**/*.test.ts',
     '<rootDir>/src/utils/**/*.test.ts',
     '<rootDir>/src/stores/**/*.test.ts',
+    '<rootDir>/src/components/**/*.test.ts',
   ],
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
@@ -22,4 +23,9 @@ module.exports = {
     }],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+  moduleNameMapper: {
+    // Expo ESM modules — mock for node test environment
+    'expo-crypto': '<rootDir>/src/__mocks__/expo-crypto.js',
+    'expo-sqlite': '<rootDir>/src/__mocks__/expo-sqlite.js',
+  },
 };
