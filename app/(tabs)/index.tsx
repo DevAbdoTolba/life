@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { View, StyleSheet, Text, FlatList, Dimensions } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Swipeable } from 'react-native-gesture-handler';
 import { colors, pillars, typography, spacing } from '../../src/constants';
 import { Joystick } from '../../src/components/joystick';
 import { useLogStore } from '../../src/stores/logStore';
@@ -8,13 +9,18 @@ import { LogHistoryItem } from '../../src/components/ui';
 import type { Log } from '../../src/database/types';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const ENTRY_ROW_HEIGHT = 48;
 
 function ListHeader() {
+  const insets = useSafeAreaInsets();
   const todayLogs = useLogStore((state) => state.todayLogs);
   const handleSwipe = () => {};
 
+  // Fill screen minus safe areas minus 1 entry height so exactly 1 entry peeks
+  const headerHeight = SCREEN_HEIGHT - insets.top - insets.bottom - ENTRY_ROW_HEIGHT;
+
   return (
-    <View style={styles.headerSection}>
+    <View style={[styles.headerSection, { minHeight: headerHeight }]}>
       {/* Compact header */}
       <View style={styles.header}>
         <Text style={styles.title}>Hayat</Text>
@@ -37,20 +43,54 @@ function ListHeader() {
   );
 }
 
+function SwipeableRow({ log, onDelete }: { log: Log; onDelete: (id: string) => void }) {
+  const swipeableRef = useRef<Swipeable>(null);
+
+  const renderRightActions = useCallback(() => (
+    <View style={styles.deleteAction}>
+      <Text style={styles.deleteText}>Delete</Text>
+    </View>
+  ), []);
+
+  const handleSwipeOpen = useCallback(() => {
+    swipeableRef.current?.close();
+    onDelete(log.id);
+  }, [log.id, onDelete]);
+
+  return (
+    <Swipeable
+      ref={swipeableRef}
+      renderRightActions={renderRightActions}
+      onSwipeableOpen={handleSwipeOpen}
+      overshootRight={false}
+      rightThreshold={80}
+    >
+      <LogHistoryItem log={log} />
+    </Swipeable>
+  );
+}
+
 export default function HomeScreen() {
   const getTodayLogs = useLogStore((state) => state.getTodayLogs);
   const todayLogs = useLogStore((state) => state.todayLogs);
+  const deleteLog = useLogStore((state) => state.deleteLog);
 
   useEffect(() => {
     getTodayLogs();
   }, [getTodayLogs]);
+
+  const handleDelete = useCallback((id: string) => {
+    deleteLog(id);
+  }, [deleteLog]);
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
         data={todayLogs}
         keyExtractor={(item: Log) => item.id}
-        renderItem={({ item }: { item: Log }) => <LogHistoryItem log={item} />}
+        renderItem={({ item }: { item: Log }) => (
+          <SwipeableRow log={item} onDelete={handleDelete} />
+        )}
         ListHeaderComponent={ListHeader}
         ListEmptyComponent={
           <View style={styles.emptyState}>
@@ -74,7 +114,6 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xxxl,
   },
   headerSection: {
-    minHeight: SCREEN_HEIGHT * 0.92,
     justifyContent: 'space-between',
   },
   header: {
@@ -118,5 +157,17 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontFamily.regular,
     fontSize: typography.sizes.sm,
     color: colors.textMuted,
+  },
+  deleteAction: {
+    backgroundColor: '#E53935',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingHorizontal: spacing.xl,
+    width: 100,
+  },
+  deleteText: {
+    fontFamily: typography.fontFamily.medium,
+    fontSize: typography.sizes.sm,
+    color: '#fff',
   },
 });

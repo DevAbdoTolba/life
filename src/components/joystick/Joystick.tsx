@@ -258,22 +258,20 @@ export function Joystick({
 
       // ── Directional hold detection ──
       if (holdState.value !== 2 && distance >= CENTER_HOLD_THRESHOLD) {
-        // After center hold: show fan immediately when user drags out
-        if (holdState.value === 1) {
+        const wasCenterHeld = holdState.value === 1;
+
+        // Both paths require the same HOLD_DURATION for directional hold
+        if (directionalHoldStart.value === 0) {
+          directionalHoldStart.value = Date.now();
+        } else if (Date.now() - directionalHoldStart.value >= HOLD_DURATION) {
           holdState.value = 2;
-          // Use angle-only direction (no SWIPE_THRESHOLD) since center hold already validated
-          const dir = getDirectionFromAngle(tx, ty);
-          runOnJS(handleHoldStart)(dir);
-        } else {
-          // No center hold — standard directional hold timing
-          if (directionalHoldStart.value === 0) {
-            directionalHoldStart.value = Date.now();
-          } else if (Date.now() - directionalHoldStart.value >= HOLD_DURATION) {
-            holdState.value = 2;
-            const dir = getSwipeDirection(tx, ty);
-            if (dir) {
-              runOnJS(handleHoldStart)(dir);
-            }
+          // After center hold: angle-only direction (no threshold needed)
+          // Normal: use full swipe threshold check
+          const dir = wasCenterHeld
+            ? getDirectionFromAngle(tx, ty)
+            : getSwipeDirection(tx, ty);
+          if (dir) {
+            runOnJS(handleHoldStart)(dir);
           }
         }
       } else if (distance < CENTER_HOLD_THRESHOLD) {

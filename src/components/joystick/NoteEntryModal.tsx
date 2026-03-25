@@ -8,6 +8,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from 'react-native';
 import { useLogStore } from '../../stores/logStore';
 import { colors } from '../../constants/colors';
@@ -30,6 +31,7 @@ export function NoteEntryModal({ logId, onClose }: NoteEntryModalProps) {
   }, [logId]);
 
   const handleSave = async () => {
+    Keyboard.dismiss();
     if (logId && note.trim()) {
       await updateLogNote(logId, note.trim());
     }
@@ -48,7 +50,7 @@ export function NoteEntryModal({ logId, onClose }: NoteEntryModalProps) {
       onRequestClose={handleSkip}
     >
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.overlay}
       >
         <TouchableOpacity
