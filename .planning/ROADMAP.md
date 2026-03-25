@@ -83,7 +83,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [ ] 12-01-PLAN.md — Replace daily activity bar chart with multi-line area chart (UX-02)
-- [ ] 12-02-PLAN.md — Restructure home screen to three-region layout with peek activity list (UX-03)
+- [x] 12-02-PLAN.md — Restructure home screen to three-region layout with peek activity list (UX-03)
 
 ### Phase 13: Advanced Visual Polish
 **Goal**: The joystick feels alive — it glows and distorts like liquid when dragged, the background shifts hue toward the active pillar color, and the UI uses clean pillar icons instead of emoji
@@ -113,5 +113,5 @@ Plans:
 | 9. Foundation Fixes | v1.1 | 1/2 | In Progress|  |
 | 10. Gesture Interaction Overhaul | v1.1 | 0/2 | Not started | - |
 | 11. Hold Interaction Visuals | v1.1 | 0/1 | Not started | - |
-| 12. Analytics & Layout | v1.1 | 0/2 | Not started | - |
+| 12. Analytics & Layout | v1.1 | 1/2 | In Progress|  |
 | 13. Advanced Visual Polish | v1.1 | 0/2 | Not started | - |

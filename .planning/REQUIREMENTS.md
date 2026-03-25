@@ -22,7 +22,7 @@ Requirements for v1.1 Refinement & Polish. Each maps to roadmap phases.
 
 - [ ] **UX-01**: Notes only prompted when center-hold note mode is active, not on every swipe
 - [ ] **UX-02**: Daily activity displays as line chart instead of bar chart (bar chart had ugly overflow)
-- [ ] **UX-03**: Analog joysticks positioned in thumb-reach zone; activity list pushed below viewport with only latest entry peeking
+- [x] **UX-03**: Analog joysticks positioned in thumb-reach zone; activity list pushed below viewport with only latest entry peeking
 
 ### Visual Polish
 
@@ -70,7 +70,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BUG-04 | Phase 10 | Pending |
 | UX-01 | Phase 10 | Pending |
 | UX-02 | Phase 12 | Pending |
-| UX-03 | Phase 12 | Pending |
+| UX-03 | Phase 12 | Complete |
 | VIS-01 | Phase 11 | Pending |
 | VIS-02 | Phase 11 | Pending |
 | VIS-03 | Phase 13 | Pending |
