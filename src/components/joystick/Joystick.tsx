@@ -7,12 +7,10 @@ import Animated, {
   withSpring,
   withTiming,
   withSequence,
-  withRepeat,
   interpolateColor,
   runOnJS,
   Easing,
   useDerivedValue,
-  SharedValue,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 
@@ -30,10 +28,12 @@ import {
   SWIPE_THRESHOLD,
   HOLD_DURATION,
   MAX_DRAG_DISTANCE,
-  SNAP_BACK_CONFIG,
   INDICATOR_SIZE,
   CENTER_HOLD_THRESHOLD,
 } from './constants';
+
+// Snappy spring — fast snap-back, no lingering bounce
+const FAST_SPRING = { damping: 28, stiffness: 400, mass: 0.8 };
 
 /**
  * Determines swipe direction from translation vector using 45° wedges.
@@ -47,12 +47,9 @@ function getSwipeDirection(
   const distance = Math.sqrt(translationX ** 2 + translationY ** 2);
   if (distance < SWIPE_THRESHOLD) return null;
 
-  // atan2 with inverted Y (screen coordinates have Y going down)
   let angle = Math.atan2(-translationY, translationX) * (180 / Math.PI);
   if (angle < 0) angle += 360;
 
-  // Map angles to directions (45° wedges centered on cardinal directions)
-  // Right: 315-45, Up: 45-135, Left: 135-225, Down: 225-315
   if (angle >= 315 || angle < 45) return 'right';
   if (angle >= 45 && angle < 135) return 'up';
   if (angle >= 135 && angle < 225) return 'left';
@@ -74,12 +71,24 @@ function directionToIndex(dir: SwipeDirection | null): number {
   }
 }
 
+function indexToDirection(idx: number): SwipeDirection | null {
+  'worklet';
+  switch (idx) {
+    case 1: return 'up';
+    case 2: return 'down';
+    case 3: return 'left';
+    case 4: return 'right';
+    default: return null;
+  }
+}
+
 /**
- * Interactive joystick component with pan gesture, spring snap-back,
- * direction detection, and visual feedback.
+ * Interactive joystick with pan gesture, direction detection, and visual feedback.
  *
- * The knob follows the user's thumb, detects 4-directional swipes,
- * and supports a hold gesture for target selection (radial menu).
+ * Hold behaviors:
+ * - Center hold (< 15px): activates note mode for this touch (momentary)
+ * - Directional hold (>= 15px for 400ms): shows target fan
+ * - Center hold → drag: shows target fan immediately (note mode stays on)
  */
 export function Joystick({
   pillarId,
@@ -95,76 +104,98 @@ export function Joystick({
   const [radialVisible, setRadialVisible] = React.useState(false);
   const [radialDirection, setRadialDirection] = React.useState<SwipeDirection | null>(null);
 
-  // Shared values for knob position
+  // Knob position
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
   // Active direction indicator (0=none, 1=up, 2=down, 3=left, 4=right)
   const activeDirection = useSharedValue(0);
 
-  // Processing state (1 = animating confirmation, 0 = idle)
-  const isProcessing = useSharedValue(0);
-
-  // Hold state (1 = holding, 0 = not)
-  const isHolding = useSharedValue(0);
-
   // Confirmation flash opacity
   const flashOpacity = useSharedValue(0);
 
-  // Confirmation scale
-  const confirmScale = useSharedValue(1);
-
-  // Direction color intensity (0 = idle, 1 = fully active)
+  // Direction color intensity (0=idle, 1=fully active)
   const dragIntensity = useSharedValue(0);
 
-  // direction color: 0 = positive, 1 = negative (shared value for color interpolation)
+  // Direction valence: 0=positive, 1=negative
   const directionValence = useSharedValue(0);
 
-  // Note mode state (D-05, D-06)
-  const noteModeGlow = useSharedValue(0); // drives pulsing ring opacity
-  const noteModeRef = useRef(false);       // JS-side truth for gating
+  // Note mode — momentary, active only during a center-hold touch
+  const noteModeActive = useSharedValue(0); // drives outer ring color animation
+  const noteModeRef = useRef(false);        // JS-side truth for swipe gating
+
+  // Hold state: 0=none, 1=center-held, 2=directional-held
+  const holdState = useSharedValue(0);
+
+  // Timer ref for center hold detection (JS thread)
+  const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Track directional hold timing on UI thread
+  const directionalHoldStart = useSharedValue(0);
+
+  // ─── JS Callbacks ──────────────────────────────────────
 
   /**
-   * JS callback when a quick swipe completes.
-   * Called via runOnJS from the gesture handler.
+   * Activate note mode on center hold (momentary — deactivates on release).
+   */
+  const activateNoteMode = useCallback(() => {
+    noteModeRef.current = true;
+    holdState.value = 1;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    noteModeActive.value = withTiming(1, { duration: 100 });
+  }, [noteModeActive, holdState]);
+
+  /**
+   * Deactivate note mode on finger release.
+   */
+  const deactivateNoteMode = useCallback(() => {
+    noteModeRef.current = false;
+    noteModeActive.value = withTiming(0, { duration: 120 });
+  }, [noteModeActive]);
+
+  /**
+   * Start hold timer on touch start. After HOLD_DURATION, if finger
+   * is still near center, activate note mode.
+   */
+  const startHoldTimer = useCallback(() => {
+    clearHoldTimer();
+    holdTimerRef.current = setTimeout(() => {
+      // Read current position from shared values
+      const tx = translateX.value;
+      const ty = translateY.value;
+      const dist = Math.sqrt(tx * tx + ty * ty);
+
+      if (dist < CENTER_HOLD_THRESHOLD) {
+        activateNoteMode();
+      }
+    }, HOLD_DURATION);
+  }, [activateNoteMode, translateX, translateY]);
+
+  const clearHoldTimer = useCallback(() => {
+    if (holdTimerRef.current) {
+      clearTimeout(holdTimerRef.current);
+      holdTimerRef.current = null;
+    }
+  }, []);
+
+  /**
+   * Quick swipe completed — log entry.
    */
   const handleSwipeComplete = useCallback(
-    (direction: SwipeDirection, wasHeld: boolean) => {
-      const result: SwipeResult = { pillarId, direction, wasHeld };
-      handleSwipe(result, null, noteModeRef.current); // pass noteMode (D-07, UX-01)
+    (direction: SwipeDirection) => {
+      const result: SwipeResult = { pillarId, direction, wasHeld: false };
+      handleSwipe(result, null, noteModeRef.current);
       if (onSwipe) onSwipe(result);
     },
     [pillarId, onSwipe, handleSwipe]
   );
 
   /**
-   * JS callback for center hold — toggles note mode on/off (D-02, BUG-03).
-   * Heavy haptic fires. No radial menu.
-   */
-  const handleCenterHold = useCallback(() => {
-    noteModeRef.current = !noteModeRef.current;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    if (noteModeRef.current) {
-      // Pulse glow ring: opacity oscillates 0.4 <-> 1.0 forever
-      noteModeGlow.value = withRepeat(
-        withSequence(
-          withTiming(1, { duration: 600 }),
-          withTiming(0.4, { duration: 600 })
-        ),
-        -1,
-        true
-      );
-    } else {
-      // Fade out glow ring
-      noteModeGlow.value = withTiming(0, { duration: 200 });
-    }
-  }, [noteModeGlow]);
-
-  /**
-   * JS callback when hold starts — notifies parent to show radial menu.
+   * Show radial menu for directional hold.
    */
   const handleHoldStart = useCallback(
     (direction: SwipeDirection) => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       setRadialDirection(direction);
       setRadialVisible(true);
       onHoldStart?.(direction);
@@ -173,25 +204,19 @@ export function Joystick({
   );
 
   /**
-   * JS callback when hold ends.
+   * Directional hold ended — hit detection + log.
    */
   const handleHoldEnd = useCallback((tx: number, ty: number, dir: SwipeDirection) => {
     setRadialVisible(false);
-
-    // Hit detection
     const positions = getTargetPositions(dir);
     const closest = getClosestTarget(tx, ty, positions);
-
-    // Log the targeted entry
     const result: SwipeResult = { pillarId, direction: dir, wasHeld: true };
     handleSwipe(result, closest ? closest.id : null, noteModeRef.current);
-
     onHoldEnd?.();
   }, [pillarId, getTargetPositions, getClosestTarget, handleSwipe, onHoldEnd]);
 
   /**
-   * JS callback when directional hold is released at center — cancel escape (D-04).
-   * Dismisses radial menu, no log, no note.
+   * Cancel escape — dismiss radial menu, no log.
    */
   const handleHoldCancel = useCallback(() => {
     setRadialVisible(false);
@@ -202,15 +227,15 @@ export function Joystick({
   const panGesture = Gesture.Pan()
     .enabled(!disabled)
     .onStart(() => {
-      if (isProcessing.value === 1) return;
       dragIntensity.value = 0;
+      holdState.value = 0;
+      directionalHoldStart.value = 0;
+      runOnJS(startHoldTimer)();
     })
     .onUpdate((event) => {
-      if (isProcessing.value === 1) return;
-
       const { translationX: tx, translationY: ty } = event;
 
-      // Clamp to max drag distance using polar coordinates
+      // Clamp to max drag distance
       const distance = Math.sqrt(tx ** 2 + ty ** 2);
       const clampedDist = Math.min(distance, MAX_DRAG_DISTANCE);
       const angle = Math.atan2(ty, tx);
@@ -218,108 +243,92 @@ export function Joystick({
       translateX.value = clampedDist * Math.cos(angle);
       translateY.value = clampedDist * Math.sin(angle);
 
-      // Update drag intensity based on distance
+      // Update drag intensity
       dragIntensity.value = Math.min(distance / SWIPE_THRESHOLD, 1);
 
       // Detect current direction for indicators
       if (distance >= SWIPE_THRESHOLD * 0.6) {
-        // Using inline direction detection for worklet compatibility
         let deg = Math.atan2(-ty, tx) * (180 / Math.PI);
         if (deg < 0) deg += 360;
 
         let dirIdx = 0;
-        if (deg >= 315 || deg < 45) dirIdx = 4; // right
-        else if (deg >= 45 && deg < 135) dirIdx = 1; // up
-        else if (deg >= 135 && deg < 225) dirIdx = 3; // left
-        else dirIdx = 2; // down
+        if (deg >= 315 || deg < 45) dirIdx = 4;
+        else if (deg >= 45 && deg < 135) dirIdx = 1;
+        else if (deg >= 135 && deg < 225) dirIdx = 3;
+        else dirIdx = 2;
 
         activeDirection.value = dirIdx;
-
-        // Set valence: up(1) and right(4) are positive, down(2) and left(3) are negative
         directionValence.value = (dirIdx === 1 || dirIdx === 4) ? 0 : 1;
       } else {
         activeDirection.value = 0;
       }
+
+      // ── Directional hold detection ──
+      if (holdState.value !== 2 && distance >= CENTER_HOLD_THRESHOLD) {
+        // After center hold: show fan immediately when user drags out
+        if (holdState.value === 1) {
+          holdState.value = 2;
+          const dir = getSwipeDirection(tx, ty);
+          if (dir) {
+            runOnJS(handleHoldStart)(dir);
+          }
+        } else {
+          // No center hold — standard directional hold timing
+          if (directionalHoldStart.value === 0) {
+            directionalHoldStart.value = Date.now();
+          } else if (Date.now() - directionalHoldStart.value >= HOLD_DURATION) {
+            holdState.value = 2;
+            const dir = getSwipeDirection(tx, ty);
+            if (dir) {
+              runOnJS(handleHoldStart)(dir);
+            }
+          }
+        }
+      } else if (distance < CENTER_HOLD_THRESHOLD) {
+        // Back to center — reset directional timer
+        directionalHoldStart.value = 0;
+      }
     })
     .onEnd((event) => {
-      if (isProcessing.value === 1) return;
+      runOnJS(clearHoldTimer)();
 
       const { translationX: tx, translationY: ty } = event;
       const dir = getSwipeDirection(tx, ty);
+      const currentHold = holdState.value;
 
-      if (dir && isHolding.value === 0) {
-        // Valid quick swipe (not a hold) — fire callback on JS thread
-        isProcessing.value = 1;
-
-        runOnJS(handleSwipeComplete)(dir, false);
-
-        // Confirmation animation: flash + scale pulse
-        flashOpacity.value = withSequence(
-          withTiming(1, { duration: 150, easing: Easing.out(Easing.ease) }),
-          withTiming(0, { duration: 200, easing: Easing.in(Easing.ease) })
-        );
-        confirmScale.value = withSequence(
-          withSpring(1.08, { damping: 12, stiffness: 200 }),
-          withSpring(1, SNAP_BACK_CONFIG, () => {
-            isProcessing.value = 0;
-          })
-        );
-      } else if (isHolding.value === 1) {
-        // Was holding — check for cancel escape (D-04)
+      if (currentHold === 2) {
+        // Was in directional hold — check cancel vs select
         const dist = Math.sqrt(tx * tx + ty * ty);
         if (dist < CENTER_HOLD_THRESHOLD) {
-          // Cancel escape — released at center during directional hold
           runOnJS(handleHoldCancel)();
         } else if (dir) {
-          // Normal hold release — hit detection + log
           runOnJS(handleHoldEnd)(tx, ty, dir);
         } else {
-          // No valid direction but was holding — cancel
           runOnJS(handleHoldCancel)();
         }
-        isHolding.value = 0;
-      }
+      } else if (dir && currentHold === 0) {
+        // Quick swipe (no hold)
+        runOnJS(handleSwipeComplete)(dir);
 
-      // Snap knob back to center
-      translateX.value = withSpring(0, SNAP_BACK_CONFIG);
-      translateY.value = withSpring(0, SNAP_BACK_CONFIG);
+        // Brief confirmation flash
+        flashOpacity.value = withSequence(
+          withTiming(0.6, { duration: 80 }),
+          withTiming(0, { duration: 100 })
+        );
+      }
+      // else: center hold only, no swipe — just release
+
+      // Always deactivate note mode on release
+      runOnJS(deactivateNoteMode)();
+
+      // Snap back fast
+      translateX.value = withSpring(0, FAST_SPRING);
+      translateY.value = withSpring(0, FAST_SPRING);
       activeDirection.value = 0;
-      dragIntensity.value = withTiming(0, { duration: 200 });
+      holdState.value = 0;
+      directionalHoldStart.value = 0;
+      dragIntensity.value = withTiming(0, { duration: 100 });
     });
-
-  const longPressGesture = Gesture.LongPress()
-    .enabled(!disabled)
-    .minDuration(HOLD_DURATION)
-    .maxDistance(MAX_DRAG_DISTANCE)
-    .onStart(() => {
-      if (isProcessing.value === 1) return;
-      isHolding.value = 1;
-
-      const tx = translateX.value;
-      const ty = translateY.value;
-      const dist = Math.sqrt(tx * tx + ty * ty);
-
-      if (dist < CENTER_HOLD_THRESHOLD) {
-        // CENTER HOLD — toggle note mode, no radial menu (BUG-03, D-01, D-02)
-        // Reset isHolding immediately so panGesture.onEnd won't interfere
-        isHolding.value = 0;
-        runOnJS(handleCenterHold)();
-      } else {
-        // DIRECTIONAL HOLD — show target fan (BUG-04, D-03)
-        let deg = Math.atan2(-ty, tx) * (180 / Math.PI);
-        if (deg < 0) deg += 360;
-
-        let dir: SwipeDirection = 'up';
-        if (deg >= 315 || deg < 45) dir = 'right';
-        else if (deg >= 45 && deg < 135) dir = 'up';
-        else if (deg >= 135 && deg < 225) dir = 'left';
-        else dir = 'down';
-
-        runOnJS(handleHoldStart)(dir);
-      }
-    });
-
-  const composedGesture = Gesture.Simultaneous(panGesture, longPressGesture);
 
   // ─── Animated Styles ─────────────────────────────────
 
@@ -330,9 +339,14 @@ export function Joystick({
     ],
   }));
 
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: confirmScale.value }],
-  }));
+  const outerRingAnimatedStyle = useAnimatedStyle(() => {
+    const borderCol = interpolateColor(
+      noteModeActive.value,
+      [0, 1],
+      [pillar.positiveColor, colors.accent]
+    );
+    return { borderColor: borderCol };
+  });
 
   const flashAnimatedStyle = useAnimatedStyle(() => {
     const bgColor = interpolateColor(
@@ -351,12 +365,7 @@ export function Joystick({
     shadowRadius: 8 + dragIntensity.value * 8,
   }));
 
-  // Note mode glow ring style (D-05)
-  const noteGlowStyle = useAnimatedStyle(() => ({
-    opacity: noteModeGlow.value,
-  }));
-
-  // Direction indicator animated styles (inlined per D-10/D-11 — no factory wrapper)
+  // Direction indicator styles
   const upIndicatorStyle = useAnimatedStyle(() => ({
     opacity: activeDirection.value === 1 ? 1 : 0.25,
     transform: [{ scale: activeDirection.value === 1 ? 1.4 : 1 }],
@@ -387,15 +396,12 @@ export function Joystick({
           y: translateY.value,
         }))}
       />
-      <GestureDetector gesture={composedGesture}>
+      <GestureDetector gesture={panGesture}>
         <Animated.View
           style={[
             styles.outerRing,
-            {
-              borderColor: pillar.positiveColor,
-              shadowColor: pillar.positiveColor,
-            },
-            containerAnimatedStyle,
+            { shadowColor: pillar.positiveColor },
+            outerRingAnimatedStyle,
             glowAnimatedStyle,
           ]}
         >
@@ -424,11 +430,6 @@ export function Joystick({
               knobAnimatedStyle,
             ]}
           >
-            {/* Note mode glow ring (D-05) — inside knob view to translate with it */}
-            <Animated.View
-              style={[styles.noteGlowRing, noteGlowStyle]}
-              pointerEvents="none"
-            />
             <Animated.Text style={styles.emoji}>{pillar.emoji}</Animated.Text>
           </Animated.View>
         </Animated.View>
@@ -460,7 +461,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'visible',
-    // Base glow
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
@@ -479,23 +479,11 @@ const styles = StyleSheet.create({
   emoji: {
     fontSize: 24,
   },
-  noteGlowRing: {
-    position: 'absolute',
-    width: KNOB_SIZE + 8,    // 64px
-    height: KNOB_SIZE + 8,   // 64px
-    borderRadius: (KNOB_SIZE + 8) / 2,  // 32px
-    borderWidth: 2,
-    borderColor: colors.accent,  // #F5A623
-    top: -4,    // centers on 56px knob
-    left: -4,
-    zIndex: 9,
-  },
   flashOverlay: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: JOYSTICK_SIZE / 2,
     zIndex: 5,
   },
-  // Direction indicators
   indicator: {
     position: 'absolute',
     width: INDICATOR_SIZE * 2,
