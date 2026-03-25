@@ -28,7 +28,7 @@
 - [x] **Phase 09: Foundation Fixes** — Repair screen wake lock and body-fill physics; remove hooks anti-pattern blocking visual work (completed 2026-03-24)
 - [ ] **Phase 10: Gesture Interaction Overhaul** — Fix joystick hold behavior: center-hold toggles notes, directional hold fans targets at 30-degree intervals
 - [ ] **Phase 11: Hold Interaction Visuals** — Quadrant separator lines, section fill on hold, and haptic feedback — all triggered at hold-start
-- [ ] **Phase 12: Analytics & Layout** — Line chart for daily activity, joystick and activity list repositioned for thumb reach
+- [x] **Phase 12: Analytics & Layout** — Line chart for daily activity, joystick and activity list repositioned for thumb reach (completed 2026-03-25)
 - [ ] **Phase 13: Advanced Visual Polish** — Liquid joystick glow, background hue shift on drag, emoji clutter removed with pillar icons
 
 ## Phase Details
@@ -82,7 +82,7 @@ Plans:
   3. The activity list sits below the viewport with only the most recent entry peeking up, scrollable on demand
 **Plans**: 2 plans
 Plans:
-- [ ] 12-01-PLAN.md — Replace daily activity bar chart with multi-line area chart (UX-02)
+- [x] 12-01-PLAN.md — Replace daily activity bar chart with multi-line area chart (UX-02)
 - [x] 12-02-PLAN.md — Restructure home screen to three-region layout with peek activity list (UX-03)
 
 ### Phase 13: Advanced Visual Polish
@@ -113,5 +113,5 @@ Plans:
 | 9. Foundation Fixes | v1.1 | 1/2 | In Progress|  |
 | 10. Gesture Interaction Overhaul | v1.1 | 0/2 | Not started | - |
 | 11. Hold Interaction Visuals | v1.1 | 0/1 | Not started | - |
-| 12. Analytics & Layout | v1.1 | 1/2 | In Progress|  |
+| 12. Analytics & Layout | v1.1 | 2/2 | Complete   | 2026-03-25 |
 | 13. Advanced Visual Polish | v1.1 | 0/2 | Not started | - |

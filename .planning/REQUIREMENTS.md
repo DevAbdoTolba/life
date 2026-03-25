@@ -9,8 +9,8 @@ Requirements for v1.1 Refinement & Polish. Each maps to roadmap phases.
 
 ### Bug Fixes
 
-- [ ] **BUG-01**: App allows screen to dim when not actively interacting (no permanent wake lock)
-- [ ] **BUG-02**: Body-fill visualization renders and animates balls falling with physics
+- [x] **BUG-01**: App allows screen to dim when not actively interacting (no permanent wake lock)
+- [x] **BUG-02**: Body-fill visualization renders and animates balls falling with physics
 - [ ] **BUG-03**: Center hold vibrates only (toggles note mode) — does not show targets
 - [ ] **BUG-04**: Directional hold shows targets fanned at 30° intervals from swipe direction
 
@@ -21,7 +21,7 @@ Requirements for v1.1 Refinement & Polish. Each maps to roadmap phases.
 ### UX Corrections
 
 - [ ] **UX-01**: Notes only prompted when center-hold note mode is active, not on every swipe
-- [ ] **UX-02**: Daily activity displays as line chart instead of bar chart (bar chart had ugly overflow)
+- [x] **UX-02**: Daily activity displays as line chart instead of bar chart (bar chart had ugly overflow)
 - [x] **UX-03**: Analog joysticks positioned in thumb-reach zone; activity list pushed below viewport with only latest entry peeking
 
 ### Visual Polish
@@ -63,13 +63,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BUG-01 | Phase 9 | Pending |
-| BUG-02 | Phase 9 | Pending |
+| BUG-01 | Phase 9 | Complete |
+| BUG-02 | Phase 9 | Complete |
 | HOOK-01 | Phase 9 | Complete |
 | BUG-03 | Phase 10 | Pending |
 | BUG-04 | Phase 10 | Pending |
 | UX-01 | Phase 10 | Pending |
-| UX-02 | Phase 12 | Pending |
+| UX-02 | Phase 12 | Complete |
 | UX-03 | Phase 12 | Complete |
 | VIS-01 | Phase 11 | Pending |
 | VIS-02 | Phase 11 | Pending |
