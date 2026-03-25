@@ -8,12 +8,6 @@ import { LogHistoryItem } from '../../src/components/ui';
 import type { Log } from '../../src/database/types';
 
 export default function HomeScreen() {
-  const today = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  });
-
   const getTodayLogs = useLogStore((state) => state.getTodayLogs);
   const todayLogs = useLogStore((state) => state.todayLogs);
 
@@ -26,42 +20,42 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={todayLogs}
-        keyExtractor={(item: Log) => item.id}
-        renderItem={({ item }: { item: Log }) => <LogHistoryItem log={item} />}
-        ListHeaderComponent={
-          <>
-            <View style={styles.header}>
-              <Text style={styles.title}>Hayat</Text>
-              <Text style={styles.date}>{today}</Text>
-              <Text style={styles.actionCount}>
-                {todayLogs.length} action{todayLogs.length !== 1 ? 's' : ''} today
-              </Text>
-            </View>
+      {/* Region 1: Compact header (per D-08) */}
+      <View style={styles.header}>
+        <Text style={styles.title}>Hayat</Text>
+        <Text style={styles.actionCount}>
+          {todayLogs.length} action{todayLogs.length !== 1 ? 's' : ''} today
+        </Text>
+      </View>
 
-            <View style={styles.triangleContainer}>
-              {/* Afterlife — top center */}
-              <View style={styles.topRow}>
-                <Joystick pillarId={pillars[0].id} onSwipe={handleSwipe} />
-              </View>
+      {/* Region 2: Joystick triangle — takes remaining space (per D-05) */}
+      <View style={styles.triangleContainer}>
+        <View style={styles.topRow}>
+          <Joystick pillarId={pillars[0].id} onSwipe={handleSwipe} />
+        </View>
+        <View style={styles.bottomRow}>
+          <Joystick pillarId={pillars[1].id} onSwipe={handleSwipe} />
+          <Joystick pillarId={pillars[2].id} onSwipe={handleSwipe} />
+        </View>
+      </View>
 
-              {/* Self & Others — bottom row */}
-              <View style={styles.bottomRow}>
-                <Joystick pillarId={pillars[1].id} onSwipe={handleSwipe} />
-                <Joystick pillarId={pillars[2].id} onSwipe={handleSwipe} />
-              </View>
-            </View>
-
-            {todayLogs.length > 0 && (
-              <Text style={styles.logListTitle}>Today's Activity</Text>
-            )}
-          </>
-        }
-        ListEmptyComponent={null}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      />
+      {/* Region 3: Activity list peek strip (per D-06, D-07) */}
+      <View style={styles.peekContainer}>
+        {todayLogs.length === 0 ? (
+          <View style={styles.emptyPeek}>
+            <Text style={styles.emptyPeekText}>No activity yet</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={todayLogs}
+            keyExtractor={(item: Log) => item.id}
+            renderItem={({ item }: { item: Log }) => <LogHistoryItem log={item} />}
+            scrollEnabled
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.listContent}
+          />
+        )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -72,35 +66,30 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     paddingHorizontal: spacing.xl,
   },
+  // Region 1: Compact header (per D-08, UI-SPEC)
   header: {
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.xxl,
+    paddingTop: spacing.lg,       // 16px — reduced from xxl
+    paddingBottom: spacing.lg,    // 16px — reduced from xxl (was spacing.xxl = 32)
     alignItems: 'center',
-    gap: spacing.xs,
+    gap: spacing.xs,              // 4px between title and subtitle
   },
   title: {
-    fontFamily: typography.fontFamily.bold,
-    fontSize: typography.sizes.hero,
+    fontFamily: typography.fontFamily.semibold,  // 600 SemiBold per UI-SPEC (not bold/700)
+    fontSize: typography.sizes.hero,             // 36px
     color: colors.textPrimary,
     letterSpacing: -1,
   },
-  date: {
-    fontFamily: typography.fontFamily.regular,
-    fontSize: typography.sizes.md,
-    color: colors.textSecondary,
-  },
   actionCount: {
-    fontFamily: typography.fontFamily.medium,
-    fontSize: typography.sizes.sm,
+    fontFamily: typography.fontFamily.regular,   // 400 Regular per UI-SPEC
+    fontSize: typography.sizes.xs,               // 10px per UI-SPEC Label role
     color: colors.textMuted,
-    marginTop: spacing.sm,
   },
+  // Region 2: Joystick triangle (per D-05)
   triangleContainer: {
+    flex: 1,                      // Takes remaining vertical space between header and peek
     justifyContent: 'center',
     alignItems: 'center',
-    gap: spacing.xxxl,
-    paddingVertical: spacing.xl,
-    paddingBottom: spacing.xxxl,
+    gap: spacing.xxxl,            // 48px between top row and bottom row
   },
   topRow: {
     alignItems: 'center',
@@ -110,17 +99,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '85%',
   },
-  logListTitle: {
-    fontFamily: typography.fontFamily.semibold,
-    fontSize: typography.sizes.sm,
-    color: colors.textSecondary,
-    marginTop: spacing.lg,
-    marginBottom: spacing.sm,
-    paddingHorizontal: spacing.md,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
+  // Region 3: Peek strip (per D-06, D-07)
+  peekContainer: {
+    maxHeight: 60,                // One LogHistoryItem row visible (per D-06, UI-SPEC)
+    borderTopWidth: 1,
+    borderTopColor: colors.border,  // #2A2A3A — visual separator
+  },
+  emptyPeek: {
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyPeekText: {
+    fontFamily: typography.fontFamily.regular,
+    fontSize: typography.sizes.sm,               // 12px
+    color: colors.textMuted,                     // #555570
   },
   listContent: {
-    paddingBottom: spacing.xxxl,
+    paddingBottom: spacing.xxxl,  // 48px bottom padding for scroll overscroll
   },
 });
