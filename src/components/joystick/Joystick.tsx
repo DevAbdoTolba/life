@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -7,12 +7,14 @@ import Animated, {
   withSpring,
   withTiming,
   withSequence,
+  withRepeat,
   interpolateColor,
   runOnJS,
   Easing,
   useDerivedValue,
   SharedValue,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 import { getPillarById } from '../../constants/pillars';
 import type { SwipeDirection } from '../../constants/pillars';
@@ -30,6 +32,7 @@ import {
   MAX_DRAG_DISTANCE,
   SNAP_BACK_CONFIG,
   INDICATOR_SIZE,
+  CENTER_HOLD_THRESHOLD,
 } from './constants';
 
 /**
@@ -117,6 +120,10 @@ export function Joystick({
   // direction color: 0 = positive, 1 = negative (shared value for color interpolation)
   const directionValence = useSharedValue(0);
 
+  // Note mode state (D-05, D-06)
+  const noteModeGlow = useSharedValue(0); // drives pulsing ring opacity
+  const noteModeRef = useRef(false);       // JS-side truth for gating
+
   /**
    * JS callback when a quick swipe completes.
    * Called via runOnJS from the gesture handler.
@@ -124,11 +131,34 @@ export function Joystick({
   const handleSwipeComplete = useCallback(
     (direction: SwipeDirection, wasHeld: boolean) => {
       const result: SwipeResult = { pillarId, direction, wasHeld };
-      handleSwipe(result);
+      handleSwipe(result, null, noteModeRef.current); // pass noteMode (D-07, UX-01)
       if (onSwipe) onSwipe(result);
     },
     [pillarId, onSwipe, handleSwipe]
   );
+
+  /**
+   * JS callback for center hold — toggles note mode on/off (D-02, BUG-03).
+   * Heavy haptic fires. No radial menu.
+   */
+  const handleCenterHold = useCallback(() => {
+    noteModeRef.current = !noteModeRef.current;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    if (noteModeRef.current) {
+      // Pulse glow ring: opacity oscillates 0.4 <-> 1.0 forever
+      noteModeGlow.value = withRepeat(
+        withSequence(
+          withTiming(1, { duration: 600 }),
+          withTiming(0.4, { duration: 600 })
+        ),
+        -1,
+        true
+      );
+    } else {
+      // Fade out glow ring
+      noteModeGlow.value = withTiming(0, { duration: 200 });
+    }
+  }, [noteModeGlow]);
 
   /**
    * JS callback when hold starts — notifies parent to show radial menu.
@@ -154,10 +184,18 @@ export function Joystick({
 
     // Log the targeted entry
     const result: SwipeResult = { pillarId, direction: dir, wasHeld: true };
-    handleSwipe(result, closest ? closest.id : null);
+    handleSwipe(result, closest ? closest.id : null, noteModeRef.current);
 
     onHoldEnd?.();
   }, [pillarId, getTargetPositions, getClosestTarget, handleSwipe, onHoldEnd]);
+
+  /**
+   * JS callback when directional hold is released at center — cancel escape (D-04).
+   * Dismisses radial menu, no log, no note.
+   */
+  const handleHoldCancel = useCallback(() => {
+    setRadialVisible(false);
+  }, []);
 
   // ─── Gesture Setup ───────────────────────────────────
 
@@ -226,10 +264,19 @@ export function Joystick({
             isProcessing.value = 0;
           })
         );
-      } else if (dir && isHolding.value === 1) {
-        // Was holding — the hold handler manages the swipe callback
-        // Just need to snap back and clean up
-        runOnJS(handleHoldEnd)(tx, ty, dir);
+      } else if (isHolding.value === 1) {
+        // Was holding — check for cancel escape (D-04)
+        const dist = Math.sqrt(tx * tx + ty * ty);
+        if (dist < CENTER_HOLD_THRESHOLD) {
+          // Cancel escape — released at center during directional hold
+          runOnJS(handleHoldCancel)();
+        } else if (dir) {
+          // Normal hold release — hit detection + log
+          runOnJS(handleHoldEnd)(tx, ty, dir);
+        } else {
+          // No valid direction but was holding — cancel
+          runOnJS(handleHoldCancel)();
+        }
         isHolding.value = 0;
       }
 
@@ -247,19 +294,26 @@ export function Joystick({
       if (isProcessing.value === 1) return;
       isHolding.value = 1;
 
-      // Determine direction from current knob position
       const tx = translateX.value;
       const ty = translateY.value;
-      let deg = Math.atan2(-ty, tx) * (180 / Math.PI);
-      if (deg < 0) deg += 360;
+      const dist = Math.sqrt(tx * tx + ty * ty);
 
-      let dir: SwipeDirection = 'up';
-      if (deg >= 315 || deg < 45) dir = 'right';
-      else if (deg >= 45 && deg < 135) dir = 'up';
-      else if (deg >= 135 && deg < 225) dir = 'left';
-      else dir = 'down';
+      if (dist < CENTER_HOLD_THRESHOLD) {
+        // CENTER HOLD — toggle note mode, no radial menu (BUG-03, D-01, D-02)
+        runOnJS(handleCenterHold)();
+      } else {
+        // DIRECTIONAL HOLD — show target fan (BUG-04, D-03)
+        let deg = Math.atan2(-ty, tx) * (180 / Math.PI);
+        if (deg < 0) deg += 360;
 
-      runOnJS(handleHoldStart)(dir);
+        let dir: SwipeDirection = 'up';
+        if (deg >= 315 || deg < 45) dir = 'right';
+        else if (deg >= 45 && deg < 135) dir = 'up';
+        else if (deg >= 135 && deg < 225) dir = 'left';
+        else dir = 'down';
+
+        runOnJS(handleHoldStart)(dir);
+      }
     });
 
   const composedGesture = Gesture.Simultaneous(panGesture, longPressGesture);
@@ -292,6 +346,11 @@ export function Joystick({
   const glowAnimatedStyle = useAnimatedStyle(() => ({
     shadowOpacity: 0.2 + dragIntensity.value * 0.4,
     shadowRadius: 8 + dragIntensity.value * 8,
+  }));
+
+  // Note mode glow ring style (D-05)
+  const noteGlowStyle = useAnimatedStyle(() => ({
+    opacity: noteModeGlow.value,
   }));
 
   // Direction indicator animated styles (inlined per D-10/D-11 — no factory wrapper)
@@ -362,6 +421,11 @@ export function Joystick({
               knobAnimatedStyle,
             ]}
           >
+            {/* Note mode glow ring (D-05) — inside knob view to translate with it */}
+            <Animated.View
+              style={[styles.noteGlowRing, noteGlowStyle]}
+              pointerEvents="none"
+            />
             <Animated.Text style={styles.emoji}>{pillar.emoji}</Animated.Text>
           </Animated.View>
         </Animated.View>
@@ -411,6 +475,17 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 24,
+  },
+  noteGlowRing: {
+    position: 'absolute',
+    width: KNOB_SIZE + 8,    // 64px
+    height: KNOB_SIZE + 8,   // 64px
+    borderRadius: (KNOB_SIZE + 8) / 2,  // 32px
+    borderWidth: 2,
+    borderColor: colors.accent,  // #F5A623
+    top: -4,    // centers on 56px knob
+    left: -4,
+    zIndex: 9,
   },
   flashOverlay: {
     ...StyleSheet.absoluteFillObject,
