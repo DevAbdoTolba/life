@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, LogBox } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack, Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -15,6 +15,9 @@ import { colors } from '../src/constants';
 import { initDatabase } from '../src/database';
 import { useLogStore, useTargetStore, useSettingsStore } from '../src/stores';
 import { initNotificationChannel } from '../src/services/notifications';
+
+// Suppress known Expo dev-mode error (transient activity lifecycle race)
+LogBox.ignoreLogs(['ExpoKeepAwake']);
 
 // Keep splash screen visible while loading resources
 SplashScreen.preventAutoHideAsync();

@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
+  ScrollView,
   Platform,
-  Keyboard,
 } from 'react-native';
 import { useLogStore } from '../../stores/logStore';
 import { colors } from '../../constants/colors';
@@ -57,7 +57,11 @@ export function NoteEntryModal({ logId, onClose }: NoteEntryModalProps) {
           activeOpacity={1}
           onPress={handleSkip}
         />
-        <View style={styles.card}>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          scrollEnabled={false}
+          contentContainerStyle={styles.card}
+        >
           <Text style={styles.title}>Add a note?</Text>
           <Text style={styles.subtitle}>Optional — tap Skip to continue without a note</Text>
           <TextInput
@@ -83,7 +87,7 @@ export function NoteEntryModal({ logId, onClose }: NoteEntryModalProps) {
               <Text style={styles.saveText}>Save Note</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </Modal>
   );
