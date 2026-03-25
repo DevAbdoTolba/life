@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from '../../src/components/ui/Text';
 import { PeriodSelector } from '../../src/components/analytics/PeriodSelector';
 import { SummaryStatsRow } from '../../src/components/analytics/SummaryStatsRow';
-import { PillarBarChart } from '../../src/components/analytics/PillarBarChart';
+import { PillarActivityLineChart } from '../../src/components/analytics/PillarActivityLineChart';
 import { PillarDonutChart } from '../../src/components/analytics/PillarDonutChart';
 import { TrendLineChart } from '../../src/components/analytics/TrendLineChart';
 import { BodyFillPreviewCard } from '../../src/components/analytics/BodyFillPreviewCard';
@@ -100,7 +100,7 @@ export default function AnalyticsScreen() {
                 <SummaryStatsRow logs={logs} />
                 <View style={styles.chartSpacer} />
 
-                <PillarBarChart dailyCounts={dailyCounts} period={selectedPeriod} />
+                <PillarActivityLineChart dailyCounts={dailyCounts} period={selectedPeriod} />
                 <View style={styles.chartSpacer} />
 
                 <PillarDonutChart logs={logs} />
