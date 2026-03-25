@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useRef } from 'react';
-import { View, StyleSheet, Text, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, FlatList, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Swipeable } from 'react-native-gesture-handler';
 import { colors, pillars, typography, spacing } from '../../src/constants';
@@ -46,24 +46,22 @@ function ListHeader() {
 function SwipeableRow({ log, onDelete }: { log: Log; onDelete: (id: string) => void }) {
   const swipeableRef = useRef<Swipeable>(null);
 
-  const renderRightActions = useCallback(() => (
-    <View style={styles.deleteAction}>
-      <Text style={styles.deleteText}>Delete</Text>
-    </View>
-  ), []);
-
-  const handleSwipeOpen = useCallback(() => {
+  const handleDelete = useCallback(() => {
     swipeableRef.current?.close();
     onDelete(log.id);
   }, [log.id, onDelete]);
+
+  const renderRightActions = useCallback(() => (
+    <TouchableOpacity style={styles.deleteAction} onPress={handleDelete}>
+      <Text style={styles.deleteText}>Delete</Text>
+    </TouchableOpacity>
+  ), [handleDelete]);
 
   return (
     <Swipeable
       ref={swipeableRef}
       renderRightActions={renderRightActions}
-      onSwipeableOpen={handleSwipeOpen}
       overshootRight={false}
-      rightThreshold={80}
     >
       <LogHistoryItem log={log} />
     </Swipeable>
@@ -72,7 +70,10 @@ function SwipeableRow({ log, onDelete }: { log: Log; onDelete: (id: string) => v
 
 export default function HomeScreen() {
   const getTodayLogs = useLogStore((state) => state.getTodayLogs);
+  const loadMoreLogs = useLogStore((state) => state.loadMoreLogs);
   const todayLogs = useLogStore((state) => state.todayLogs);
+  const hasMoreLogs = useLogStore((state) => state.hasMoreLogs);
+  const isLoading = useLogStore((state) => state.isLoading);
   const deleteLog = useLogStore((state) => state.deleteLog);
 
   useEffect(() => {
@@ -97,6 +98,15 @@ export default function HomeScreen() {
             <Text style={styles.emptyText}>No activity yet</Text>
           </View>
         }
+        ListFooterComponent={
+          hasMoreLogs && todayLogs.length > 0 ? (
+            <View style={styles.loadingFooter}>
+              {isLoading ? <ActivityIndicator size="small" color={colors.textMuted} /> : null}
+            </View>
+          ) : null
+        }
+        onEndReached={loadMoreLogs}
+        onEndReachedThreshold={0.3}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
       />
@@ -158,10 +168,14 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.sm,
     color: colors.textMuted,
   },
+  loadingFooter: {
+    paddingVertical: spacing.lg,
+    alignItems: 'center',
+  },
   deleteAction: {
     backgroundColor: '#E53935',
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     paddingHorizontal: spacing.xl,
     width: 100,
   },

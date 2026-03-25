@@ -30,10 +30,9 @@ export function NoteEntryModal({ logId, onClose }: NoteEntryModalProps) {
     }
   }, [logId]);
 
-  const handleSave = async () => {
-    Keyboard.dismiss();
+  const handleSave = () => {
     if (logId && note.trim()) {
-      await updateLogNote(logId, note.trim());
+      updateLogNote(logId, note.trim()); // fire-and-forget — no await
     }
     onClose();
   };
@@ -50,7 +49,7 @@ export function NoteEntryModal({ logId, onClose }: NoteEntryModalProps) {
       onRequestClose={handleSkip}
     >
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior="padding"
         style={styles.overlay}
       >
         <TouchableOpacity

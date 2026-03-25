@@ -5,9 +5,12 @@ import type { Log, SwipeDirectionType } from '../database/types';
 import type { DailyPillarCount } from '../types/analytics';
 import type { PillarId, SwipeDirection } from '../constants/pillars';
 
+const PAGE_SIZE = 15;
+
 interface LogState {
   todayLogs: Log[];
   isLoading: boolean;
+  hasMoreLogs: boolean;
 
   // Actions
   addLog: (
@@ -17,6 +20,7 @@ interface LogState {
     note?: string | null
   ) => Promise<string>;
   getTodayLogs: () => Promise<void>;
+  loadMoreLogs: () => Promise<void>;
   getLogsByPeriod: (startDate: string, endDate: string) => Promise<Log[]>;
   getDailyLogsByPillar: (startDate: string, endDate: string) => Promise<DailyPillarCount[]>;
   getLogsByTarget: (targetId: string, startDate: string, endDate: string) => Promise<Log[]>;
@@ -36,6 +40,7 @@ function getTodayStart(): string {
 export const useLogStore = create<LogState>((set, get) => ({
   todayLogs: [],
   isLoading: false,
+  hasMoreLogs: true,
 
   addLog: async (pillarId, direction, targetId = null, note = null) => {
     const db = getDatabase();
@@ -80,8 +85,9 @@ export const useLogStore = create<LogState>((set, get) => ({
         `SELECT id, pillar_id, direction, target_id, note, created_at
          FROM logs
          WHERE created_at >= ?
-         ORDER BY created_at DESC`,
-        [todayStart]
+         ORDER BY created_at DESC
+         LIMIT ?`,
+        [todayStart, PAGE_SIZE]
       );
 
       const logs: Log[] = rows.map((row) => ({
@@ -93,9 +99,54 @@ export const useLogStore = create<LogState>((set, get) => ({
         createdAt: row.created_at,
       }));
 
-      set({ todayLogs: logs, isLoading: false });
+      set({ todayLogs: logs, isLoading: false, hasMoreLogs: logs.length === PAGE_SIZE });
     } catch (error) {
       console.error('[LogStore] Failed to get today logs:', error);
+      set({ isLoading: false });
+    }
+  },
+
+  loadMoreLogs: async () => {
+    const { todayLogs, isLoading, hasMoreLogs } = get();
+    if (isLoading || !hasMoreLogs) return;
+
+    set({ isLoading: true });
+    try {
+      const db = getDatabase();
+      const todayStart = getTodayStart();
+
+      const rows = await db.getAllAsync<{
+        id: string;
+        pillar_id: number;
+        direction: SwipeDirectionType;
+        target_id: string | null;
+        note: string | null;
+        created_at: string;
+      }>(
+        `SELECT id, pillar_id, direction, target_id, note, created_at
+         FROM logs
+         WHERE created_at >= ?
+         ORDER BY created_at DESC
+         LIMIT ? OFFSET ?`,
+        [todayStart, PAGE_SIZE, todayLogs.length]
+      );
+
+      const newLogs: Log[] = rows.map((row) => ({
+        id: row.id,
+        pillarId: row.pillar_id,
+        direction: row.direction,
+        targetId: row.target_id,
+        note: row.note,
+        createdAt: row.created_at,
+      }));
+
+      set((state) => ({
+        todayLogs: [...state.todayLogs, ...newLogs],
+        isLoading: false,
+        hasMoreLogs: newLogs.length === PAGE_SIZE,
+      }));
+    } catch (error) {
+      console.error('[LogStore] Failed to load more logs:', error);
       set({ isLoading: false });
     }
   },

@@ -258,21 +258,14 @@ export function Joystick({
 
       // ── Directional hold detection ──
       if (holdState.value !== 2 && distance >= CENTER_HOLD_THRESHOLD) {
-        const wasCenterHeld = holdState.value === 1;
-
         // Both paths require the same HOLD_DURATION for directional hold
         if (directionalHoldStart.value === 0) {
           directionalHoldStart.value = Date.now();
         } else if (Date.now() - directionalHoldStart.value >= HOLD_DURATION) {
           holdState.value = 2;
-          // After center hold: angle-only direction (no threshold needed)
-          // Normal: use full swipe threshold check
-          const dir = wasCenterHeld
-            ? getDirectionFromAngle(tx, ty)
-            : getSwipeDirection(tx, ty);
-          if (dir) {
-            runOnJS(handleHoldStart)(dir);
-          }
+          // Use angle-only direction — distance already validated >= CENTER_HOLD_THRESHOLD
+          const dir = getDirectionFromAngle(tx, ty);
+          runOnJS(handleHoldStart)(dir);
         }
       } else if (distance < CENTER_HOLD_THRESHOLD) {
         // Back to center — reset directional timer

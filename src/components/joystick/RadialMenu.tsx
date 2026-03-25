@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Animated, {
   useAnimatedStyle,
+  useSharedValue,
   withSpring,
   withDelay,
   withTiming,
@@ -38,26 +39,34 @@ function RadialBubble({
   const { x, y, target } = position;
   const displayName = target.isMasked && isPrivacyMode ? target.codename : target.realName;
 
+  // Entrance/exit scale — driven only by `visible`, not by thumb movement
+  const entryScale = useSharedValue(0);
+  React.useEffect(() => {
+    if (visible) {
+      entryScale.value = withDelay(
+        index * 15,
+        withSpring(1, { damping: 20, stiffness: 300 })
+      );
+    } else {
+      entryScale.value = withTiming(0, { duration: 60 });
+    }
+  }, [visible]);
+
   const animatedStyle = useAnimatedStyle(() => {
-    // Distance from thumb to this bubble
+    // Hover effect — reacts to thumb position every frame (cheap, no animation)
     const dist = Math.sqrt(
       (thumbPosition.value.x - x) ** 2 + (thumbPosition.value.y - y) ** 2
     );
-    
-    // Hover effect
     const isHovered = dist < RADIAL_HIT_RADIUS;
-    const baseScale = isHovered ? 1.2 : 1;
+    const hoverScale = isHovered ? 1.2 : 1;
     const opacity = isHovered ? 1 : 0.8;
-
-    // Visibility animation
-    const finalScale = visible ? withDelay(index * 15, withSpring(baseScale, { damping: 20, stiffness: 300 })) : withTiming(0, { duration: 60 });
 
     return {
       opacity,
       transform: [
         { translateX: x },
         { translateY: y },
-        { scale: finalScale },
+        { scale: entryScale.value * hoverScale },
       ],
     };
   });
