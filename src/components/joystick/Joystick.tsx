@@ -9,7 +9,6 @@ import Animated, {
   withSequence,
   interpolateColor,
   runOnJS,
-  Easing,
   useDerivedValue,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
@@ -57,30 +56,23 @@ function getSwipeDirection(
 }
 
 /**
- * Maps a direction to a numeric index for shared values.
- * 0=none, 1=up, 2=down, 3=left, 4=right
+ * Direction from angle only — no distance threshold.
+ * Used for directional hold after center hold (distance already validated).
  */
-function directionToIndex(dir: SwipeDirection | null): number {
+function getDirectionFromAngle(
+  translationX: number,
+  translationY: number
+): SwipeDirection {
   'worklet';
-  switch (dir) {
-    case 'up': return 1;
-    case 'down': return 2;
-    case 'left': return 3;
-    case 'right': return 4;
-    default: return 0;
-  }
+  let angle = Math.atan2(-translationY, translationX) * (180 / Math.PI);
+  if (angle < 0) angle += 360;
+
+  if (angle >= 315 || angle < 45) return 'right';
+  if (angle >= 45 && angle < 135) return 'up';
+  if (angle >= 135 && angle < 225) return 'left';
+  return 'down';
 }
 
-function indexToDirection(idx: number): SwipeDirection | null {
-  'worklet';
-  switch (idx) {
-    case 1: return 'up';
-    case 2: return 'down';
-    case 3: return 'left';
-    case 4: return 'right';
-    default: return null;
-  }
-}
 
 /**
  * Interactive joystick with pan gesture, direction detection, and visual feedback.
@@ -269,10 +261,9 @@ export function Joystick({
         // After center hold: show fan immediately when user drags out
         if (holdState.value === 1) {
           holdState.value = 2;
-          const dir = getSwipeDirection(tx, ty);
-          if (dir) {
-            runOnJS(handleHoldStart)(dir);
-          }
+          // Use angle-only direction (no SWIPE_THRESHOLD) since center hold already validated
+          const dir = getDirectionFromAngle(tx, ty);
+          runOnJS(handleHoldStart)(dir);
         } else {
           // No center hold — standard directional hold timing
           if (directionalHoldStart.value === 0) {
@@ -340,14 +331,9 @@ export function Joystick({
     ],
   }));
 
-  const outerRingAnimatedStyle = useAnimatedStyle(() => {
-    const borderCol = interpolateColor(
-      noteModeActive.value,
-      [0, 1],
-      [pillar.positiveColor, colors.accent]
-    );
-    return { borderColor: borderCol };
-  });
+  const outerRingAnimatedStyle = useAnimatedStyle(() => ({
+    borderWidth: 1.5 + noteModeActive.value * 2.5, // 1.5 → 4 when note mode active
+  }));
 
   const flashAnimatedStyle = useAnimatedStyle(() => {
     const bgColor = interpolateColor(
@@ -387,7 +373,7 @@ export function Joystick({
   // ─── Render ──────────────────────────────────────────
 
   return (
-    <View style={styles.wrapper}>
+    <View style={[styles.wrapper, radialVisible && styles.wrapperElevated]}>
       <RadialMenu
         visible={radialVisible}
         direction={radialDirection}
@@ -401,7 +387,7 @@ export function Joystick({
         <Animated.View
           style={[
             styles.outerRing,
-            { shadowColor: pillar.positiveColor },
+            { shadowColor: pillar.positiveColor, borderColor: pillar.positiveColor },
             outerRingAnimatedStyle,
             glowAnimatedStyle,
           ]}
@@ -452,6 +438,10 @@ const styles = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
     gap: 8,
+  },
+  wrapperElevated: {
+    zIndex: 100,
+    elevation: 100,
   },
   outerRing: {
     width: JOYSTICK_SIZE,

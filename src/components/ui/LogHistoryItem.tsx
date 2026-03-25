@@ -5,6 +5,7 @@ import type { PillarId, SwipeDirection } from '../../constants/pillars';
 import { getLogColor, swipeDirections } from '../../constants/pillars';
 import { colors } from '../../constants/colors';
 import { spacing, typography } from '../../constants/theme';
+import { useTargetStore } from '../../stores/targetStore';
 
 interface LogHistoryItemProps {
   log: Log;
@@ -13,6 +14,7 @@ interface LogHistoryItemProps {
 export function LogHistoryItem({ log }: LogHistoryItemProps) {
   const dotColor = getLogColor(log.pillarId as PillarId, log.direction as SwipeDirection);
   const directionLabel = swipeDirections[log.direction as SwipeDirection]?.label ?? log.direction;
+  const target = useTargetStore((s) => log.targetId ? s.targets.find((t) => t.id === log.targetId) : undefined);
   const time = new Date(log.createdAt).toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
@@ -22,7 +24,9 @@ export function LogHistoryItem({ log }: LogHistoryItemProps) {
     <View style={styles.container}>
       <View style={styles.topRow}>
         <View style={[styles.dot, { backgroundColor: dotColor }]} />
-        <Text style={styles.direction} numberOfLines={1}>{directionLabel}</Text>
+        <Text style={styles.direction} numberOfLines={1}>
+          {directionLabel}{target ? ` · ${target.realName}` : ''}
+        </Text>
         <Text style={styles.time}>{time}</Text>
       </View>
       {log.note ? (

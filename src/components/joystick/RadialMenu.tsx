@@ -50,7 +50,7 @@ function RadialBubble({
     const opacity = isHovered ? 1 : 0.8;
 
     // Visibility animation
-    const finalScale = visible ? withDelay(index * 30, withSpring(baseScale, { damping: 15 })) : withTiming(0, { duration: 100 });
+    const finalScale = visible ? withDelay(index * 15, withSpring(baseScale, { damping: 20, stiffness: 300 })) : withTiming(0, { duration: 60 });
 
     return {
       opacity,
