@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xxxl,
   },
   headerSection: {
-    minHeight: SCREEN_HEIGHT * 0.75,
+    minHeight: SCREEN_HEIGHT * 0.92,
     justifyContent: 'space-between',
   },
   header: {
