@@ -10,7 +10,11 @@ export function useSwipeLog(pillarId: PillarId) {
   const [pendingLogId, setPendingLogId] = useState<string | null>(null);
   const lastSwipeTime = useRef<number>(0);
 
-  const handleSwipe = useCallback(async (result: SwipeResult, targetId: string | null = null) => {
+  const handleSwipe = useCallback(async (
+    result: SwipeResult,
+    targetId: string | null = null,
+    noteMode: boolean = false
+  ) => {
     const now = Date.now();
     if (now - lastSwipeTime.current < DEBOUNCE_MS) {
       return;
@@ -25,8 +29,10 @@ export function useSwipeLog(pillarId: PillarId) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
 
-    // Small delay prevents gesture handler conflict with modal autoFocus
-    setTimeout(() => setPendingLogId(logId), 50);
+    // Gate note prompt behind note-mode state (D-07, D-08, UX-01)
+    if (noteMode) {
+      setTimeout(() => setPendingLogId(logId), 50);
+    }
   }, [addLog]);
 
   const clearPendingLogId = useCallback(() => setPendingLogId(null), []);

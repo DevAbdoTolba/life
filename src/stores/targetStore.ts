@@ -13,6 +13,7 @@ interface TargetState {
   updateTargetStatus: (id: string, newStatus: TargetStatus) => Promise<void>;
   toggleMask: (id: string) => Promise<void>;
   getTargetsByPillar: (pillarId: number) => Target[];
+  getActiveTargetsByPillar: (pillarId: number) => Target[];
   deleteTarget: (id: string) => Promise<void>;
   updateTargetName: (id: string, realName: string) => Promise<void>;
   getTargetHistory: (targetId: string) => Promise<TargetHistoryEntry[]>;
@@ -140,6 +141,13 @@ export const useTargetStore = create<TargetState>((set, get) => ({
     return get().targets.filter(
       (t) => t.pillarId === pillarId && t.status === 'active'
     );
+  },
+
+  getActiveTargetsByPillar: (pillarId) => {
+    return get()
+      .targets
+      .filter((t) => t.pillarId === pillarId && t.status === 'active')
+      .slice(0, 3); // MAX_ACTIVE_TARGETS cap — D-10
   },
 
   deleteTarget: async (id) => {
