@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Refinement & Polish
 status: Phase complete — ready for verification
-stopped_at: Completed 10-gesture-interaction-overhaul/10-01-PLAN.md
-last_updated: "2026-03-25T07:25:50.520Z"
+stopped_at: "10-02 checkpoint:human-verify — Task 1 complete (73a420c), awaiting device verification"
+last_updated: "2026-03-25T07:32:24.203Z"
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 9
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -42,6 +42,8 @@ v1.1 decisions pending (none logged yet).
 - [Phase 10]: Export computeFanPositions as pure function alongside hook for unit testability
 - [Phase 10]: noteMode defaults to false - backward-compatible with all existing handleSwipe callers
 - [Phase 10]: Hardcode .slice(0, 3) in getActiveTargetsByPillar to avoid circular dependency with component constants
+- [Phase 10-gesture-interaction-overhaul]: noteModeRef as useRef not SharedValue — JS callback reads it directly, no runOnJS overhead for gating
+- [Phase 10-gesture-interaction-overhaul]: Cancel escape in panGesture.onEnd checks isHolding first then dist — old 'dir && isHolding' silently dropped cancel when knob at center
 
 ### Pending Todos
 
@@ -58,6 +60,6 @@ v1.1 decisions pending (none logged yet).
 
 ## Session Continuity
 
-Last session: 2026-03-25T07:25:50.516Z
-Stopped at: Completed 10-gesture-interaction-overhaul/10-01-PLAN.md
+Last session: 2026-03-25T07:32:24.199Z
+Stopped at: 10-02 checkpoint:human-verify — Task 1 complete (73a420c), awaiting device verification
 Resume file: None

@@ -26,7 +26,7 @@
 **Milestone Goal:** Fix broken behaviors, correct UX misunderstandings, and elevate the visual/tactile experience of the joystick system.
 
 - [x] **Phase 09: Foundation Fixes** — Repair screen wake lock and body-fill physics; remove hooks anti-pattern blocking visual work (completed 2026-03-24)
-- [ ] **Phase 10: Gesture Interaction Overhaul** — Fix joystick hold behavior: center-hold toggles notes, directional hold fans targets at 30-degree intervals
+- [x] **Phase 10: Gesture Interaction Overhaul** — Fix joystick hold behavior: center-hold toggles notes, directional hold fans targets at 30-degree intervals (completed 2026-03-25)
 - [ ] **Phase 11: Hold Interaction Visuals** — Quadrant separator lines, section fill on hold, and haptic feedback — all triggered at hold-start
 - [x] **Phase 12: Analytics & Layout** — Line chart for daily activity, joystick and activity list repositioned for thumb reach (completed 2026-03-25)
 - [ ] **Phase 13: Advanced Visual Polish** — Liquid joystick glow, background hue shift on drag, emoji clutter removed with pillar icons
@@ -58,7 +58,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 10-01-PLAN.md — Constants, targetStore 3-cap selector, 30-degree fan geometry, useSwipeLog note-mode gate (BUG-04, UX-01)
-- [ ] 10-02-PLAN.md — Joystick.tsx center-vs-directional hold branch, glow ring, cancel escape, noteMode wiring (BUG-03, BUG-04, UX-01)
+- [x] 10-02-PLAN.md — Joystick.tsx center-vs-directional hold branch, glow ring, cancel escape, noteMode wiring (BUG-03, BUG-04, UX-01)
 
 ### Phase 11: Hold Interaction Visuals
 **Goal**: The joystick communicates its four quadrants visually at rest and reacts with color and haptics the moment a hold begins
@@ -111,7 +111,7 @@ Plans:
 | 7. Integration Wiring Fixes | v1.0 | 2/2 | Complete | 2026-03-24 |
 | 8. Custom Date Range Picker | v1.0 | 2/2 | Complete | 2026-03-24 |
 | 9. Foundation Fixes | v1.1 | 1/2 | In Progress|  |
-| 10. Gesture Interaction Overhaul | v1.1 | 1/2 | In Progress|  |
+| 10. Gesture Interaction Overhaul | v1.1 | 2/2 | Complete   | 2026-03-25 |
 | 11. Hold Interaction Visuals | v1.1 | 0/1 | Not started | - |
 | 12. Analytics & Layout | v1.1 | 2/2 | Complete   | 2026-03-25 |
 | 13. Advanced Visual Polish | v1.1 | 0/2 | Not started | - |

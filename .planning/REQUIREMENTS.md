@@ -11,7 +11,7 @@ Requirements for v1.1 Refinement & Polish. Each maps to roadmap phases.
 
 - [x] **BUG-01**: App allows screen to dim when not actively interacting (no permanent wake lock)
 - [x] **BUG-02**: Body-fill visualization renders and animates balls falling with physics
-- [ ] **BUG-03**: Center hold vibrates only (toggles note mode) — does not show targets
+- [x] **BUG-03**: Center hold vibrates only (toggles note mode) — does not show targets
 - [x] **BUG-04**: Directional hold shows targets fanned at 30° intervals from swipe direction
 
 ### Code Health
@@ -66,7 +66,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BUG-01 | Phase 9 | Complete |
 | BUG-02 | Phase 9 | Complete |
 | HOOK-01 | Phase 9 | Complete |
-| BUG-03 | Phase 10 | Pending |
+| BUG-03 | Phase 10 | Complete |
 | BUG-04 | Phase 10 | Complete |
 | UX-01 | Phase 10 | Complete |
 | UX-02 | Phase 12 | Complete |
